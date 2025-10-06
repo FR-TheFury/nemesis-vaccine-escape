@@ -14,16 +14,136 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      chat_messages: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          metadata: Json | null
+          player_pseudo: string
+          session_code: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message: string
+          metadata?: Json | null
+          player_pseudo: string
+          session_code: string
+          type?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          metadata?: Json | null
+          player_pseudo?: string
+          session_code?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_messages_session_code_fkey"
+            columns: ["session_code"]
+            isOneToOne: false
+            referencedRelation: "sessions"
+            referencedColumns: ["code"]
+          },
+        ]
+      }
+      players: {
+        Row: {
+          id: string
+          is_connected: boolean
+          is_host: boolean
+          joined_at: string
+          last_seen: string
+          pseudo: string
+          session_code: string
+        }
+        Insert: {
+          id?: string
+          is_connected?: boolean
+          is_host?: boolean
+          joined_at?: string
+          last_seen?: string
+          pseudo: string
+          session_code: string
+        }
+        Update: {
+          id?: string
+          is_connected?: boolean
+          is_host?: boolean
+          joined_at?: string
+          last_seen?: string
+          pseudo?: string
+          session_code?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "players_session_code_fkey"
+            columns: ["session_code"]
+            isOneToOne: false
+            referencedRelation: "sessions"
+            referencedColumns: ["code"]
+          },
+        ]
+      }
+      sessions: {
+        Row: {
+          code: string
+          created_at: string
+          current_zone: number
+          hints_used: number
+          host_id: string
+          inventory: Json
+          solved_puzzles: Json
+          status: Database["public"]["Enums"]["session_status"]
+          timer_remaining: number
+          timer_running: boolean
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          current_zone?: number
+          hints_used?: number
+          host_id: string
+          inventory?: Json
+          solved_puzzles?: Json
+          status?: Database["public"]["Enums"]["session_status"]
+          timer_remaining?: number
+          timer_running?: boolean
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          current_zone?: number
+          hints_used?: number
+          host_id?: string
+          inventory?: Json
+          solved_puzzles?: Json
+          status?: Database["public"]["Enums"]["session_status"]
+          timer_remaining?: number
+          timer_running?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      cleanup_old_sessions: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
     }
     Enums: {
-      [_ in never]: never
+      session_status: "waiting" | "active" | "completed" | "failed"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +270,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      session_status: ["waiting", "active", "completed", "failed"],
+    },
   },
 } as const
