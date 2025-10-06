@@ -26,9 +26,9 @@ export const usePuzzleSolver = (sessionCode: string | null) => {
         : currentInventory;
 
       // Vérifier si toutes les énigmes de la zone sont résolues
-      const zone1Puzzles = ['zone1_caesar', 'zone1_locker'];
-      const zone2Puzzles = ['zone2_dna', 'zone2_microscope'];
-      const zone3Puzzles = ['zone3_cryobox', 'zone3_mixer'];
+      const zone1Puzzles = ['zone1_caesar', 'zone1_locker', 'zone1_audio'];
+      const zone2Puzzles = ['zone2_dna', 'zone2_microscope', 'zone2_periodic'];
+      const zone3Puzzles = ['zone3_cryobox', 'zone3_mixer', 'zone3_final'];
       
       let newZone = session.current_zone;
       let newStatus = session.status;

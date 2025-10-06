@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { DNASequence } from '@/components/puzzles/DNASequence';
 import { Microscope } from '@/components/puzzles/Microscope';
+import { PeriodicTable } from '@/components/puzzles/PeriodicTable';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { usePuzzleSolver } from '@/hooks/usePuzzleSolver';
-import { Dna, MicroscopeIcon, TestTube, Atom } from 'lucide-react';
+import { Dna, MicroscopeIcon, TestTube, Atom, FlaskConical } from 'lucide-react';
 import enigmesData from '@/data/enigmes.json';
 
 interface Zone2Props {
@@ -94,6 +95,32 @@ export const Zone2 = ({ sessionCode, session }: Zone2Props) => {
                 )}
               </div>
             </Card>
+
+            <Card className="p-6 bg-slate-900/90 backdrop-blur-sm border-green-500/30 hover:border-green-500/60 transition-all">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-green-600 rounded-lg">
+                      <FlaskConical className="h-6 w-6 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold text-white">Tableau périodique</h3>
+                  </div>
+                  {solvedPuzzles[zone.puzzles.periodic.id] && (
+                    <Badge variant="default" className="bg-green-600">✓ Résolu</Badge>
+                  )}
+                </div>
+                <p className="text-sm text-slate-300">Résolvez les équations chimiques</p>
+                <div className="flex items-center gap-2 text-xs text-slate-400">
+                  <Atom className="h-4 w-4" />
+                  <span>Chimie organique</span>
+                </div>
+                {!solvedPuzzles[zone.puzzles.periodic.id] && (
+                  <Button onClick={() => setActivePuzzle('periodic')} className="w-full bg-green-600 hover:bg-green-700">
+                    Analyser le tableau
+                  </Button>
+                )}
+              </div>
+            </Card>
           </div>
         </div>
       </div>
@@ -109,6 +136,14 @@ export const Zone2 = ({ sessionCode, session }: Zone2Props) => {
         isOpen={activePuzzle === 'microscope'}
         onClose={() => setActivePuzzle(null)}
         onSolve={() => handleSolvePuzzle(zone.puzzles.microscope.id, zone.puzzles.microscope.reward)}
+      />
+
+      <PeriodicTable
+        isOpen={activePuzzle === 'periodic'}
+        onClose={() => setActivePuzzle(null)}
+        equations={zone.puzzles.periodic.equations}
+        halfFormula={zone.puzzles.periodic.halfFormula}
+        onSolve={() => handleSolvePuzzle(zone.puzzles.periodic.id, zone.puzzles.periodic.reward)}
       />
     </div>
   );

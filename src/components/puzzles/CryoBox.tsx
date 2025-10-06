@@ -17,10 +17,13 @@ export const CryoBox = ({ isOpen, onClose, correctCode, onSolve }: CryoBoxProps)
   const { toast } = useToast();
 
   const handleSubmit = () => {
-    const normalized = code.trim().toUpperCase().replace(/[\s-]/g, '');
-    const normalizedCorrect = correctCode.toUpperCase().replace(/[\s-]/g, '');
+    const normalized = code.trim().toUpperCase().replace(/[\s\-+]/g, '');
+    const normalizedCorrect = correctCode.toUpperCase().replace(/[\s\-+]/g, '');
+    
+    // Alternative: also accept with "+" separator
+    const alternativeCorrect = correctCode.replace(/[\s-]/g, '+').toUpperCase().replace(/\+/g, '');
 
-    if (normalized === normalizedCorrect) {
+    if (normalized === normalizedCorrect || normalized === alternativeCorrect) {
       toast({
         title: "✓ Coffre cryogénique ouvert !",
         description: "Les flacons de synthèse sont accessibles.",

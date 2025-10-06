@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { CaesarCipher } from '@/components/puzzles/CaesarCipher';
 import { CodeLocker } from '@/components/puzzles/CodeLocker';
+import { Dictaphone } from '@/components/puzzles/Dictaphone';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { usePuzzleSolver } from '@/hooks/usePuzzleSolver';
-import { FileText, Lock, BookOpen, KeyRound } from 'lucide-react';
+import { FileText, Lock, BookOpen, KeyRound, Mic } from 'lucide-react';
 import enigmesData from '@/data/enigmes.json';
 
 interface Zone1Props {
@@ -94,6 +95,32 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
                 )}
               </div>
             </Card>
+
+            <Card className="p-6 bg-slate-900/90 backdrop-blur-sm border-blue-500/30 hover:border-blue-500/60 transition-all">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-blue-600 rounded-lg">
+                      <Mic className="h-6 w-6 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold text-white">Dictaphone</h3>
+                  </div>
+                  {solvedPuzzles[zone.puzzles.audio.id] && (
+                    <Badge variant="default" className="bg-green-600">✓ Résolu</Badge>
+                  )}
+                </div>
+                <p className="text-sm text-slate-300">Message enregistré du Dr Morel</p>
+                <div className="flex items-center gap-2 text-xs text-slate-400">
+                  <Mic className="h-4 w-4" />
+                  <span>Indice audio crucial</span>
+                </div>
+                {!solvedPuzzles[zone.puzzles.audio.id] && (
+                  <Button onClick={() => setActivePuzzle('audio')} className="w-full">
+                    Écouter le message
+                  </Button>
+                )}
+              </div>
+            </Card>
           </div>
         </div>
       </div>
@@ -111,6 +138,13 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
         onClose={() => setActivePuzzle(null)}
         correctCode={zone.puzzles.locker.code}
         onSolve={() => handleSolvePuzzle(zone.puzzles.locker.id, zone.puzzles.locker.reward)}
+      />
+
+      <Dictaphone
+        isOpen={activePuzzle === 'audio'}
+        onClose={() => setActivePuzzle(null)}
+        transcript={zone.puzzles.audio.transcript}
+        onSolve={() => handleSolvePuzzle(zone.puzzles.audio.id, zone.puzzles.audio.reward)}
       />
     </div>
   );

@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { CryoBox } from '@/components/puzzles/CryoBox';
 import { LiquidMixer } from '@/components/puzzles/LiquidMixer';
+import { FinalCode } from '@/components/puzzles/FinalCode';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { usePuzzleSolver } from '@/hooks/usePuzzleSolver';
-import { Snowflake, TestTube, AlertTriangle, Siren } from 'lucide-react';
+import { Snowflake, TestTube, AlertTriangle, Siren, Lock } from 'lucide-react';
 import enigmesData from '@/data/enigmes.json';
 
 interface Zone3Props {
@@ -98,6 +99,37 @@ export const Zone3 = ({ sessionCode, session }: Zone3Props) => {
                 )}
               </div>
             </Card>
+
+            <Card className="p-6 bg-slate-900/90 backdrop-blur-sm border-red-500/30 hover:border-red-500/60 transition-all">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-red-600 rounded-lg">
+                      <Lock className="h-6 w-6 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold text-white">Code final</h3>
+                  </div>
+                  {solvedPuzzles[zone.puzzles.final.id] && (
+                    <Badge variant="default" className="bg-green-600">✓ Résolu</Badge>
+                  )}
+                </div>
+                <p className="text-sm text-slate-300">Activation finale du vaccin NEMESIS</p>
+                <div className="flex items-center gap-2 text-xs text-slate-400">
+                  <AlertTriangle className="h-4 w-4" />
+                  <span>Dernière étape critique</span>
+                </div>
+                {!solvedPuzzles[zone.puzzles.final.id] && solvedPuzzles[zone.puzzles.mixer.id] && (
+                  <Button onClick={() => setActivePuzzle('final')} className="w-full bg-red-600 hover:bg-red-700">
+                    Entrer le code final
+                  </Button>
+                )}
+                {!solvedPuzzles[zone.puzzles.mixer.id] && (
+                  <p className="text-xs text-muted-foreground">
+                    Terminez d'abord la synthèse du vaccin
+                  </p>
+                )}
+              </div>
+            </Card>
           </div>
         </div>
       </div>
@@ -114,6 +146,14 @@ export const Zone3 = ({ sessionCode, session }: Zone3Props) => {
         onClose={() => setActivePuzzle(null)}
         correctSequence={zone.puzzles.mixer.sequence}
         onSolve={() => handleSolvePuzzle(zone.puzzles.mixer.id, zone.puzzles.mixer.reward)}
+      />
+
+      <FinalCode
+        isOpen={activePuzzle === 'final'}
+        onClose={() => setActivePuzzle(null)}
+        letters={zone.puzzles.final.letters}
+        solution={zone.puzzles.final.solution}
+        onSolve={() => handleSolvePuzzle(zone.puzzles.final.id, zone.puzzles.final.reward)}
       />
     </div>
   );

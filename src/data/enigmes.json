@@ -6,37 +6,44 @@
       "puzzles": {
         "caesar": {
           "id": "zone1_caesar",
-          "name": "Chiffrement de César",
-          "encrypted": "IRUTNQF-FQUMF",
-          "key": 5,
-          "solution": "FORMULE-ALPHA",
-          "reward": "Carnet du Dr Morel",
+          "name": "Le Carnet - Chiffrement de César",
+          "encrypted": "KHOOR GRFWHXUV, OD VRXUUH GH OD YpULWp V'RXYUH SDU OD FOp DOISKD.",
+          "key": 3,
+          "solution": "ALPHA",
+          "halfFormula": "C17H19NO3",
+          "reward": "Demi-formule α",
           "hints": [
-            "Le Dr Morel utilisait un système de chiffrement classique... César, peut-être ?",
-            "Essayez un décalage de 5 lettres dans l'alphabet",
-            "A → F, B → G, C → H... I devient N, R devient W..."
+            "Pensez à un décalage des lettres… classique.",
+            "Le médecin aimait Jules… (indice auteur).",
+            "Essayez César et un décalage de 3."
           ]
         },
         "locker": {
           "id": "zone1_locker",
-          "name": "Casier sécurisé",
+          "name": "Le Casier - Code anatomique",
           "code": "2741",
-          "reward": "Badge magnétique",
+          "organs": {
+            "coeur": 2,
+            "poumons": 7,
+            "foie": 4,
+            "reins": 1
+          },
+          "reward": "Carte magnétique",
           "hints": [
-            "Regardez attentivement le diagramme anatomique au mur",
-            "Les lettres marquées correspondent à des positions numériques",
-            "B=2, G=7, D=4, A=1 → Code: 2741"
+            "Le flux dicte l'ordre.",
+            "L'anatomie dessine des chiffres.",
+            "C=2, P=7, Fo=4, R=1 → ?"
           ]
         },
         "audio": {
           "id": "zone1_audio",
-          "name": "Dictaphone",
-          "keywords": ["ADN", "Tube 3A", "séquence delta"],
-          "reward": "Indice audio",
+          "name": "Le Dictaphone",
+          "transcript": "Ici Morel… l'explosion… les réactifs… ADN… suivez la séquence… Micro… *coupure*…",
+          "keyword": "ADN",
+          "reward": "Accès Zone 2",
           "hints": [
-            "Écoutez attentivement le message du Dr Morel",
-            "Il mentionne quelque chose à propos du laboratoire...",
-            "Notez les termes : 'ADN', 'Tube 3A', 'séquence delta'"
+            "Écoutez jusqu'au bout.",
+            "Il insiste sur une séquence."
           ]
         }
       }
@@ -47,40 +54,43 @@
       "puzzles": {
         "dna": {
           "id": "zone2_dna",
-          "name": "Reconstruction ADN",
-          "sequence": ["A", "T", "C", "G", "G", "C", "T", "A"],
-          "reward": "Séquence ADN complète",
+          "name": "Séquence ADN",
+          "sequence": ["A", "T", "G", "C", "C", "A", "T", "T", "A", "G"],
+          "fragment": "ALPHA+β",
+          "reward": "Fragment de code",
           "hints": [
-            "L'ADN suit une logique d'appariement : A avec T, C avec G",
-            "Le dictaphone mentionnait 'Tube 3A'... commencez par A",
-            "Séquence correcte : A-T-C-G-G-C-T-A"
+            "Relisez la séquence évoquée par Morel.",
+            "ATGC… l'alphabet moléculaire.",
+            "Commencez par A T G."
           ]
         },
         "microscope": {
           "id": "zone2_microscope",
           "name": "Microscope UV",
-          "solution": "FORMULE-BETA",
-          "reward": "Formule Beta",
+          "delta": 7,
+          "positions": [3, 6, 9],
+          "result": "BIO",
+          "reward": "Clé numérique Δ=7",
           "hints": [
-            "Certaines marques ne sont visibles qu'aux rayons UV",
-            "Activez le mode UV sur le microscope",
-            "Un QR code apparaît, révélant 'FORMULE-BETA'"
+            "Essayez le mode UV.",
+            "Δ signifie un décalage.",
+            "3e, 6e, 9e caractères après le décalage."
           ]
         },
         "periodic": {
           "id": "zone2_periodic",
           "name": "Tableau périodique crypté",
-          "elements": [
-            { "symbol": "Ne", "number": 10 },
-            { "symbol": "Si", "number": 14 },
-            { "symbol": "S", "number": 16 }
+          "equations": [
+            {"operation": "10 + 7", "result": 17, "symbol": "Cl"},
+            {"operation": "12 - 4", "result": 8, "symbol": "O"},
+            {"operation": "19 - 18", "result": 1, "symbol": "H"}
           ],
-          "solution": "NEMESIS",
-          "reward": "Code d'accès Zone 3",
+          "halfFormula": "C9H11NO2",
+          "reward": "Demi-formule β",
           "hints": [
-            "Les symboles chimiques forment un mot...",
-            "Ne (2x) + Si (2x) + S = NE-ME-SI-S",
-            "NEMESIS est la clé pour accéder à la salle de confinement"
+            "Numéro atomique → symbole.",
+            "L'ordre est celui des équations.",
+            "Cl, O, H… ça complète une formule."
           ]
         }
       }
@@ -92,24 +102,38 @@
         "cryobox": {
           "id": "zone3_cryobox",
           "name": "Coffre cryogénique",
-          "solution": "FORMULE-ALPHA-BETA",
-          "reward": "Flacons chimiques",
+          "solution": "C17H19NO3C9H11NO2",
+          "alternativeSolution": "C17H19NO3+C9H11NO2",
+          "reward": "Flacons de synthèse",
           "hints": [
-            "Le coffre nécessite la formule complète",
-            "Vous avez trouvé FORMULE-ALPHA dans le bureau...",
-            "Et FORMULE-BETA dans le labo... combinez-les !"
+            "Deux moitiés font un tout.",
+            "Concaténez α et β."
           ]
         },
         "mixer": {
           "id": "zone3_mixer",
-          "name": "Synthèse du vaccin",
+          "name": "Table de synthèse",
           "sequence": ["Bleu", "Vert", "Rouge"],
+          "colors": {
+            "Bleu": "Refroidir",
+            "Vert": "Stabiliser",
+            "Rouge": "Activer"
+          },
+          "reward": "Réaction chimique activée",
+          "hints": [
+            "Refroidir, stabiliser, activer.",
+            "L'activation vient en dernier."
+          ]
+        },
+        "final": {
+          "id": "zone3_final",
+          "name": "Code final",
+          "letters": ["V", "A", "C", "C", "I", "N"],
           "solution": "VACCIN",
           "reward": "VACCIN NEMESIS",
           "hints": [
-            "L'ordre de mélange est crucial pour la stabilité",
-            "Pensez au spectre de la lumière... bleu, vert, rouge",
-            "Mélangez : Bleu → Vert → Rouge pour obtenir le vaccin doré"
+            "Le but de tout cela ?",
+            "Le mot sur toutes les lèvres depuis le début…"
           ]
         }
       }
@@ -125,5 +149,21 @@
   "hints": {
     "maxHints": 3,
     "cooldown": 0
+  },
+  "redHerrings": {
+    "zone1": [
+      "ROT13 ? (griffonné dans carnet)",
+      "Code 1234 (au dos du cadre)",
+      "BPM 88 (stéthoscope)"
+    ],
+    "zone2": [
+      "Base U (ARN - non utilisable)",
+      "QR red-herring"
+    ],
+    "zone3": [
+      "Caféine C8H10N4O2",
+      "Étiquette RVB",
+      "Lettre M sur sticky"
+    ]
   }
 }
