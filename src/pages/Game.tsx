@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useGameSession } from '@/hooks/useGameSession';
 import { useRealtimeSync } from '@/hooks/useRealtimeSync';
@@ -10,6 +10,15 @@ import { Zone2 } from './zones/Zone2';
 import { Zone3 } from './zones/Zone3';
 import { GameEnd } from './zones/GameEnd';
 import { Button } from '@/components/ui/button';
+import { 
+  AlertDialog, 
+  AlertDialogContent, 
+  AlertDialogHeader, 
+  AlertDialogTitle, 
+  AlertDialogDescription, 
+  AlertDialogFooter,
+  AlertDialogAction 
+} from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
 import enigmesData from '@/data/enigmes.json';
 
@@ -17,6 +26,7 @@ const Game = () => {
   const { sessionCode } = useParams<{ sessionCode: string }>();
   const navigate = useNavigate();
   const { session, players, currentPlayer, loading, error, setSession, setPlayers } = useGameSession(sessionCode || null);
+  const [showTimeUpDialog, setShowTimeUpDialog] = useState(false);
   
   useRealtimeSync(
     sessionCode || null,
@@ -41,7 +51,7 @@ const Game = () => {
     session?.timer_remaining || 3600,
     currentPlayer?.is_host || false,
     () => {
-      toast.error('Temps écoulé ! Mission échouée.');
+      setShowTimeUpDialog(true);
     }
   );
 
@@ -181,6 +191,22 @@ const Game = () => {
       />
       
       {renderZone()}
+
+      <AlertDialog open={showTimeUpDialog} onOpenChange={setShowTimeUpDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-destructive text-2xl">⏰ Temps écoulé !</AlertDialogTitle>
+            <AlertDialogDescription className="text-lg">
+              Le virus s'est propagé... Mission échouée.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => navigate('/')}>
+              Retour à l'accueil
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
