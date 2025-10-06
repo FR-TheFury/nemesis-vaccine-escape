@@ -155,6 +155,20 @@ export const useGameSession = (sessionCode: string | null) => {
 
         setSession(sessionData);
         setPlayers(playersData || []);
+
+        // Définir le joueur actuel depuis le localStorage
+        const storedSession = localStorage.getItem('nemesis_session');
+        if (storedSession && playersData) {
+          try {
+            const { playerId } = JSON.parse(storedSession);
+            const player = playersData.find(p => p.id === playerId);
+            if (player) {
+              setCurrentPlayer(player);
+            }
+          } catch (e) {
+            console.error('Error parsing stored session:', e);
+          }
+        }
       } catch (err) {
         console.error('Error loading session:', err);
         setError('Impossible de charger la session');
