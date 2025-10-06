@@ -190,5 +190,7 @@ export const useGameSession = (sessionCode: string | null) => {
     joinSession,
     leaveSession,
     setCurrentPlayer,
+    setSession,
+    setPlayers,
   };
 };

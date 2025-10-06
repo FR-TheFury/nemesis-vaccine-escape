@@ -16,14 +16,23 @@ import enigmesData from '@/data/enigmes.json';
 const Game = () => {
   const { sessionCode } = useParams<{ sessionCode: string }>();
   const navigate = useNavigate();
-  const { session, players, currentPlayer, loading, error } = useGameSession(sessionCode || null);
+  const { session, players, currentPlayer, loading, error, setSession, setPlayers } = useGameSession(sessionCode || null);
   
   useRealtimeSync(
     sessionCode || null,
     {
       onSessionUpdate: (updatedSession) => {
-        console.log('Session updated', updatedSession);
-      }
+        setSession(updatedSession as any);
+      },
+      onPlayerJoin: (player) => {
+        setPlayers((prev: any) => [...prev, player as any]);
+      },
+      onPlayerUpdate: (player) => {
+        setPlayers((prev: any) => prev.map((p: any) => p.id === player.id ? player : p));
+      },
+      onPlayerLeave: (player) => {
+        setPlayers((prev: any) => prev.map((p: any) => p.id === player.id ? player : p));
+      },
     }
   );
 

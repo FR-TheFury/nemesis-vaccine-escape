@@ -63,6 +63,17 @@ export const Chat = ({ sessionCode, currentPlayerPseudo }: ChatProps) => {
         });
 
       if (!error) {
+        // Optimiste: afficher immédiatement le message localement
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: crypto.randomUUID(),
+            player_pseudo: currentPlayerPseudo,
+            message: inputMessage,
+            type: 'chat',
+            created_at: new Date().toISOString(),
+          } as any,
+        ]);
         setInputMessage('');
       }
     } catch (err) {
