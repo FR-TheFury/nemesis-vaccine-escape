@@ -35,8 +35,8 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
     },
     {
       id: 'locker',
-      x: 75,
-      y: 25,
+      x: 76,
+      y: 13,
       label: 'Le Casier',
       icon: '🔒',
       solved: !!solvedPuzzles[zone.puzzles.locker.id],

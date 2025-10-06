@@ -68,16 +68,16 @@ export const InteractiveZoneMap = ({
         >
           {/* Pulse animation pour les énigmes non résolues */}
           {!hotspot.solved && (
-            <div className="absolute inset-0 animate-ping rounded-full bg-primary/30 scale-150" />
+            <div className="absolute inset-0 animate-ping rounded-full bg-white/10 scale-150" />
           )}
           
           {/* Icône de l'énigme */}
           <div className={cn(
             "relative w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center text-lg sm:text-xl md:text-2xl",
-            "backdrop-blur-md border-2 transition-all duration-300",
+            "backdrop-blur-sm border-2 transition-all duration-300",
             hotspot.solved 
               ? "bg-green-500/80 border-green-300 shadow-lg shadow-green-500/50" 
-              : "bg-primary/90 border-primary-foreground/30 shadow-2xl shadow-primary/50 hover:shadow-primary/70"
+              : "bg-transparent border-white/20 shadow-lg hover:bg-white/10 hover:border-white/40"
           )}>
             <span className="drop-shadow-lg">{hotspot.icon}</span>
           </div>
