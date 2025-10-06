@@ -19,7 +19,7 @@ const TUBE_COLORS = {
 };
 
 export const DNASequence = ({ isOpen, onClose, correctSequence, onSolve }: DNASequenceProps) => {
-  const [sequence, setSequence] = useState<string[]>(Array(8).fill(''));
+  const [sequence, setSequence] = useState<string[]>(Array(correctSequence.length).fill(''));
   const { toast } = useToast();
 
   const handleTubeClick = (base: string) => {
