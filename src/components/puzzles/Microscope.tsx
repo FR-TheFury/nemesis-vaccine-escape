@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 
@@ -39,6 +39,9 @@ export const Microscope = ({ isOpen, onClose, onSolve }: MicroscopeProps) => {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Microscope haute résolution</DialogTitle>
+          <DialogDescription>
+            Examinez l'échantillon et activez le mode UV
+          </DialogDescription>
         </DialogHeader>
         
         <div className="space-y-4">

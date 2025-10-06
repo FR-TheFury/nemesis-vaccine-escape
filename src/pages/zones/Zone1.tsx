@@ -4,6 +4,7 @@ import { CodeLocker } from '@/components/puzzles/CodeLocker';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { usePuzzleSolver } from '@/hooks/usePuzzleSolver';
 import enigmesData from '@/data/enigmes.json';
 
 interface Zone1Props {
@@ -15,6 +16,12 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
   const [activePuzzle, setActivePuzzle] = useState<string | null>(null);
   const zone = (enigmesData.zones as any).zone1;
   const solvedPuzzles = session.solved_puzzles || {};
+  const { solvePuzzle } = usePuzzleSolver(sessionCode);
+
+  const handleSolvePuzzle = async (puzzleId: string, reward: string) => {
+    await solvePuzzle(puzzleId, reward);
+    setActivePuzzle(null);
+  };
 
   return (
     <div className="container mx-auto p-8 pt-32">
@@ -71,14 +78,14 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
         onClose={() => setActivePuzzle(null)}
         encryptedText={zone.puzzles.caesar.encrypted}
         correctKey={zone.puzzles.caesar.key}
-        onSolve={() => {}}
+        onSolve={() => handleSolvePuzzle(zone.puzzles.caesar.id, zone.puzzles.caesar.reward)}
       />
 
       <CodeLocker
         isOpen={activePuzzle === 'locker'}
         onClose={() => setActivePuzzle(null)}
         correctCode={zone.puzzles.locker.code}
-        onSolve={() => {}}
+        onSolve={() => handleSolvePuzzle(zone.puzzles.locker.id, zone.puzzles.locker.reward)}
       />
     </div>
   );

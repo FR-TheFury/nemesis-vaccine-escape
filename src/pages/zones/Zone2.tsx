@@ -4,6 +4,7 @@ import { Microscope } from '@/components/puzzles/Microscope';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { usePuzzleSolver } from '@/hooks/usePuzzleSolver';
 import enigmesData from '@/data/enigmes.json';
 
 interface Zone2Props {
@@ -15,6 +16,12 @@ export const Zone2 = ({ sessionCode, session }: Zone2Props) => {
   const [activePuzzle, setActivePuzzle] = useState<string | null>(null);
   const zone = (enigmesData.zones as any).zone2;
   const solvedPuzzles = session.solved_puzzles || {};
+  const { solvePuzzle } = usePuzzleSolver(sessionCode);
+
+  const handleSolvePuzzle = async (puzzleId: string, reward: string) => {
+    await solvePuzzle(puzzleId, reward);
+    setActivePuzzle(null);
+  };
 
   return (
     <div className="container mx-auto p-8 pt-32">
@@ -70,13 +77,13 @@ export const Zone2 = ({ sessionCode, session }: Zone2Props) => {
         isOpen={activePuzzle === 'dna'}
         onClose={() => setActivePuzzle(null)}
         correctSequence={zone.puzzles.dna.sequence}
-        onSolve={() => {}}
+        onSolve={() => handleSolvePuzzle(zone.puzzles.dna.id, zone.puzzles.dna.reward)}
       />
 
       <Microscope
         isOpen={activePuzzle === 'microscope'}
         onClose={() => setActivePuzzle(null)}
-        onSolve={() => {}}
+        onSolve={() => handleSolvePuzzle(zone.puzzles.microscope.id, zone.puzzles.microscope.reward)}
       />
     </div>
   );

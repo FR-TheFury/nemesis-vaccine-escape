@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 
@@ -47,6 +47,9 @@ export const CodeLocker = ({ isOpen, onClose, correctCode, onSolve }: CodeLocker
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Casier sécurisé - Code 4 chiffres</DialogTitle>
+          <DialogDescription>
+            Entrez le code à 4 chiffres pour déverrouiller le casier
+          </DialogDescription>
         </DialogHeader>
         
         <div className="space-y-4">

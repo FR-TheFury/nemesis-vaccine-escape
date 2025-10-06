@@ -4,6 +4,7 @@ import { LiquidMixer } from '@/components/puzzles/LiquidMixer';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { usePuzzleSolver } from '@/hooks/usePuzzleSolver';
 import enigmesData from '@/data/enigmes.json';
 
 interface Zone3Props {
@@ -15,6 +16,12 @@ export const Zone3 = ({ sessionCode, session }: Zone3Props) => {
   const [activePuzzle, setActivePuzzle] = useState<string | null>(null);
   const zone = (enigmesData.zones as any).zone3;
   const solvedPuzzles = session.solved_puzzles || {};
+  const { solvePuzzle } = usePuzzleSolver(sessionCode);
+
+  const handleSolvePuzzle = async (puzzleId: string, reward: string) => {
+    await solvePuzzle(puzzleId, reward);
+    setActivePuzzle(null);
+  };
 
   return (
     <div className="container mx-auto p-8 pt-32">
@@ -70,14 +77,14 @@ export const Zone3 = ({ sessionCode, session }: Zone3Props) => {
         isOpen={activePuzzle === 'cryobox'}
         onClose={() => setActivePuzzle(null)}
         correctCode={zone.puzzles.cryobox.solution}
-        onSolve={() => {}}
+        onSolve={() => handleSolvePuzzle(zone.puzzles.cryobox.id, zone.puzzles.cryobox.reward)}
       />
 
       <LiquidMixer
         isOpen={activePuzzle === 'mixer'}
         onClose={() => setActivePuzzle(null)}
         correctSequence={zone.puzzles.mixer.sequence}
-        onSolve={() => {}}
+        onSolve={() => handleSolvePuzzle(zone.puzzles.mixer.id, zone.puzzles.mixer.reward)}
       />
     </div>
   );

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -52,6 +52,9 @@ export const CaesarCipher = ({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Carnet du Dr Morel</DialogTitle>
+          <DialogDescription>
+            Déchiffrez le message en trouvant la bonne clé de décalage
+          </DialogDescription>
         </DialogHeader>
         
         <div className="space-y-4">
