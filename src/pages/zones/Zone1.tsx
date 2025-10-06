@@ -26,8 +26,8 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
   const hotspots = [
     {
       id: 'caesar',
-      x: 45,
-      y: 70,
+      x: 50,
+      y: 50,
       label: 'Le Carnet',
       icon: '📖',
       solved: !!solvedPuzzles[zone.puzzles.caesar.id],
@@ -35,8 +35,8 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
     },
     {
       id: 'locker',
-      x: 18,
-      y: 45,
+      x: 75,
+      y: 25,
       label: 'Le Casier',
       icon: '🔒',
       solved: !!solvedPuzzles[zone.puzzles.locker.id],
@@ -44,8 +44,8 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
     },
     {
       id: 'audio',
-      x: 55,
-      y: 50,
+      x: 35,
+      y: 25,
       label: 'Le Dictaphone',
       icon: '🎙️',
       solved: !!solvedPuzzles[zone.puzzles.audio.id],
