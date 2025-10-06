@@ -17,14 +17,24 @@ const Home = () => {
   const { toast } = useToast();
 
   const handleCreate = async () => {
-    if (!pseudo.trim()) return;
+    if (!pseudo.trim()) {
+      toast({ title: "Erreur", description: "Veuillez entrer un pseudo", variant: "destructive" });
+      return;
+    }
     
     setIsCreating(true);
+    console.log('[Home] Creating session for pseudo:', pseudo);
+    
     try {
-      const { code, player } = await createSession(pseudo);
-      localStorage.setItem('nemesis_session', JSON.stringify({ code, pseudo, playerId: player.id }));
-      navigate(`/game/${code}`);
+      const result = await createSession(pseudo);
+      console.log('[Home] Session created:', result);
+      
+      localStorage.setItem('nemesis_session', JSON.stringify({ code: result.code, pseudo, playerId: result.player.id }));
+      console.log('[Home] Navigating to game:', result.code);
+      
+      navigate(`/game/${result.code}`);
     } catch (err) {
+      console.error('[Home] Error creating session:', err);
       toast({ title: "Erreur", description: "Impossible de créer la session", variant: "destructive" });
     } finally {
       setIsCreating(false);
@@ -32,14 +42,24 @@ const Home = () => {
   };
 
   const handleJoin = async () => {
-    if (!pseudo.trim() || !joinCode.trim()) return;
+    if (!pseudo.trim() || !joinCode.trim()) {
+      toast({ title: "Erreur", description: "Veuillez remplir tous les champs", variant: "destructive" });
+      return;
+    }
     
     setIsJoining(true);
+    console.log('[Home] Joining session:', joinCode, 'with pseudo:', pseudo);
+    
     try {
       const { session, player } = await joinSession(joinCode.toUpperCase(), pseudo);
+      console.log('[Home] Session joined:', session.code);
+      
       localStorage.setItem('nemesis_session', JSON.stringify({ code: session.code, pseudo, playerId: player.id }));
+      console.log('[Home] Navigating to game:', session.code);
+      
       navigate(`/game/${session.code}`);
     } catch (err) {
+      console.error('[Home] Error joining session:', err);
       toast({ title: "Erreur", description: "Session introuvable ou pseudo déjà pris", variant: "destructive" });
     } finally {
       setIsJoining(false);
