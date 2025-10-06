@@ -111,6 +111,8 @@ const Game = () => {
           maxHints={enigmesData.hints.maxHints}
           currentPuzzleId={null}
           puzzleHints={[]}
+          currentZone={currentZone}
+          solvedPuzzles={session.solved_puzzles as any}
         />
         
         <div className="text-center space-y-6">
@@ -165,6 +167,8 @@ const Game = () => {
         maxHints={enigmesData.hints.maxHints}
         currentPuzzleId={null}
         puzzleHints={[]}
+        currentZone={currentZone}
+        solvedPuzzles={session.solved_puzzles as any}
       />
       
       {renderZone()}

@@ -3,6 +3,7 @@ import { Inventory } from './Inventory';
 import { Chat } from './Chat';
 import { PlayersList } from './PlayersList';
 import { HintButton } from './HintButton';
+import { FacilityMap } from './FacilityMap';
 import { Button } from '@/components/ui/button';
 import { Play, Pause } from 'lucide-react';
 import type { InventoryItem } from '@/lib/gameLogic';
@@ -28,6 +29,8 @@ interface HUDProps {
   maxHints: number;
   currentPuzzleId: string | null;
   puzzleHints: string[];
+  currentZone?: number;
+  solvedPuzzles?: Record<string, boolean>;
 }
 
 export const HUD = ({
@@ -44,6 +47,8 @@ export const HUD = ({
   maxHints,
   currentPuzzleId,
   puzzleHints,
+  currentZone = 1,
+  solvedPuzzles = {},
 }: HUDProps) => {
   return (
     <>
@@ -56,6 +61,11 @@ export const HUD = ({
       <PlayersList 
         players={players}
         sessionCode={sessionCode}
+      />
+
+      <FacilityMap 
+        currentZone={currentZone}
+        solvedPuzzles={solvedPuzzles}
       />
 
       <Inventory items={inventory} />

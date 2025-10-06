@@ -1,0 +1,98 @@
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Check, Lock } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+interface FacilityMapProps {
+  currentZone: number;
+  solvedPuzzles: Record<string, boolean>;
+}
+
+export const FacilityMap = ({ currentZone, solvedPuzzles }: FacilityMapProps) => {
+  const zones = [
+    { 
+      id: 1, 
+      name: 'Bureau du Dr Morel',
+      puzzles: ['zone1_caesar', 'zone1_locker'],
+      color: 'from-blue-600 to-blue-800',
+      position: 'top-4 left-4'
+    },
+    { 
+      id: 2, 
+      name: 'Laboratoire',
+      puzzles: ['zone2_dna', 'zone2_microscope'],
+      color: 'from-green-600 to-green-800',
+      position: 'top-4 right-4'
+    },
+    { 
+      id: 3, 
+      name: 'Confinement',
+      puzzles: ['zone3_cryobox', 'zone3_mixer'],
+      color: 'from-red-600 to-red-800',
+      position: 'bottom-4 left-1/2 -translate-x-1/2'
+    },
+  ];
+
+  const getZoneStatus = (zone: typeof zones[0]) => {
+    const allSolved = zone.puzzles.every(p => solvedPuzzles[p]);
+    const isUnlocked = currentZone >= zone.id;
+    const isCurrent = currentZone === zone.id;
+    
+    return { allSolved, isUnlocked, isCurrent };
+  };
+
+  return (
+    <Card className="fixed top-4 right-4 z-40 p-4 bg-background/95 backdrop-blur-md border-2 border-primary">
+      <div className="space-y-3">
+        <h3 className="text-sm font-bold flex items-center gap-2">
+          🗺️ Plan de l'installation
+        </h3>
+        
+        <div className="relative w-64 h-64 bg-muted rounded-lg border-2 border-border">
+          {/* Connexions */}
+          <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 1 }}>
+            <line x1="30%" y1="30%" x2="70%" y2="30%" stroke="currentColor" strokeWidth="2" strokeDasharray="4" opacity="0.3" />
+            <line x1="30%" y1="30%" x2="50%" y2="70%" stroke="currentColor" strokeWidth="2" strokeDasharray="4" opacity="0.3" />
+            <line x1="70%" y1="30%" x2="50%" y2="70%" stroke="currentColor" strokeWidth="2" strokeDasharray="4" opacity="0.3" />
+          </svg>
+
+          {/* Zones */}
+          {zones.map((zone) => {
+            const { allSolved, isUnlocked, isCurrent } = getZoneStatus(zone);
+            
+            return (
+              <div
+                key={zone.id}
+                className={cn(
+                  "absolute w-20 h-20 rounded-lg flex flex-col items-center justify-center text-white",
+                  "transition-all duration-300 border-2",
+                  zone.position,
+                  isUnlocked ? `bg-gradient-to-br ${zone.color}` : 'bg-gray-700',
+                  isCurrent && 'ring-4 ring-primary scale-110',
+                  !isUnlocked && 'opacity-50'
+                )}
+                style={{ zIndex: 10 }}
+              >
+                <div className="text-2xl mb-1">
+                  {!isUnlocked && <Lock className="h-5 w-5" />}
+                  {isUnlocked && allSolved && <Check className="h-5 w-5" />}
+                  {isUnlocked && !allSolved && zone.id}
+                </div>
+                <div className="text-[8px] text-center font-bold px-1">
+                  {zone.name.split(' ')[0]}
+                </div>
+                <Badge variant="secondary" className="text-[8px] px-1 py-0 mt-1">
+                  {zone.puzzles.filter(p => solvedPuzzles[p]).length}/{zone.puzzles.length}
+                </Badge>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="text-xs text-muted-foreground text-center">
+          Zone {currentZone}/3
+        </div>
+      </div>
+    </Card>
+  );
+};
