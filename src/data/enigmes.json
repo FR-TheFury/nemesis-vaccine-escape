@@ -1,0 +1,129 @@
+{
+  "zones": {
+    "zone1": {
+      "name": "Bureau du Dr Morel",
+      "description": "Le bureau personnel du Dr Morel, rempli de documents confidentiels et d'indices cruciaux pour créer le vaccin.",
+      "puzzles": {
+        "caesar": {
+          "id": "zone1_caesar",
+          "name": "Chiffrement de César",
+          "encrypted": "IRUTNQF-FQUMF",
+          "key": 5,
+          "solution": "FORMULE-ALPHA",
+          "reward": "Carnet du Dr Morel",
+          "hints": [
+            "Le Dr Morel utilisait un système de chiffrement classique... César, peut-être ?",
+            "Essayez un décalage de 5 lettres dans l'alphabet",
+            "A → F, B → G, C → H... I devient N, R devient W..."
+          ]
+        },
+        "locker": {
+          "id": "zone1_locker",
+          "name": "Casier sécurisé",
+          "code": "2741",
+          "reward": "Badge magnétique",
+          "hints": [
+            "Regardez attentivement le diagramme anatomique au mur",
+            "Les lettres marquées correspondent à des positions numériques",
+            "B=2, G=7, D=4, A=1 → Code: 2741"
+          ]
+        },
+        "audio": {
+          "id": "zone1_audio",
+          "name": "Dictaphone",
+          "keywords": ["ADN", "Tube 3A", "séquence delta"],
+          "reward": "Indice audio",
+          "hints": [
+            "Écoutez attentivement le message du Dr Morel",
+            "Il mentionne quelque chose à propos du laboratoire...",
+            "Notez les termes : 'ADN', 'Tube 3A', 'séquence delta'"
+          ]
+        }
+      }
+    },
+    "zone2": {
+      "name": "Laboratoire de Microbiologie",
+      "description": "Le laboratoire high-tech où le Dr Morel travaillait sur le vaccin. Équipement de pointe et échantillons critiques.",
+      "puzzles": {
+        "dna": {
+          "id": "zone2_dna",
+          "name": "Reconstruction ADN",
+          "sequence": ["A", "T", "C", "G", "G", "C", "T", "A"],
+          "reward": "Séquence ADN complète",
+          "hints": [
+            "L'ADN suit une logique d'appariement : A avec T, C avec G",
+            "Le dictaphone mentionnait 'Tube 3A'... commencez par A",
+            "Séquence correcte : A-T-C-G-G-C-T-A"
+          ]
+        },
+        "microscope": {
+          "id": "zone2_microscope",
+          "name": "Microscope UV",
+          "solution": "FORMULE-BETA",
+          "reward": "Formule Beta",
+          "hints": [
+            "Certaines marques ne sont visibles qu'aux rayons UV",
+            "Activez le mode UV sur le microscope",
+            "Un QR code apparaît, révélant 'FORMULE-BETA'"
+          ]
+        },
+        "periodic": {
+          "id": "zone2_periodic",
+          "name": "Tableau périodique crypté",
+          "elements": [
+            { "symbol": "Ne", "number": 10 },
+            { "symbol": "Si", "number": 14 },
+            { "symbol": "S", "number": 16 }
+          ],
+          "solution": "NEMESIS",
+          "reward": "Code d'accès Zone 3",
+          "hints": [
+            "Les symboles chimiques forment un mot...",
+            "Ne (2x) + Si (2x) + S = NE-ME-SI-S",
+            "NEMESIS est la clé pour accéder à la salle de confinement"
+          ]
+        }
+      }
+    },
+    "zone3": {
+      "name": "Salle de Confinement",
+      "description": "La salle sécurisée où le vaccin final doit être synthétisé. Le temps presse, l'alarme retentit.",
+      "puzzles": {
+        "cryobox": {
+          "id": "zone3_cryobox",
+          "name": "Coffre cryogénique",
+          "solution": "FORMULE-ALPHA-BETA",
+          "reward": "Flacons chimiques",
+          "hints": [
+            "Le coffre nécessite la formule complète",
+            "Vous avez trouvé FORMULE-ALPHA dans le bureau...",
+            "Et FORMULE-BETA dans le labo... combinez-les !"
+          ]
+        },
+        "mixer": {
+          "id": "zone3_mixer",
+          "name": "Synthèse du vaccin",
+          "sequence": ["Bleu", "Vert", "Rouge"],
+          "solution": "VACCIN",
+          "reward": "VACCIN NEMESIS",
+          "hints": [
+            "L'ordre de mélange est crucial pour la stabilité",
+            "Pensez au spectre de la lumière... bleu, vert, rouge",
+            "Mélangez : Bleu → Vert → Rouge pour obtenir le vaccin doré"
+          ]
+        }
+      }
+    }
+  },
+  "timer": {
+    "duration": 3600,
+    "warnings": {
+      "300": "⚠️ 5 minutes restantes ! Dépêchez-vous !",
+      "60": "🚨 1 MINUTE ! Le confinement va échouer !"
+    }
+  },
+  "hints": {
+    "maxHints": 3,
+    "cooldown": 0
+  }
+}
