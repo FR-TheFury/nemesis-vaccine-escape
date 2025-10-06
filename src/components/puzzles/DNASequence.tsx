@@ -32,7 +32,7 @@ export const DNASequence = ({ isOpen, onClose, correctSequence, onSolve }: DNASe
   };
 
   const handleReset = () => {
-    setSequence(Array(8).fill(''));
+    setSequence(Array(correctSequence.length).fill(''));
   };
 
   const handleSubmit = () => {
