@@ -56,8 +56,27 @@ export const useTimer = (
         }
 
         // Déclencher la fin du jeu
-        if (newTime === 0 && onTimeEnd) {
-          onTimeEnd();
+        if (newTime === 0) {
+          // Arrêter le timer
+          setIsRunning(false);
+          
+          // Mettre à jour le statut de la session
+          if (sessionCode) {
+            supabase
+              .from('sessions')
+              .update({ 
+                status: 'failed',
+                timer_running: false,
+                timer_remaining: 0
+              })
+              .eq('code', sessionCode)
+              .then();
+          }
+          
+          // Appeler le callback
+          if (onTimeEnd) {
+            onTimeEnd();
+          }
         }
 
         return newTime;

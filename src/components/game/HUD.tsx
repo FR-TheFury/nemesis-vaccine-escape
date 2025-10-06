@@ -6,7 +6,7 @@ import { PlayersList } from './PlayersList';
 import { HintButton } from './HintButton';
 import { FacilityMap } from './FacilityMap';
 import { Button } from '@/components/ui/button';
-import { Play, Pause, Package, Map, Users } from 'lucide-react';
+import { Package, Map, Users } from 'lucide-react';
 import type { InventoryItem } from '@/lib/gameLogic';
 
 interface Player {
@@ -61,6 +61,8 @@ export const HUD = ({
         timeRemaining={timeRemaining}
         isRunning={isTimerRunning}
         formatTime={formatTime}
+        isHost={isHost}
+        onToggle={onToggleTimer}
       />
 
       {/* Toggle buttons */}
@@ -119,26 +121,6 @@ export const HUD = ({
         currentPuzzleId={currentPuzzleId}
         puzzleHints={puzzleHints}
       />
-
-      {isHost && (
-        <Button
-          onClick={onToggleTimer}
-          className="fixed top-20 right-4 z-50"
-          variant="outline"
-        >
-          {isTimerRunning ? (
-            <>
-              <Pause className="h-4 w-4 mr-2" />
-              Pause
-            </>
-          ) : (
-            <>
-              <Play className="h-4 w-4 mr-2" />
-              Démarrer
-            </>
-          )}
-        </Button>
-      )}
     </>
   );
 };

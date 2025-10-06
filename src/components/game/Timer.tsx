@@ -1,13 +1,16 @@
-import { Clock } from 'lucide-react';
+import { Clock, Pause, Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
 interface TimerProps {
   timeRemaining: number;
   isRunning: boolean;
   formatTime: (seconds: number) => string;
+  isHost?: boolean;
+  onToggle?: () => void;
 }
 
-export const Timer = ({ timeRemaining, isRunning, formatTime }: TimerProps) => {
+export const Timer = ({ timeRemaining, isRunning, formatTime, isHost, onToggle }: TimerProps) => {
   const isWarning = timeRemaining <= 300; // 5 minutes
   const isCritical = timeRemaining <= 60; // 1 minute
 
@@ -25,7 +28,7 @@ export const Timer = ({ timeRemaining, isRunning, formatTime }: TimerProps) => {
           isWarning ? "text-orange-500" :
           "text-primary"
         )} />
-        <div>
+        <div className="flex-1">
           <div className={cn(
             "text-2xl font-bold font-mono",
             isCritical ? "text-destructive" :
@@ -38,6 +41,16 @@ export const Timer = ({ timeRemaining, isRunning, formatTime }: TimerProps) => {
             {isRunning ? "En cours" : "En pause"}
           </div>
         </div>
+        {isHost && onToggle && (
+          <Button
+            onClick={onToggle}
+            size="sm"
+            variant={isRunning ? "destructive" : "default"}
+            className="ml-2"
+          >
+            {isRunning ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+          </Button>
+        )}
       </div>
     </div>
   );
