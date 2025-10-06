@@ -42,7 +42,7 @@ export const FacilityMap = ({ currentZone, solvedPuzzles }: FacilityMapProps) =>
   };
 
   return (
-    <Card className="fixed top-4 right-4 z-40 p-4 bg-background/95 backdrop-blur-md border-2 border-primary">
+    <Card className="fixed top-4 left-4 z-40 p-4 bg-background/95 backdrop-blur-md border-2 border-primary">
       <div className="space-y-3">
         <h3 className="text-sm font-bold flex items-center gap-2">
           🗺️ Plan de l'installation
