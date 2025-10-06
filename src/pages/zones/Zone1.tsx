@@ -5,6 +5,7 @@ import { Dictaphone } from '@/components/puzzles/Dictaphone';
 import { InteractiveZoneMap } from '@/components/zones/InteractiveZoneMap';
 import { usePuzzleSolver } from '@/hooks/usePuzzleSolver';
 import enigmesData from '@/data/enigmes.json';
+import zone1Background from '@/assets/zone1-bg.png';
 
 interface Zone1Props {
   sessionCode: string;
@@ -61,6 +62,7 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
         </div>
 
         <InteractiveZoneMap
+          backgroundImage={zone1Background}
           backgroundColor="bg-gradient-to-br from-amber-900 via-orange-900 to-slate-800"
           hotspots={hotspots}
           zoneName={zone.name}
