@@ -82,42 +82,43 @@ export const Chat = ({ sessionCode, currentPlayerPseudo }: ChatProps) => {
   };
 
   return (
-    <div className="fixed right-4 bottom-24 z-40">
+    <div className="fixed right-2 bottom-20 sm:right-4 sm:bottom-24 z-40">
       {!isExpanded ? (
         <Button
           onClick={() => setIsExpanded(true)}
-          className="rounded-full h-14 w-14"
+          className="rounded-full h-12 w-12 sm:h-14 sm:w-14"
           size="icon"
         >
-          <MessageSquare className="h-6 w-6" />
+          <MessageSquare className="h-5 w-5 sm:h-6 sm:w-6" />
         </Button>
       ) : (
-        <div className="bg-background/95 backdrop-blur-md border-2 border-primary rounded-lg w-80 shadow-lg">
-          <div className="flex items-center justify-between p-3 border-b border-border">
-            <div className="flex items-center gap-2">
-              <MessageSquare className="h-5 w-5 text-primary" />
-              <h3 className="font-bold">Chat</h3>
+        <div className="bg-background/95 backdrop-blur-md border-2 border-primary rounded-lg w-[calc(100vw-1rem)] max-w-[320px] sm:w-80 shadow-lg">
+          <div className="flex items-center justify-between p-2 sm:p-3 border-b border-border">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <MessageSquare className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+              <h3 className="font-bold text-sm sm:text-base">Chat</h3>
             </div>
             <Button
               variant="ghost"
               size="sm"
+              className="h-7 w-7 p-0"
               onClick={() => setIsExpanded(false)}
             >
               ✕
             </Button>
           </div>
 
-          <ScrollArea className="h-64 p-3" ref={scrollRef}>
+          <ScrollArea className="h-48 sm:h-64 p-2 sm:p-3" ref={scrollRef}>
             {messages.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-8">
+              <p className="text-xs sm:text-sm text-muted-foreground text-center py-6 sm:py-8">
                 Aucun message
               </p>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-1.5 sm:space-y-2">
                 {messages.map((msg) => (
                   <div
                     key={msg.id}
-                    className={`text-sm ${
+                    className={`text-xs sm:text-sm ${
                       msg.player_pseudo === currentPlayerPseudo
                         ? 'text-right'
                         : 'text-left'
@@ -126,23 +127,23 @@ export const Chat = ({ sessionCode, currentPlayerPseudo }: ChatProps) => {
                     <span className="font-semibold text-primary">
                       {msg.player_pseudo}:
                     </span>{' '}
-                    <span className="text-foreground">{msg.message}</span>
+                    <span className="text-foreground break-words">{msg.message}</span>
                   </div>
                 ))}
               </div>
             )}
           </ScrollArea>
 
-          <div className="p-3 border-t border-border flex gap-2">
+          <div className="p-2 sm:p-3 border-t border-border flex gap-1.5 sm:gap-2">
             <Input
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-              placeholder="Votre message..."
-              className="flex-1"
+              placeholder="Message..."
+              className="flex-1 text-xs sm:text-sm h-8 sm:h-10"
             />
-            <Button onClick={sendMessage} size="icon">
-              <Send className="h-4 w-4" />
+            <Button onClick={sendMessage} size="icon" className="h-8 w-8 sm:h-10 sm:w-10">
+              <Send className="h-3 w-3 sm:h-4 sm:w-4" />
             </Button>
           </div>
         </div>

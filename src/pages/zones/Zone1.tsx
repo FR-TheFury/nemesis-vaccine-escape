@@ -53,11 +53,11 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-950 via-slate-900 to-slate-950 p-4">
-      <div className="max-w-6xl mx-auto space-y-6 pt-24">
-        <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold text-white">{zone.name}</h1>
-          <p className="text-lg text-slate-300">{zone.description}</p>
+    <div className="min-h-screen bg-gradient-to-br from-blue-950 via-slate-900 to-slate-950 p-2 sm:p-4">
+      <div className="max-w-6xl mx-auto space-y-4 sm:space-y-6 pt-16 sm:pt-24">
+        <div className="text-center space-y-1 sm:space-y-2">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">{zone.name}</h1>
+          <p className="text-sm sm:text-base md:text-lg text-slate-300 px-2">{zone.description}</p>
         </div>
 
         <InteractiveZoneMap

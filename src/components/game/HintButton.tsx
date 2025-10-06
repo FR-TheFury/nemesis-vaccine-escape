@@ -52,12 +52,13 @@ export const HintButton = ({
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className="fixed bottom-4 left-4 z-40"
+          className="fixed bottom-24 left-2 sm:bottom-4 sm:left-4 z-40 text-xs sm:text-sm h-8 sm:h-10 px-2 sm:px-4"
           disabled={!canUseHint}
         >
-          <Lightbulb className="h-4 w-4 mr-2" />
-          Indices
-          <Badge variant="secondary" className="ml-2">
+          <Lightbulb className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+          <span className="hidden sm:inline">Indices</span>
+          <span className="sm:hidden">💡</span>
+          <Badge variant="secondary" className="ml-1 sm:ml-2 text-[10px] sm:text-xs px-1">
             {currentHints}/{maxHints}
           </Badge>
         </Button>

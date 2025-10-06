@@ -115,7 +115,7 @@ const Game = () => {
 
   if (session.status === 'waiting') {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="flex min-h-screen items-center justify-center bg-background p-4">
         <HUD
           sessionCode={sessionCode || ''}
           currentPlayerPseudo={currentPlayer.pseudo}
@@ -134,21 +134,21 @@ const Game = () => {
           solvedPuzzles={session.solved_puzzles as any}
         />
         
-        <div className="text-center space-y-6">
-          <h1 className="text-5xl font-bold text-primary mb-2">NEMESIS</h1>
-          <p className="text-xl text-muted-foreground">Salle d'attente</p>
-          <p className="text-sm text-muted-foreground">
+        <div className="text-center space-y-4 sm:space-y-6 max-w-md mx-auto">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-2">NEMESIS</h1>
+          <p className="text-lg sm:text-xl text-muted-foreground">Salle d'attente</p>
+          <p className="text-xs sm:text-sm text-muted-foreground">
             {players.filter(p => p.is_connected).length} joueur(s) connecté(s)
           </p>
           
           {canStartGame && (
-            <Button onClick={handleStartGame} size="lg" className="mt-6">
+            <Button onClick={handleStartGame} size="lg" className="mt-4 sm:mt-6 w-full sm:w-auto">
               Démarrer la partie
             </Button>
           )}
           
           {!isHost && (
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs sm:text-sm text-muted-foreground">
               En attente que l'hôte lance la partie...
             </p>
           )}

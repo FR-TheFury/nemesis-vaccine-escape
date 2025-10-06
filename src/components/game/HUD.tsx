@@ -66,30 +66,33 @@ export const HUD = ({
       />
 
       {/* Toggle buttons */}
-      <div className="fixed top-20 left-4 z-50 flex flex-col gap-2">
+      <div className="fixed top-16 sm:top-20 left-2 sm:left-4 z-50 flex flex-col gap-1.5 sm:gap-2">
         <Button
           onClick={() => setShowPlayers(!showPlayers)}
           variant="outline"
           size="icon"
+          className="h-8 w-8 sm:h-10 sm:w-10"
           title={showPlayers ? "Cacher les joueurs" : "Afficher les joueurs"}
         >
-          <Users className="h-4 w-4" />
+          <Users className="h-3 w-3 sm:h-4 sm:w-4" />
         </Button>
         <Button
           onClick={() => setShowMap(!showMap)}
           variant="outline"
           size="icon"
+          className="h-8 w-8 sm:h-10 sm:w-10"
           title={showMap ? "Cacher le plan" : "Afficher le plan"}
         >
-          <Map className="h-4 w-4" />
+          <Map className="h-3 w-3 sm:h-4 sm:w-4" />
         </Button>
         <Button
           onClick={() => setShowInventory(!showInventory)}
           variant="outline"
           size="icon"
+          className="h-8 w-8 sm:h-10 sm:w-10"
           title={showInventory ? "Cacher l'inventaire" : "Afficher l'inventaire"}
         >
-          <Package className="h-4 w-4" />
+          <Package className="h-3 w-3 sm:h-4 sm:w-4" />
         </Button>
       </div>
 

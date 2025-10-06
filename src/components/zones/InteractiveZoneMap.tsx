@@ -25,7 +25,7 @@ export const InteractiveZoneMap = ({
   zoneName 
 }: InteractiveZoneMapProps) => {
   return (
-    <div className="relative w-full h-[600px] rounded-lg overflow-hidden border-2 border-primary/30 shadow-2xl">
+    <div className="relative w-full h-[400px] sm:h-[500px] md:h-[600px] rounded-lg overflow-hidden border-2 border-primary/30 shadow-2xl">
       {/* Fond de la map */}
       <div 
         className={cn(
@@ -43,8 +43,8 @@ export const InteractiveZoneMap = ({
       </div>
 
       {/* Titre de la zone */}
-      <div className="absolute top-4 left-4 z-10">
-        <Badge variant="secondary" className="text-lg px-4 py-2 backdrop-blur-sm bg-background/80">
+      <div className="absolute top-2 left-2 sm:top-4 sm:left-4 z-10">
+        <Badge variant="secondary" className="text-xs sm:text-sm md:text-lg px-2 py-1 sm:px-3 sm:py-1.5 md:px-4 md:py-2 backdrop-blur-sm bg-background/80">
           {zoneName}
         </Badge>
       </div>
@@ -73,7 +73,7 @@ export const InteractiveZoneMap = ({
           
           {/* Icône de l'énigme */}
           <div className={cn(
-            "relative w-16 h-16 rounded-full flex items-center justify-center text-2xl",
+            "relative w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center text-lg sm:text-xl md:text-2xl",
             "backdrop-blur-md border-2 transition-all duration-300",
             hotspot.solved 
               ? "bg-green-500/80 border-green-300 shadow-lg shadow-green-500/50" 
@@ -84,8 +84,8 @@ export const InteractiveZoneMap = ({
 
           {/* Label */}
           <div className={cn(
-            "absolute top-full mt-2 left-1/2 -translate-x-1/2 whitespace-nowrap",
-            "px-3 py-1 rounded-md text-sm font-medium backdrop-blur-md",
+            "absolute top-full mt-1 sm:mt-2 left-1/2 -translate-x-1/2 whitespace-nowrap",
+            "px-2 py-0.5 sm:px-3 sm:py-1 rounded-md text-xs sm:text-sm font-medium backdrop-blur-md",
             "opacity-0 group-hover:opacity-100 transition-opacity",
             hotspot.solved 
               ? "bg-green-500/90 text-white" 

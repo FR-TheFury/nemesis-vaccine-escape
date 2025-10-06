@@ -48,16 +48,16 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-primary/5 flex items-center justify-center p-4">
-      <div className="max-w-2xl w-full space-y-8 text-center">
-        <div className="space-y-4">
-          <h1 className="text-6xl font-bold text-primary animate-fade-in" style={{ fontFamily: 'Orbitron, sans-serif' }}>
+      <div className="max-w-2xl w-full space-y-6 md:space-y-8 text-center px-2">
+        <div className="space-y-2 md:space-y-4">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-primary animate-fade-in" style={{ fontFamily: 'Orbitron, sans-serif' }}>
             NEMESIS
           </h1>
-          <p className="text-2xl text-muted-foreground">Le Dernier Vaccin</p>
+          <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground">Le Dernier Vaccin</p>
         </div>
 
-        <div className="p-6 bg-background/50 backdrop-blur-md rounded-lg border-2 border-primary/50 space-y-4">
-          <p className="text-sm text-muted-foreground leading-relaxed">
+        <div className="p-4 md:p-6 bg-background/50 backdrop-blur-md rounded-lg border-2 border-primary/50 space-y-4">
+          <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
             Une fuite virale catastrophique s'est produite dans l'installation NEMESIS. 
             Le Dr Morel a disparu, laissant derrière lui les fragments d'une formule capable 
             de neutraliser le virus. Vous avez <span className="text-primary font-bold">60 minutes</span> pour 
@@ -65,10 +65,10 @@ const Home = () => {
           </p>
         </div>
 
-        <div className="flex gap-4 justify-center">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
           <Dialog>
             <DialogTrigger asChild>
-              <Button size="lg" className="text-lg px-8">Créer une session</Button>
+              <Button size="lg" className="text-base sm:text-lg px-6 sm:px-8 w-full sm:w-auto">Créer une session</Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
@@ -88,7 +88,7 @@ const Home = () => {
 
           <Dialog>
             <DialogTrigger asChild>
-              <Button size="lg" variant="outline" className="text-lg px-8">Rejoindre une session</Button>
+              <Button size="lg" variant="outline" className="text-base sm:text-lg px-6 sm:px-8 w-full sm:w-auto">Rejoindre une session</Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
