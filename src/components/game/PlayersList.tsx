@@ -18,7 +18,7 @@ export const PlayersList = ({ players, sessionCode }: PlayersListProps) => {
   const connectedCount = players.filter(p => p.is_connected).length;
 
   return (
-    <div className="fixed top-4 left-4 z-50 bg-background/95 backdrop-blur-md border-2 border-primary rounded-lg p-4 min-w-[200px]">
+    <div className="fixed bottom-4 left-4 z-50 bg-background/95 backdrop-blur-md border-2 border-primary rounded-lg p-4 min-w-[200px]">
       <div className="flex items-center gap-2 mb-3">
         <Users className="h-5 w-5 text-primary" />
         <h3 className="font-bold">Joueurs</h3>
