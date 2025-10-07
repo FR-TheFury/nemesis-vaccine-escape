@@ -199,12 +199,9 @@ export const DoorPadlock = ({
                       <span className="text-primary font-bold">1</span>
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm font-medium mb-2">
+                      <p className="text-sm font-medium">
                         {RIDDLES[`zone${currentZone}` as keyof typeof RIDDLES].riddle1}
                       </p>
-                      <div className="text-xs text-muted-foreground bg-muted p-2 rounded">
-                        💡 {RIDDLES[`zone${currentZone}` as keyof typeof RIDDLES].answer1}
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -216,22 +213,13 @@ export const DoorPadlock = ({
                       <span className="text-primary font-bold">2</span>
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm font-medium mb-2">
+                      <p className="text-sm font-medium">
                         {RIDDLES[`zone${currentZone}` as keyof typeof RIDDLES].riddle2}
                       </p>
-                      <div className="text-xs text-muted-foreground bg-muted p-2 rounded">
-                        💡 {RIDDLES[`zone${currentZone}` as keyof typeof RIDDLES].answer2}
-                      </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Solution */}
-                <div className="p-3 rounded-lg bg-green-950/20 border border-green-500/30">
-                  <p className="text-sm font-mono text-center">
-                    {RIDDLES[`zone${currentZone}` as keyof typeof RIDDLES].solution}
-                  </p>
-                </div>
               </div>
             </TabsContent>
 

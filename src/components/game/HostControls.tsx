@@ -1,13 +1,39 @@
 import { useState, useEffect } from 'react';
-import { Settings, Lock, Unlock, Save, Shield, Copy, Check } from 'lucide-react';
+import { Settings, Lock, Unlock, Save, Shield, Copy, Check, FlaskConical } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
+
+// Charades par zone
+const RIDDLES = {
+  zone1: {
+    riddle1: "Je suis le métal des rois et des pharaons, brillant et précieux. Mon numéro atomique ?",
+    answer1: "Or (Au) - 79",
+    riddle2: "Je suis l'élément principal de l'acier, forgé dans le feu. Mon numéro atomique ?",
+    answer2: "Fer (Fe) - 26",
+    solution: "Code: 79 + 26 = 7926"
+  },
+  zone2: {
+    riddle1: "Je suis un métal alcalin, présent dans le sel de table. Mon numéro atomique ?",
+    answer1: "Sodium (Na) - 11",
+    riddle2: "Je suis un métal précieux, utilisé en bijouterie et photographie. Mon numéro atomique ?",
+    answer2: "Argent (Ag) - 47",
+    solution: "Code: 11 + 47 = 1147"
+  },
+  zone3: {
+    riddle1: "Je suis un métal rougeâtre, excellent conducteur d'électricité. Mon numéro atomique ?",
+    answer1: "Cuivre (Cu) - 29",
+    riddle2: "Je suis un métal lourd, autrefois utilisé dans les peintures. Mon numéro atomique ?",
+    answer2: "Plomb (Pb) - 82",
+    solution: "Code: 29 + 82 = 2982"
+  }
+};
 
 interface HostControlsProps {
   sessionCode: string;
@@ -204,6 +230,67 @@ export const HostControls = ({
               </div>
             </>
           )}
+        </div>
+
+        {/* Charades et Solutions */}
+        <div className="space-y-4 pt-4 border-t">
+          <div className="flex items-center gap-2">
+            <FlaskConical className="w-5 h-5 text-muted-foreground" />
+            <h3 className="font-semibold">Charades et Solutions</h3>
+          </div>
+          
+          <Accordion type="single" collapsible className="w-full space-y-2">
+            {[1, 2, 3].map(zone => {
+              const zoneKey = `zone${zone}` as keyof typeof RIDDLES;
+              const riddles = RIDDLES[zoneKey];
+              
+              return (
+                <AccordionItem 
+                  key={zoneKey} 
+                  value={zoneKey}
+                  className="border-2 border-primary/20 rounded-lg px-4 bg-primary/5"
+                >
+                  <AccordionTrigger className="hover:no-underline">
+                    <span className="font-semibold">Zone {zone}</span>
+                  </AccordionTrigger>
+                  <AccordionContent className="space-y-3 pt-2">
+                    {/* Charade 1 */}
+                    <div className="p-3 rounded-lg bg-background/50 border">
+                      <div className="flex items-start gap-2 mb-2">
+                        <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                          <span className="text-xs font-bold text-primary">1</span>
+                        </div>
+                        <p className="text-sm">{riddles.riddle1}</p>
+                      </div>
+                      <div className="text-sm font-semibold text-green-600 bg-green-950/20 p-2 rounded">
+                        💡 Réponse: {riddles.answer1}
+                      </div>
+                    </div>
+                    
+                    {/* Charade 2 */}
+                    <div className="p-3 rounded-lg bg-background/50 border">
+                      <div className="flex items-start gap-2 mb-2">
+                        <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                          <span className="text-xs font-bold text-primary">2</span>
+                        </div>
+                        <p className="text-sm">{riddles.riddle2}</p>
+                      </div>
+                      <div className="text-sm font-semibold text-green-600 bg-green-950/20 p-2 rounded">
+                        💡 Réponse: {riddles.answer2}
+                      </div>
+                    </div>
+                    
+                    {/* Solution finale */}
+                    <div className="p-3 rounded-lg bg-orange-950/20 border-2 border-orange-500/30">
+                      <p className="text-sm font-mono font-bold text-center text-orange-400">
+                        {riddles.solution}
+                      </p>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              );
+            })}
+          </Accordion>
         </div>
 
         {/* État des portes */}
