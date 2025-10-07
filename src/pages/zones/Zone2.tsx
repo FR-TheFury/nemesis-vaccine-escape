@@ -4,6 +4,7 @@ import { Microscope } from '@/components/puzzles/Microscope';
 import { PeriodicTable } from '@/components/puzzles/PeriodicTable';
 import { InteractiveZoneMap } from '@/components/zones/InteractiveZoneMap';
 import { DoorPadlock } from '@/components/game/DoorPadlock';
+import { DistractorModal } from '@/components/game/DistractorModal';
 import { usePuzzleSolver } from '@/hooks/usePuzzleSolver';
 import enigmesData from '@/data/enigmes.json';
 
@@ -55,6 +56,43 @@ export const Zone2 = ({ sessionCode, session }: Zone2Props) => {
       icon: '⚗️',
       solved: !!solvedPuzzles[zone.puzzles.periodic.id],
       onClick: () => setActivePuzzle('periodic')
+    },
+    // Distracteurs
+    {
+      id: 'samples',
+      x: 15,
+      y: 65,
+      label: 'Échantillons',
+      icon: '🧪',
+      solved: false,
+      onClick: () => setActivePuzzle('samples')
+    },
+    {
+      id: 'monitor',
+      x: 85,
+      y: 40,
+      label: 'Écran de monitoring',
+      icon: '📊',
+      solved: false,
+      onClick: () => setActivePuzzle('monitor')
+    },
+    {
+      id: 'notes',
+      x: 40,
+      y: 70,
+      label: 'Notes de laboratoire',
+      icon: '📝',
+      solved: false,
+      onClick: () => setActivePuzzle('notes')
+    },
+    {
+      id: 'centrifuge',
+      x: 65,
+      y: 25,
+      label: 'Centrifugeuse',
+      icon: '⚙️',
+      solved: false,
+      onClick: () => setActivePuzzle('centrifuge')
     }
   ];
 
@@ -115,6 +153,39 @@ export const Zone2 = ({ sessionCode, session }: Zone2Props) => {
         onUnlock={() => {
           setShowDoorPadlock(false);
         }}
+      />
+
+      {/* Distracteurs */}
+      <DistractorModal
+        isOpen={activePuzzle === 'samples'}
+        onClose={() => setActivePuzzle(null)}
+        title="Échantillons biologiques"
+        icon="🧪"
+        content="Des tubes à essai contenant des échantillons déjà analysés. Les étiquettes indiquent 'Traitement terminé - Archivé'."
+      />
+      
+      <DistractorModal
+        isOpen={activePuzzle === 'monitor'}
+        onClose={() => setActivePuzzle(null)}
+        title="Écran de monitoring"
+        icon="📊"
+        content="L'écran affiche des graphiques de température et d'humidité de la pièce. Tout semble dans les normes, mais aucune information utile."
+      />
+      
+      <DistractorModal
+        isOpen={activePuzzle === 'notes'}
+        onClose={() => setActivePuzzle(null)}
+        title="Notes de laboratoire"
+        icon="📝"
+        content="Un cahier rempli de notes manuscrites illisibles et de schémas incompréhensibles. Les pages sont jaunies et datent de plusieurs années."
+      />
+      
+      <DistractorModal
+        isOpen={activePuzzle === 'centrifuge'}
+        onClose={() => setActivePuzzle(null)}
+        title="Centrifugeuse"
+        icon="⚙️"
+        content="La centrifugeuse est vide et hors tension. Un autocollant indique 'EN MAINTENANCE - NE PAS UTILISER'."
       />
     </div>
   );

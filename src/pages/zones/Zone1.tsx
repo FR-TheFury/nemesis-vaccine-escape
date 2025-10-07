@@ -4,6 +4,7 @@ import { CodeLocker } from '@/components/puzzles/CodeLocker';
 import { Dictaphone } from '@/components/puzzles/Dictaphone';
 import { InteractiveZoneMap } from '@/components/zones/InteractiveZoneMap';
 import { DoorPadlock } from '@/components/game/DoorPadlock';
+import { DistractorModal } from '@/components/game/DistractorModal';
 import { usePuzzleSolver } from '@/hooks/usePuzzleSolver';
 import enigmesData from '@/data/enigmes.json';
 import zone1Background from '@/assets/zone1-bg.png';
@@ -56,6 +57,43 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
       icon: '🎙️',
       solved: !!solvedPuzzles[zone.puzzles.audio.id],
       onClick: () => setActivePuzzle('audio')
+    },
+    // Distracteurs
+    {
+      id: 'control-panel',
+      x: 15,
+      y: 65,
+      label: 'Panneau de contrôle',
+      icon: '🖥️',
+      solved: false,
+      onClick: () => setActivePuzzle('control-panel')
+    },
+    {
+      id: 'old-computer',
+      x: 85,
+      y: 60,
+      label: 'Ordinateur ancien',
+      icon: '💻',
+      solved: false,
+      onClick: () => setActivePuzzle('old-computer')
+    },
+    {
+      id: 'empty-safe',
+      x: 20,
+      y: 80,
+      label: 'Petit coffre',
+      icon: '📦',
+      solved: false,
+      onClick: () => setActivePuzzle('empty-safe')
+    },
+    {
+      id: 'dusty-files',
+      x: 70,
+      y: 75,
+      label: 'Archives poussiéreuses',
+      icon: '📚',
+      solved: false,
+      onClick: () => setActivePuzzle('dusty-files')
     }
   ];
 
@@ -118,6 +156,39 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
         onUnlock={() => {
           setShowDoorPadlock(false);
         }}
+      />
+
+      {/* Distracteurs */}
+      <DistractorModal
+        isOpen={activePuzzle === 'control-panel'}
+        onClose={() => setActivePuzzle(null)}
+        title="Panneau de contrôle"
+        icon="🖥️"
+        content="Les écrans affichent des données obsolètes datant de plusieurs années. Les boutons ne répondent plus."
+      />
+      
+      <DistractorModal
+        isOpen={activePuzzle === 'old-computer'}
+        onClose={() => setActivePuzzle(null)}
+        title="Ordinateur ancien"
+        icon="💻"
+        content="L'ordinateur est hors service. Un message d'erreur clignote : 'SYSTÈME CORROMPU - RÉCUPÉRATION IMPOSSIBLE'."
+      />
+      
+      <DistractorModal
+        isOpen={activePuzzle === 'empty-safe'}
+        onClose={() => setActivePuzzle(null)}
+        title="Petit coffre"
+        icon="📦"
+        content="Le coffre est ouvert et complètement vide. On dirait qu'il a été vidé il y a longtemps."
+      />
+      
+      <DistractorModal
+        isOpen={activePuzzle === 'dusty-files'}
+        onClose={() => setActivePuzzle(null)}
+        title="Archives poussiéreuses"
+        icon="📚"
+        content="Des dossiers anciens contenant des rapports d'expériences passées. Rien de pertinent pour votre mission actuelle."
       />
     </div>
   );

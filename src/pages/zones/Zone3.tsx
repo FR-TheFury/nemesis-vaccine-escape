@@ -5,6 +5,7 @@ import { LiquidMixer } from '@/components/puzzles/LiquidMixer';
 import { FinalCode } from '@/components/puzzles/FinalCode';
 import { InteractiveZoneMap } from '@/components/zones/InteractiveZoneMap';
 import { DoorPadlock } from '@/components/game/DoorPadlock';
+import { DistractorModal } from '@/components/game/DistractorModal';
 import { usePuzzleSolver } from '@/hooks/usePuzzleSolver';
 import { AlertTriangle } from 'lucide-react';
 import enigmesData from '@/data/enigmes.json';
@@ -67,6 +68,43 @@ export const Zone3 = ({ sessionCode, session }: Zone3Props) => {
         }
         setActivePuzzle('final');
       }
+    },
+    // Distracteurs
+    {
+      id: 'terminal',
+      x: 15,
+      y: 35,
+      label: 'Terminal sécurisé',
+      icon: '🖥️',
+      solved: false,
+      onClick: () => setActivePuzzle('terminal')
+    },
+    {
+      id: 'documents',
+      x: 85,
+      y: 65,
+      label: 'Documents classifiés',
+      icon: '📄',
+      solved: false,
+      onClick: () => setActivePuzzle('documents')
+    },
+    {
+      id: 'scanner',
+      x: 45,
+      y: 25,
+      label: 'Scanner biométrique',
+      icon: '👁️',
+      solved: false,
+      onClick: () => setActivePuzzle('scanner')
+    },
+    {
+      id: 'storage',
+      x: 65,
+      y: 75,
+      label: 'Armoire frigorifique',
+      icon: '🧊',
+      solved: false,
+      onClick: () => setActivePuzzle('storage')
     }
   ];
 
@@ -136,6 +174,39 @@ export const Zone3 = ({ sessionCode, session }: Zone3Props) => {
         onUnlock={() => {
           setShowDoorPadlock(false);
         }}
+      />
+
+      {/* Distracteurs */}
+      <DistractorModal
+        isOpen={activePuzzle === 'terminal'}
+        onClose={() => setActivePuzzle(null)}
+        title="Terminal sécurisé"
+        icon="🖥️"
+        content="Le terminal demande une authentification de niveau 5. Message d'erreur : 'ACCÈS REFUSÉ - AUTORISATION INSUFFISANTE'."
+      />
+      
+      <DistractorModal
+        isOpen={activePuzzle === 'documents'}
+        onClose={() => setActivePuzzle(null)}
+        title="Documents classifiés"
+        icon="📄"
+        content="Des dossiers marqués 'TOP SECRET' contenant des rapports techniques incompréhensibles et des schémas floutés. Tout a été caviardé."
+      />
+      
+      <DistractorModal
+        isOpen={activePuzzle === 'scanner'}
+        onClose={() => setActivePuzzle(null)}
+        title="Scanner biométrique"
+        icon="👁️"
+        content="Le scanner rétinien ne s'active pas. Un écran affiche : 'SYSTÈME HORS LIGNE - CONTACTEZ L'ADMINISTRATEUR'."
+      />
+      
+      <DistractorModal
+        isOpen={activePuzzle === 'storage'}
+        onClose={() => setActivePuzzle(null)}
+        title="Armoire frigorifique"
+        icon="🧊"
+        content="L'armoire contient des échantillons gelés déjà catalogués et scellés. Aucun n'est pertinent pour votre mission actuelle."
       />
     </div>
   );
