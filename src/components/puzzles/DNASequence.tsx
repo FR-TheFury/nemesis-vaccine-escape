@@ -65,12 +65,12 @@ export const DNASequence = ({ isOpen, onClose, correctSequence, onSolve }: DNASe
           </p>
 
           {/* Séquence actuelle */}
-          <div className="flex justify-center gap-1">
+          <div className="flex flex-wrap justify-center gap-1 max-w-full overflow-x-auto">
             {sequence.map((base, index) => (
               <div
                 key={index}
                 className={cn(
-                  "w-12 h-16 rounded-md border-2 flex items-center justify-center text-white font-bold text-lg",
+                  "w-10 h-14 sm:w-12 sm:h-16 rounded-md border-2 flex items-center justify-center text-white font-bold text-base sm:text-lg flex-shrink-0",
                   base ? TUBE_COLORS[base as keyof typeof TUBE_COLORS] : "border-dashed border-muted bg-muted/20"
                 )}
               >
@@ -80,15 +80,15 @@ export const DNASequence = ({ isOpen, onClose, correctSequence, onSolve }: DNASe
           </div>
 
           {/* Palette de tubes */}
-          <div className="p-4 bg-muted rounded-md">
+          <div className="p-3 sm:p-4 bg-muted rounded-md">
             <p className="text-sm font-bold mb-2">Tubes disponibles:</p>
-            <div className="flex justify-center gap-2">
+            <div className="flex justify-center gap-2 flex-wrap">
               {(['A', 'T', 'C', 'G'] as const).map((base) => (
                 <Button
                   key={base}
                   onClick={() => handleTubeClick(base)}
                   className={cn(
-                    "w-12 h-12 text-white font-bold",
+                    "w-10 h-10 sm:w-12 sm:h-12 text-white font-bold flex-shrink-0",
                     TUBE_COLORS[base]
                   )}
                 >
