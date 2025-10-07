@@ -3,6 +3,8 @@ import { DNASequence } from '@/components/puzzles/DNASequence';
 import { Microscope } from '@/components/puzzles/Microscope';
 import { PeriodicTable } from '@/components/puzzles/PeriodicTable';
 import { InteractiveZoneMap } from '@/components/zones/InteractiveZoneMap';
+import { HintsPanel } from '@/components/game/HintsPanel';
+import { DoorPadlock } from '@/components/game/DoorPadlock';
 import { usePuzzleSolver } from '@/hooks/usePuzzleSolver';
 import enigmesData from '@/data/enigmes.json';
 
@@ -13,12 +15,17 @@ interface Zone2Props {
 
 export const Zone2 = ({ sessionCode, session }: Zone2Props) => {
   const [activePuzzle, setActivePuzzle] = useState<string | null>(null);
+  const [showDoorPadlock, setShowDoorPadlock] = useState(false);
   const zone = (enigmesData.zones as any).zone2;
   const solvedPuzzles = session.solved_puzzles || {};
+  const revealedHints = session.revealed_hints || { zone1: [], zone2: [], zone3: [] };
+  const doorVisible = session.door_visible || { zone1: false, zone2: false, zone3: false };
+  const doorStatus = session.door_status || { zone1: 'locked', zone2: 'locked', zone3: 'locked' };
+  const doorCodes = session.door_codes || {};
   const { solvePuzzle } = usePuzzleSolver(sessionCode);
 
-  const handleSolvePuzzle = async (puzzleId: string, reward: string) => {
-    await solvePuzzle(puzzleId, reward);
+  const handleSolvePuzzle = async (puzzleId: string) => {
+    await solvePuzzle(puzzleId);
     setActivePuzzle(null);
   };
 
@@ -60,24 +67,43 @@ export const Zone2 = ({ sessionCode, session }: Zone2Props) => {
           <p className="text-lg text-slate-300">{zone.description}</p>
         </div>
 
+        {/* Panneau des indices révélés */}
+        <HintsPanel 
+          currentZone={2} 
+          revealedHints={revealedHints}
+          className="mb-4"
+        />
+
         <InteractiveZoneMap
           backgroundColor="bg-gradient-to-br from-emerald-900 via-green-900 to-teal-800"
           hotspots={hotspots}
           zoneName={zone.name}
         />
+
+        {/* Bouton pour accéder au cadenas de la porte */}
+        {doorVisible.zone2 && doorStatus.zone2 === 'locked' && (
+          <div className="text-center animate-fade-in">
+            <button
+              onClick={() => setShowDoorPadlock(true)}
+              className="px-8 py-4 bg-primary text-primary-foreground rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transition-all hover:scale-105"
+            >
+              🔐 Déverrouiller la Porte de Zone 3
+            </button>
+          </div>
+        )}
       </div>
 
       <DNASequence
         isOpen={activePuzzle === 'dna'}
         onClose={() => setActivePuzzle(null)}
         correctSequence={zone.puzzles.dna.sequence}
-        onSolve={() => handleSolvePuzzle(zone.puzzles.dna.id, zone.puzzles.dna.reward)}
+        onSolve={() => handleSolvePuzzle(zone.puzzles.dna.id)}
       />
 
       <Microscope
         isOpen={activePuzzle === 'microscope'}
         onClose={() => setActivePuzzle(null)}
-        onSolve={() => handleSolvePuzzle(zone.puzzles.microscope.id, zone.puzzles.microscope.reward)}
+        onSolve={() => handleSolvePuzzle(zone.puzzles.microscope.id)}
       />
 
       <PeriodicTable
@@ -85,7 +111,18 @@ export const Zone2 = ({ sessionCode, session }: Zone2Props) => {
         onClose={() => setActivePuzzle(null)}
         equations={zone.puzzles.periodic.equations}
         halfFormula={zone.puzzles.periodic.halfFormula}
-        onSolve={() => handleSolvePuzzle(zone.puzzles.periodic.id, zone.puzzles.periodic.reward)}
+        onSolve={() => handleSolvePuzzle(zone.puzzles.periodic.id)}
+      />
+
+      <DoorPadlock
+        isOpen={showDoorPadlock}
+        onClose={() => setShowDoorPadlock(false)}
+        sessionCode={sessionCode}
+        currentZone={2}
+        doorCode={doorCodes.zone2 || ''}
+        onUnlock={() => {
+          setShowDoorPadlock(false);
+        }}
       />
     </div>
   );

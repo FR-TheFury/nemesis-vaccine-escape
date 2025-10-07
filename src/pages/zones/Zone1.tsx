@@ -3,6 +3,8 @@ import { CaesarCipher } from '@/components/puzzles/CaesarCipher';
 import { CodeLocker } from '@/components/puzzles/CodeLocker';
 import { Dictaphone } from '@/components/puzzles/Dictaphone';
 import { InteractiveZoneMap } from '@/components/zones/InteractiveZoneMap';
+import { HintsPanel } from '@/components/game/HintsPanel';
+import { DoorPadlock } from '@/components/game/DoorPadlock';
 import { usePuzzleSolver } from '@/hooks/usePuzzleSolver';
 import enigmesData from '@/data/enigmes.json';
 import zone1Background from '@/assets/zone1-bg.png';
@@ -14,12 +16,17 @@ interface Zone1Props {
 
 export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
   const [activePuzzle, setActivePuzzle] = useState<string | null>(null);
+  const [showDoorPadlock, setShowDoorPadlock] = useState(false);
   const zone = (enigmesData.zones as any).zone1;
   const solvedPuzzles = session.solved_puzzles || {};
+  const revealedHints = session.revealed_hints || { zone1: [], zone2: [], zone3: [] };
+  const doorVisible = session.door_visible || { zone1: false, zone2: false, zone3: false };
+  const doorStatus = session.door_status || { zone1: 'locked', zone2: 'locked', zone3: 'locked' };
+  const doorCodes = session.door_codes || {};
   const { solvePuzzle } = usePuzzleSolver(sessionCode);
 
-  const handleSolvePuzzle = async (puzzleId: string, reward: string) => {
-    await solvePuzzle(puzzleId, reward);
+  const handleSolvePuzzle = async (puzzleId: string) => {
+    await solvePuzzle(puzzleId);
     setActivePuzzle(null);
   };
 
@@ -61,12 +68,31 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
           <p className="text-sm sm:text-base md:text-lg text-slate-300 px-2">{zone.description}</p>
         </div>
 
+        {/* Panneau des indices révélés */}
+        <HintsPanel 
+          currentZone={1} 
+          revealedHints={revealedHints}
+          className="mb-4"
+        />
+
         <InteractiveZoneMap
           backgroundImage={zone1Background}
           backgroundColor="bg-gradient-to-br from-amber-900 via-orange-900 to-slate-800"
           hotspots={hotspots}
           zoneName={zone.name}
         />
+
+        {/* Bouton pour accéder au cadenas de la porte */}
+        {doorVisible.zone1 && doorStatus.zone1 === 'locked' && (
+          <div className="text-center animate-fade-in">
+            <button
+              onClick={() => setShowDoorPadlock(true)}
+              className="px-8 py-4 bg-primary text-primary-foreground rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transition-all hover:scale-105"
+            >
+              🔐 Déverrouiller la Porte de Zone 2
+            </button>
+          </div>
+        )}
       </div>
 
       <CaesarCipher
@@ -74,21 +100,32 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
         onClose={() => setActivePuzzle(null)}
         encryptedText={zone.puzzles.caesar.encrypted}
         correctKey={zone.puzzles.caesar.key}
-        onSolve={() => handleSolvePuzzle(zone.puzzles.caesar.id, zone.puzzles.caesar.reward)}
+        onSolve={() => handleSolvePuzzle(zone.puzzles.caesar.id)}
       />
 
       <CodeLocker
         isOpen={activePuzzle === 'locker'}
         onClose={() => setActivePuzzle(null)}
         correctCode={zone.puzzles.locker.code}
-        onSolve={() => handleSolvePuzzle(zone.puzzles.locker.id, zone.puzzles.locker.reward)}
+        onSolve={() => handleSolvePuzzle(zone.puzzles.locker.id)}
       />
 
       <Dictaphone
         isOpen={activePuzzle === 'audio'}
         onClose={() => setActivePuzzle(null)}
         transcript={zone.puzzles.audio.transcript}
-        onSolve={() => handleSolvePuzzle(zone.puzzles.audio.id, zone.puzzles.audio.reward)}
+        onSolve={() => handleSolvePuzzle(zone.puzzles.audio.id)}
+      />
+
+      <DoorPadlock
+        isOpen={showDoorPadlock}
+        onClose={() => setShowDoorPadlock(false)}
+        sessionCode={sessionCode}
+        currentZone={1}
+        doorCode={doorCodes.zone1 || ''}
+        onUnlock={() => {
+          setShowDoorPadlock(false);
+        }}
       />
     </div>
   );

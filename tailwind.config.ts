@@ -134,6 +134,11 @@ export default {
           "0%": { backgroundPosition: "-1000px 0" },
           "100%": { backgroundPosition: "1000px 0" }
         },
+        "shake": {
+          "0%, 100%": { transform: "translateX(0)" },
+          "10%, 30%, 50%, 70%, 90%": { transform: "translateX(-10px)" },
+          "20%, 40%, 60%, 80%": { transform: "translateX(10px)" }
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.3s ease-out",
@@ -147,6 +152,7 @@ export default {
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
         "float": "float 3s ease-in-out infinite",
         "shimmer": "shimmer 2s linear infinite",
+        "shake": "shake 0.5s ease-in-out",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

@@ -1,0 +1,31 @@
+{
+  "zones": [
+    {
+      "id": "zone1",
+      "name": "Bureau du Dr Morel",
+      "hints": {
+        "p1": "🔍 Indice 1 : Cherchez la boîte bleue près de l'entrée principale. Le premier chiffre est marqué à l'intérieur.",
+        "p2": "🔍 Indice 2 : Le code est écrit en rouge sur le dossier médical. C'est le deuxième chiffre.",
+        "p3": "🔍 Indice 3 : Regardez sous la table du bureau. Le troisième chiffre y est gravé."
+      }
+    },
+    {
+      "id": "zone2",
+      "name": "Laboratoire de Microbiologie",
+      "hints": {
+        "p1": "🔬 Indice 1 : La séquence ADN révèle le premier chiffre. Comptez les bases marquées en jaune.",
+        "p2": "🔬 Indice 2 : Le microscope pointe vers une boîte verte. Le code y est inscrit au dos.",
+        "p3": "🔬 Indice 3 : Le tableau périodique cache un message. Les éléments soulignés forment un nombre."
+      }
+    },
+    {
+      "id": "zone3",
+      "name": "Salle de Confinement",
+      "hints": {
+        "p1": "⚠️ Indice 1 : La cryobox contient un échantillon avec un code gravé dessus. C'est le début.",
+        "p2": "⚠️ Indice 2 : Le mélangeur de liquides révèle une formule. Les chiffres sont dans l'ordre des couleurs.",
+        "p3": "⚠️ Indice 3 : Le code final est inscrit sur le certificat de vaccination dans la boîte rouge."
+      }
+    }
+  ]
+}

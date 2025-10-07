@@ -188,6 +188,9 @@ const Game = () => {
         puzzleHints={[]}
         currentZone={currentZone}
         solvedPuzzles={session.solved_puzzles as any}
+        revealedHints={session.revealed_hints as Record<string, string[]>}
+        doorCodes={session.door_codes as Record<string, string>}
+        doorStatus={session.door_status as Record<string, string>}
       />
       
       {renderZone()}

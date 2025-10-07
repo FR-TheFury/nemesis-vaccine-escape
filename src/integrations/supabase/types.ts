@@ -95,9 +95,13 @@ export type Database = {
           code: string
           created_at: string
           current_zone: number
+          door_codes: Json | null
+          door_status: Json | null
+          door_visible: Json | null
           hints_used: number
           host_id: string
           inventory: Json
+          revealed_hints: Json | null
           solved_puzzles: Json
           status: Database["public"]["Enums"]["session_status"]
           timer_remaining: number
@@ -108,9 +112,13 @@ export type Database = {
           code: string
           created_at?: string
           current_zone?: number
+          door_codes?: Json | null
+          door_status?: Json | null
+          door_visible?: Json | null
           hints_used?: number
           host_id: string
           inventory?: Json
+          revealed_hints?: Json | null
           solved_puzzles?: Json
           status?: Database["public"]["Enums"]["session_status"]
           timer_remaining?: number
@@ -121,9 +129,13 @@ export type Database = {
           code?: string
           created_at?: string
           current_zone?: number
+          door_codes?: Json | null
+          door_status?: Json | null
+          door_visible?: Json | null
           hints_used?: number
           host_id?: string
           inventory?: Json
+          revealed_hints?: Json | null
           solved_puzzles?: Json
           status?: Database["public"]["Enums"]["session_status"]
           timer_remaining?: number

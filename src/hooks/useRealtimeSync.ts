@@ -13,6 +13,10 @@ interface RealtimeSyncCallbacks {
   onPlayerLeave?: (player: Player) => void;
   onPlayerUpdate?: (player: Player) => void;
   onChatMessage?: (message: ChatMessage) => void;
+  onHintRevealed?: (session: Session) => void;
+  onDoorVisibleChanged?: (session: Session) => void;
+  onDoorUnlocked?: (session: Session) => void;
+  onDoorCodesUpdated?: (session: Session) => void;
 }
 
 export const useRealtimeSync = (
