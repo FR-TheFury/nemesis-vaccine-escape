@@ -10,6 +10,7 @@ import { usePuzzleSolver } from '@/hooks/usePuzzleSolver';
 import { useToast } from '@/hooks/use-toast';
 import { AlertTriangle } from 'lucide-react';
 import enigmesData from '@/data/enigmes.json';
+import zone3Background from '@/assets/zone3-bg.png';
 
 interface Zone3Props {
   sessionCode: string;
@@ -137,6 +138,7 @@ export const Zone3 = ({ sessionCode, session }: Zone3Props) => {
         </div>
 
         <InteractiveZoneMap
+          backgroundImage={zone3Background}
           backgroundColor="bg-gradient-to-br from-red-900 via-orange-900 to-amber-800"
           hotspots={hotspots}
           zoneName={zone.name}

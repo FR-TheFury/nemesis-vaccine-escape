@@ -7,6 +7,7 @@ import { DoorPadlock } from '@/components/game/DoorPadlock';
 import { DistractorModal } from '@/components/game/DistractorModal';
 import { usePuzzleSolver } from '@/hooks/usePuzzleSolver';
 import enigmesData from '@/data/enigmes.json';
+import zone2Background from '@/assets/zone2-bg.png';
 
 interface Zone2Props {
   sessionCode: string;
@@ -105,6 +106,7 @@ export const Zone2 = ({ sessionCode, session }: Zone2Props) => {
         </div>
 
         <InteractiveZoneMap
+          backgroundImage={zone2Background}
           backgroundColor="bg-gradient-to-br from-emerald-900 via-green-900 to-teal-800"
           hotspots={hotspots}
           zoneName={zone.name}
