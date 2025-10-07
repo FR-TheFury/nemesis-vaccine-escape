@@ -129,8 +129,19 @@ const Game = () => {
   const handleZoneChange = async (newZone: number) => {
     if (!sessionCode || !session) return;
     
-    // Vérifier que la zone est déverrouillée
-    if (newZone > session.current_zone) {
+    const doorStatus = (session.door_status || { zone1: 'locked', zone2: 'locked', zone3: 'locked' }) as Record<string, string>;
+    
+    // Vérifier que la zone est accessible
+    let canAccess = false;
+    if (newZone === 1) {
+      canAccess = true; // Zone 1 toujours accessible
+    } else if (newZone === 2) {
+      canAccess = doorStatus.zone1 === 'unlocked';
+    } else if (newZone === 3) {
+      canAccess = doorStatus.zone2 === 'unlocked';
+    }
+    
+    if (!canAccess) {
       toast.error('Cette zone n\'est pas encore déverrouillée');
       return;
     }

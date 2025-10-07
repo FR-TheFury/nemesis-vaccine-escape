@@ -173,6 +173,7 @@ export const HUD = ({
         <FacilityMap 
           currentZone={currentZone}
           solvedPuzzles={solvedPuzzles}
+          doorStatus={doorStatus}
           onZoneChange={onZoneChange}
         />
       )}

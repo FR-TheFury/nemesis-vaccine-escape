@@ -6,10 +6,11 @@ import { cn } from '@/lib/utils';
 interface FacilityMapProps {
   currentZone: number;
   solvedPuzzles: Record<string, boolean>;
+  doorStatus?: Record<string, string>;
   onZoneChange?: (zone: number) => void;
 }
 
-export const FacilityMap = ({ currentZone, solvedPuzzles, onZoneChange }: FacilityMapProps) => {
+export const FacilityMap = ({ currentZone, solvedPuzzles, doorStatus = {}, onZoneChange }: FacilityMapProps) => {
   const zones = [
     { 
       id: 1, 
@@ -36,8 +37,19 @@ export const FacilityMap = ({ currentZone, solvedPuzzles, onZoneChange }: Facili
 
   const getZoneStatus = (zone: typeof zones[0]) => {
     const allSolved = zone.puzzles.every(p => solvedPuzzles[p]);
-    const isUnlocked = currentZone >= zone.id;
     const isCurrent = currentZone === zone.id;
+    
+    // Zone 1 est toujours déverrouillée (zone de départ)
+    // Zone 2 est déverrouillée si la porte de zone 1 est unlocked
+    // Zone 3 est déverrouillée si la porte de zone 2 est unlocked
+    let isUnlocked = false;
+    if (zone.id === 1) {
+      isUnlocked = true;
+    } else if (zone.id === 2) {
+      isUnlocked = doorStatus[`zone1`] === 'unlocked';
+    } else if (zone.id === 3) {
+      isUnlocked = doorStatus[`zone2`] === 'unlocked';
+    }
     
     return { allSolved, isUnlocked, isCurrent };
   };
