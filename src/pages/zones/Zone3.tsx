@@ -34,7 +34,8 @@ export const Zone3 = ({ sessionCode, session }: Zone3Props) => {
     setActivePuzzle(null);
   };
 
-  const hotspots = [
+  // Hotspots pour les énigmes principales
+  const puzzleHotspots = [
     {
       id: 'cryobox',
       x: 30,
@@ -81,8 +82,11 @@ export const Zone3 = ({ sessionCode, session }: Zone3Props) => {
         }
         setActivePuzzle('final');
       }
-    },
-    // Distracteurs
+    }
+  ];
+
+  // Distracteurs
+  const distractorHotspots = [
     {
       id: 'terminal',
       x: 15,
@@ -121,6 +125,22 @@ export const Zone3 = ({ sessionCode, session }: Zone3Props) => {
     }
   ];
 
+  // Hotspot de la porte finale
+  const doorHotspot = doorVisible.zone3 && doorStatus.zone3 === 'locked' ? [{
+    id: 'door',
+    x: 50,
+    y: 85,
+    label: 'Mission Finale',
+    icon: '🏆',
+    solved: false,
+    isDoor: true,
+    onClick: () => setShowDoorPadlock(true)
+  }] : [];
+
+  const hotspots = doorVisible.zone3 
+    ? doorHotspot 
+    : [...puzzleHotspots, ...distractorHotspots];
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-950 via-orange-900 to-slate-950 p-4">
       <div className="max-w-6xl mx-auto space-y-6 pt-24">
@@ -143,18 +163,6 @@ export const Zone3 = ({ sessionCode, session }: Zone3Props) => {
           hotspots={hotspots}
           zoneName={zone.name}
         />
-
-        {/* Bouton pour accéder au cadenas de la porte finale */}
-        {doorVisible.zone3 && doorStatus.zone3 === 'locked' && (
-          <div className="text-center animate-fade-in">
-            <button
-              onClick={() => setShowDoorPadlock(true)}
-              className="px-8 py-4 bg-red-600 text-white rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transition-all hover:scale-105"
-            >
-              🏆 Déverrouiller la Mission Finale
-            </button>
-          </div>
-        )}
       </div>
 
       <CryoBox

@@ -30,7 +30,8 @@ export const Zone2 = ({ sessionCode, session }: Zone2Props) => {
     setActivePuzzle(null);
   };
 
-  const hotspots = [
+  // Hotspots pour les énigmes principales
+  const puzzleHotspots = [
     {
       id: 'dna',
       x: 25,
@@ -57,8 +58,11 @@ export const Zone2 = ({ sessionCode, session }: Zone2Props) => {
       icon: '⚗️',
       solved: !!solvedPuzzles[zone.puzzles.periodic.id],
       onClick: () => setActivePuzzle('periodic')
-    },
-    // Distracteurs
+    }
+  ];
+
+  // Distracteurs
+  const distractorHotspots = [
     {
       id: 'samples',
       x: 15,
@@ -97,6 +101,22 @@ export const Zone2 = ({ sessionCode, session }: Zone2Props) => {
     }
   ];
 
+  // Hotspot de la porte
+  const doorHotspot = doorVisible.zone2 && doorStatus.zone2 === 'locked' ? [{
+    id: 'door',
+    x: 50,
+    y: 85,
+    label: 'Porte vers Zone 3',
+    icon: '🚪',
+    solved: false,
+    isDoor: true,
+    onClick: () => setShowDoorPadlock(true)
+  }] : [];
+
+  const hotspots = doorVisible.zone2 
+    ? doorHotspot 
+    : [...puzzleHotspots, ...distractorHotspots];
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-950 via-emerald-900 to-slate-950 p-4">
       <div className="max-w-6xl mx-auto space-y-6 pt-24">
@@ -111,18 +131,6 @@ export const Zone2 = ({ sessionCode, session }: Zone2Props) => {
           hotspots={hotspots}
           zoneName={zone.name}
         />
-
-        {/* Bouton pour accéder au cadenas de la porte */}
-        {doorVisible.zone2 && doorStatus.zone2 === 'locked' && (
-          <div className="text-center animate-fade-in">
-            <button
-              onClick={() => setShowDoorPadlock(true)}
-              className="px-8 py-4 bg-primary text-primary-foreground rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transition-all hover:scale-105"
-            >
-              🔐 Déverrouiller la Porte de Zone 3
-            </button>
-          </div>
-        )}
       </div>
 
       <DNASequence

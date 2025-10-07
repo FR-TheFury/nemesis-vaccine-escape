@@ -30,7 +30,8 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
     setActivePuzzle(null);
   };
 
-  const hotspots = [
+  // Hotspots pour les énigmes principales
+  const puzzleHotspots = [
     {
       id: 'caesar',
       x: 50,
@@ -57,8 +58,11 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
       icon: '🎙️',
       solved: !!solvedPuzzles[zone.puzzles.audio.id],
       onClick: () => setActivePuzzle('audio')
-    },
-    // Distracteurs
+    }
+  ];
+
+  // Distracteurs
+  const distractorHotspots = [
     {
       id: 'control-panel',
       x: 15,
@@ -97,6 +101,23 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
     }
   ];
 
+  // Hotspot de la porte (uniquement visible quand toutes les énigmes sont résolues)
+  const doorHotspot = doorVisible.zone1 && doorStatus.zone1 === 'locked' ? [{
+    id: 'door',
+    x: 50,
+    y: 85,
+    label: 'Porte vers Zone 2',
+    icon: '🚪',
+    solved: false,
+    isDoor: true,
+    onClick: () => setShowDoorPadlock(true)
+  }] : [];
+
+  // Afficher les énigmes + distracteurs SAUF si la porte est visible
+  const hotspots = doorVisible.zone1 
+    ? doorHotspot 
+    : [...puzzleHotspots, ...distractorHotspots];
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-950 via-slate-900 to-slate-950 p-2 sm:p-4">
       <div className="max-w-6xl mx-auto space-y-4 sm:space-y-6 pt-16 sm:pt-24">
@@ -111,18 +132,6 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
           hotspots={hotspots}
           zoneName={zone.name}
         />
-
-        {/* Bouton pour accéder au cadenas de la porte */}
-        {doorVisible.zone1 && doorStatus.zone1 === 'locked' && (
-          <div className="text-center animate-fade-in">
-            <button
-              onClick={() => setShowDoorPadlock(true)}
-              className="px-8 py-4 bg-primary text-primary-foreground rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transition-all hover:scale-105"
-            >
-              🔐 Déverrouiller la Porte de Zone 2
-            </button>
-          </div>
-        )}
       </div>
 
       <CaesarCipher

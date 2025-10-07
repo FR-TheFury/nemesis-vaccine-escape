@@ -8,6 +8,7 @@ interface Hotspot {
   label: string;
   icon: string;
   solved: boolean;
+  isDoor?: boolean; // Pour différencier les portes
   onClick: () => void;
 }
 
@@ -65,19 +66,46 @@ export const InteractiveZoneMap = ({
           aria-label={hotspot.label}
         >
           {/* Étincelle principale */}
-          <div className="relative w-3 h-3 rounded-full transition-all duration-300 bg-white/40 shadow-[0_0_12px_rgba(255,255,255,0.8)] group-hover:scale-150 group-hover:bg-white/80">
+          <div className={cn(
+            "relative rounded-full transition-all duration-300",
+            hotspot.isDoor 
+              ? "w-6 h-6 bg-amber-400/80 shadow-[0_0_20px_rgba(251,191,36,0.9)] group-hover:scale-125 group-hover:shadow-[0_0_30px_rgba(251,191,36,1)]"
+              : "w-3 h-3 bg-white/40 shadow-[0_0_12px_rgba(255,255,255,0.8)] group-hover:scale-150 group-hover:bg-white/80"
+          )}>
             {/* Animation de scintillement */}
-            <div className="absolute inset-0 rounded-full bg-white/60 animate-ping" />
-            <div className="absolute inset-0 rounded-full bg-white/40 animate-pulse" />
+            <div className={cn(
+              "absolute inset-0 rounded-full animate-ping",
+              hotspot.isDoor ? "bg-amber-300/70" : "bg-white/60"
+            )} />
+            <div className={cn(
+              "absolute inset-0 rounded-full animate-pulse",
+              hotspot.isDoor ? "bg-amber-400/50" : "bg-white/40"
+            )} />
           </div>
 
           {/* Particules secondaires autour */}
-          <div className="absolute -top-2 -left-2 w-1 h-1 rounded-full bg-white/30 animate-pulse" style={{ animationDelay: '0.2s' }} />
-          <div className="absolute -top-1 left-3 w-1 h-1 rounded-full bg-white/30 animate-pulse" style={{ animationDelay: '0.4s' }} />
-          <div className="absolute top-3 -right-2 w-1 h-1 rounded-full bg-white/30 animate-pulse" style={{ animationDelay: '0.6s' }} />
+          {hotspot.isDoor ? (
+            <>
+              <div className="absolute -top-3 -left-3 w-2 h-2 rounded-full bg-amber-400/50 animate-pulse" style={{ animationDelay: '0.1s' }} />
+              <div className="absolute -top-2 left-4 w-2 h-2 rounded-full bg-amber-400/50 animate-pulse" style={{ animationDelay: '0.3s' }} />
+              <div className="absolute top-4 -right-3 w-2 h-2 rounded-full bg-amber-400/50 animate-pulse" style={{ animationDelay: '0.5s' }} />
+              <div className="absolute top-4 -left-3 w-2 h-2 rounded-full bg-amber-400/50 animate-pulse" style={{ animationDelay: '0.7s' }} />
+            </>
+          ) : (
+            <>
+              <div className="absolute -top-2 -left-2 w-1 h-1 rounded-full bg-white/30 animate-pulse" style={{ animationDelay: '0.2s' }} />
+              <div className="absolute -top-1 left-3 w-1 h-1 rounded-full bg-white/30 animate-pulse" style={{ animationDelay: '0.4s' }} />
+              <div className="absolute top-3 -right-2 w-1 h-1 rounded-full bg-white/30 animate-pulse" style={{ animationDelay: '0.6s' }} />
+            </>
+          )}
 
           {/* Label au survol */}
-          <div className="absolute top-6 left-1/2 -translate-x-1/2 whitespace-nowrap z-50 px-3 py-1.5 rounded-lg text-sm font-medium backdrop-blur-md border opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none bg-primary/90 border-primary/50 text-primary-foreground shadow-lg">
+          <div className={cn(
+            "absolute top-8 left-1/2 -translate-x-1/2 whitespace-nowrap z-50 px-3 py-2 rounded-lg font-medium backdrop-blur-md border opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg",
+            hotspot.isDoor 
+              ? "text-base bg-amber-500/95 border-amber-400/70 text-white shadow-amber-500/50" 
+              : "text-sm bg-primary/90 border-primary/50 text-primary-foreground"
+          )}>
             {hotspot.icon} {hotspot.label}
           </div>
         </button>
