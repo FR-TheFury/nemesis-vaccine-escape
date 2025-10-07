@@ -38,6 +38,7 @@ interface HUDProps {
   revealedHints?: Record<string, string[]>;
   doorCodes?: Record<string, string>;
   doorStatus?: Record<string, string>;
+  onZoneChange?: (zone: number) => void;
 }
 
 export const HUD = ({
@@ -59,6 +60,7 @@ export const HUD = ({
   revealedHints = { zone1: [], zone2: [], zone3: [] },
   doorCodes = {},
   doorStatus = { zone1: 'locked', zone2: 'locked', zone3: 'locked' },
+  onZoneChange,
 }: HUDProps) => {
   const [showPlayers, setShowPlayers] = useState(true);
   const [showMap, setShowMap] = useState(true);
@@ -171,6 +173,7 @@ export const HUD = ({
         <FacilityMap 
           currentZone={currentZone}
           solvedPuzzles={solvedPuzzles}
+          onZoneChange={onZoneChange}
         />
       )}
 

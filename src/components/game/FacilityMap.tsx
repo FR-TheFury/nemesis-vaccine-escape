@@ -6,9 +6,10 @@ import { cn } from '@/lib/utils';
 interface FacilityMapProps {
   currentZone: number;
   solvedPuzzles: Record<string, boolean>;
+  onZoneChange?: (zone: number) => void;
 }
 
-export const FacilityMap = ({ currentZone, solvedPuzzles }: FacilityMapProps) => {
+export const FacilityMap = ({ currentZone, solvedPuzzles, onZoneChange }: FacilityMapProps) => {
   const zones = [
     { 
       id: 1, 
@@ -63,15 +64,17 @@ export const FacilityMap = ({ currentZone, solvedPuzzles }: FacilityMapProps) =>
             return (
               <div
                 key={zone.id}
+                onClick={() => isUnlocked && onZoneChange && onZoneChange(zone.id)}
                 className={cn(
                   "absolute w-14 h-14 sm:w-20 sm:h-20 rounded-lg flex flex-col items-center justify-center text-white",
                   "transition-all duration-300 border-2",
                   zone.position,
-                  isUnlocked ? `bg-gradient-to-br ${zone.color}` : 'bg-gray-700',
+                  isUnlocked ? `bg-gradient-to-br ${zone.color} cursor-pointer hover:scale-105` : 'bg-gray-700',
                   isCurrent && 'ring-2 sm:ring-4 ring-primary scale-110',
-                  !isUnlocked && 'opacity-50'
+                  !isUnlocked && 'opacity-50 cursor-not-allowed'
                 )}
                 style={{ zIndex: 10 }}
+                title={isUnlocked ? `Aller à ${zone.name}` : 'Zone verrouillée'}
               >
                 <div className="text-lg sm:text-2xl mb-0.5 sm:mb-1">
                   {!isUnlocked && <Lock className="h-3 w-3 sm:h-5 sm:w-5" />}

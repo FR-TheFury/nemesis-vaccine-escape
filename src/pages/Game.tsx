@@ -113,6 +113,29 @@ const Game = () => {
     }
   };
 
+  const handleZoneChange = async (newZone: number) => {
+    if (!sessionCode || !session) return;
+    
+    // Vérifier que la zone est déverrouillée
+    if (newZone > session.current_zone) {
+      toast.error('Cette zone n\'est pas encore déverrouillée');
+      return;
+    }
+    
+    try {
+      const { supabase } = await import('@/integrations/supabase/client');
+      await supabase
+        .from('sessions')
+        .update({ current_zone: newZone })
+        .eq('code', sessionCode);
+      
+      toast.success(`Navigation vers Zone ${newZone}`);
+    } catch (err) {
+      console.error('Error changing zone:', err);
+      toast.error('Erreur lors du changement de zone');
+    }
+  };
+
   if (session.status === 'waiting') {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background p-4">
@@ -132,6 +155,7 @@ const Game = () => {
           puzzleHints={[]}
           currentZone={currentZone}
           solvedPuzzles={session.solved_puzzles as any}
+          onZoneChange={handleZoneChange}
         />
         
         <div className="text-center space-y-4 sm:space-y-6 max-w-md mx-auto">
@@ -191,6 +215,7 @@ const Game = () => {
         revealedHints={session.revealed_hints as Record<string, string[]>}
         doorCodes={session.door_codes as Record<string, string>}
         doorStatus={session.door_status as Record<string, string>}
+        onZoneChange={handleZoneChange}
       />
       
       {renderZone()}
