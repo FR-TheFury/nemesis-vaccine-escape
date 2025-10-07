@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { generateSessionCode } from '@/lib/sessionCode';
+import { generateSessionCode, generateAllDoorCodes } from '@/lib/sessionCode';
 import type { Database } from '@/integrations/supabase/types';
 
 type Session = Database['public']['Tables']['sessions']['Row'];
@@ -18,6 +18,9 @@ export const useGameSession = (sessionCode: string | null) => {
     try {
       const code = generateSessionCode();
       const playerId = crypto.randomUUID();
+      const doorCodes = generateAllDoorCodes();
+
+      console.log('[useGameSession] Generated door codes:', doorCodes);
 
       // Créer la session
       const { data: sessionData, error: sessionError } = await supabase
@@ -32,6 +35,7 @@ export const useGameSession = (sessionCode: string | null) => {
           solved_puzzles: {},
           hints_used: 0,
           status: 'waiting',
+          door_codes: doorCodes,
         })
         .select()
         .single();

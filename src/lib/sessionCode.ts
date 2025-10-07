@@ -20,3 +20,21 @@ export const generateSessionCode = (): string => {
 export const isValidSessionCode = (code: string): boolean => {
   return /^[A-Z0-9]{6}$/.test(code);
 };
+
+/**
+ * Génère un code de porte aléatoire à 4 chiffres
+ */
+export const generateDoorCode = (): string => {
+  return Math.floor(1000 + Math.random() * 9000).toString();
+};
+
+/**
+ * Génère tous les codes de porte pour les 3 zones
+ */
+export const generateAllDoorCodes = () => {
+  return {
+    zone1: generateDoorCode(),
+    zone2: generateDoorCode(),
+    zone3: generateDoorCode()
+  };
+};

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Settings, Lock, Unlock, Save, Shield } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Settings, Lock, Unlock, Save, Shield, Copy, Check } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -30,10 +30,27 @@ export const HostControls = ({
     zone3: doorCodes.zone3 || '',
   });
   const [isSaving, setIsSaving] = useState(false);
+  const [copiedZone, setCopiedZone] = useState<string | null>(null);
+
+  // Synchroniser les codes avec les props
+  useEffect(() => {
+    setCodes({
+      zone1: doorCodes.zone1 || '',
+      zone2: doorCodes.zone2 || '',
+      zone3: doorCodes.zone3 || '',
+    });
+  }, [doorCodes]);
 
   if (!isHost) {
     return null;
   }
+
+  const handleCopyCode = (zone: string, code: string) => {
+    navigator.clipboard.writeText(code);
+    setCopiedZone(zone);
+    toast.success(`Code de la ${zone} copié`);
+    setTimeout(() => setCopiedZone(null), 2000);
+  };
 
   const handleSaveCodes = async () => {
     setIsSaving(true);
@@ -111,35 +128,71 @@ export const HostControls = ({
         <div className="space-y-4">
           <div className="flex items-center gap-2">
             <Settings className="w-5 h-5 text-muted-foreground" />
-            <h3 className="font-semibold">Codes des Portes</h3>
+            <h3 className="font-semibold">Codes des Portes Physiques</h3>
           </div>
           
-          <div className="grid gap-4">
+          <Alert className="bg-blue-950/20 border-blue-500/30">
+            <AlertDescription className="text-sm">
+              💡 Ces codes ont été générés automatiquement. Notez-les sur des papiers et dispersez-les dans votre zone de jeu réelle.
+            </AlertDescription>
+          </Alert>
+          
+          <div className="grid gap-3">
             {['zone1', 'zone2', 'zone3'].map((zone, idx) => (
-              <div key={zone} className="space-y-2">
-                <Label htmlFor={`code-${zone}`}>
-                  Code Zone {idx + 1}
-                </Label>
-                <Input
-                  id={`code-${zone}`}
-                  type="text"
-                  placeholder="Ex: 1234"
-                  value={codes[zone as keyof typeof codes]}
-                  onChange={(e) => setCodes(prev => ({ ...prev, [zone]: e.target.value }))}
-                  className="font-mono"
-                />
+              <div 
+                key={zone} 
+                className="p-4 rounded-lg border-2 border-primary/30 bg-primary/5 space-y-2"
+              >
+                <div className="flex items-center justify-between">
+                  <Label className="text-base font-semibold">
+                    Code Zone {idx + 1}
+                  </Label>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => handleCopyCode(`Zone ${idx + 1}`, codes[zone as keyof typeof codes])}
+                  >
+                    {copiedZone === zone ? (
+                      <Check className="w-4 h-4 text-green-500" />
+                    ) : (
+                      <Copy className="w-4 h-4" />
+                    )}
+                  </Button>
+                </div>
+                <div className="text-3xl font-mono font-bold text-primary tracking-widest">
+                  {codes[zone as keyof typeof codes] || '----'}
+                </div>
               </div>
             ))}
           </div>
 
-          <Button 
-            onClick={handleSaveCodes} 
-            disabled={isSaving}
-            className="w-full"
-          >
-            <Save className="w-4 h-4 mr-2" />
-            {isSaving ? 'Sauvegarde...' : 'Sauvegarder les codes'}
-          </Button>
+          <div className="flex gap-2">
+            <Input
+              type="text"
+              placeholder="Modifier un code manuellement..."
+              className="flex-1 font-mono"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  const target = e.target as HTMLInputElement;
+                  const zoneIdx = parseInt(target.value.charAt(0)) - 1;
+                  if (zoneIdx >= 0 && zoneIdx < 3) {
+                    const newCode = target.value.substring(1).trim();
+                    const zone = `zone${zoneIdx + 1}`;
+                    setCodes(prev => ({ ...prev, [zone]: newCode }));
+                    target.value = '';
+                  }
+                }
+              }}
+            />
+            <Button 
+              onClick={handleSaveCodes} 
+              disabled={isSaving}
+              variant="outline"
+            >
+              <Save className="w-4 h-4 mr-2" />
+              {isSaving ? 'Sauvegarde...' : 'Sauvegarder'}
+            </Button>
+          </div>
         </div>
 
         {/* État des portes */}
