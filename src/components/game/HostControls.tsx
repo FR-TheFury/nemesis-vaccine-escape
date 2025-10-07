@@ -73,8 +73,7 @@ export const HostControls = ({
         await supabase
           .from('sessions')
           .update({
-            door_status: updatedDoorStatus,
-            current_zone: zone === 3 ? 3 : zone + 1
+            door_status: updatedDoorStatus
           })
           .eq('code', sessionCode);
 
