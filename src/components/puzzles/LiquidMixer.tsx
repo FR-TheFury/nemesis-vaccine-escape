@@ -35,7 +35,7 @@ export const LiquidMixer = ({ isOpen, onClose, correctSequence, onSolve }: Liqui
     if (JSON.stringify(mixedLiquids) === JSON.stringify(correctSequence)) {
       toast({
         title: "✓ VACCIN SYNTHÉTISÉ !",
-        description: "Le virus NEMESIS peut être neutralisé !",
+        description: "Le virus Protocol Z peut être neutralisé !",
       });
       onSolve();
       onClose();
@@ -63,7 +63,7 @@ export const LiquidMixer = ({ isOpen, onClose, correctSequence, onSolve }: Liqui
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Synthèse du vaccin NEMESIS</DialogTitle>
+          <DialogTitle>Synthèse du vaccin Protocol Z</DialogTitle>
         </DialogHeader>
         
         <div className="space-y-4">

@@ -81,7 +81,7 @@ const Game = () => {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-center">
-          <h1 className="mb-4 text-4xl font-bold animate-pulse">NEMESIS</h1>
+          <h1 className="mb-4 text-4xl font-bold animate-pulse">Protocol Z</h1>
           <p className="text-xl text-muted-foreground">Chargement...</p>
         </div>
       </div>
@@ -135,7 +135,7 @@ const Game = () => {
         />
         
         <div className="text-center space-y-4 sm:space-y-6 max-w-md mx-auto">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-2">NEMESIS</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-2">Protocol Z</h1>
           <p className="text-lg sm:text-xl text-muted-foreground">Salle d'attente</p>
           <p className="text-xs sm:text-sm text-muted-foreground">
             {players.filter(p => p.is_connected).length} joueur(s) connecté(s)

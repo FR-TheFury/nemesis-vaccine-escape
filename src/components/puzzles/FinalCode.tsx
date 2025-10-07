@@ -33,7 +33,7 @@ export const FinalCode = ({ isOpen, onClose, letters, solution, onSolve }: Final
     if (userAnswer.toUpperCase() === solution.toUpperCase()) {
       toast({
         title: "🏆 MISSION ACCOMPLIE !",
-        description: "Virus NEMESIS neutralisé. Vaccin synthétisé avec succès !",
+        description: "Virus Protocol Z neutralisé. Vaccin synthétisé avec succès !",
       });
       onSolve();
       onClose();

@@ -1,4 +1,4 @@
-# 🎮 Guide du Game Master - NEMESIS : Le Dernier Vaccin
+# 🎮 Guide du Game Master - Protocol Z : Le Dernier Vaccin
 
 ## 📋 Table des matières
 1. [Vue d'ensemble](#vue-densemble)
@@ -13,7 +13,7 @@
 
 ## 🎯 Vue d'ensemble
 
-NEMESIS est un escape game hybride physique/numérique où les joueurs :
+Protocol Z est un escape game hybride physique/numérique où les joueurs :
 1. Résolvent **3 énigmes numériques** par zone
 2. Chaque énigme révèle un **indice textuel**
 3. Les 3 indices pointent vers une **boîte physique** dans la salle
@@ -32,7 +32,7 @@ NEMESIS est un escape game hybride physique/numérique où les joueurs :
 
 ### Étape 1 : Création de la session
 
-1. Ouvrez l'application NEMESIS
+1. Ouvrez l'application Protocol Z
 2. Cliquez sur **"Créer une session"**
 3. Entrez votre pseudo de Game Master
 4. **Configuration des codes de porte** (optionnel à cette étape) :

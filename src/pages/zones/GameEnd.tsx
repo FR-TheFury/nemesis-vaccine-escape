@@ -31,7 +31,7 @@ export const GameEnd = ({ session, players }: GameEndProps) => {
           
           <p className="text-base sm:text-lg md:text-xl text-muted-foreground px-2">
             {success 
-              ? 'Vous avez sauvé l\'humanité du virus NEMESIS !'
+              ? 'Vous avez sauvé l\'humanité du virus Protocol Z !'
               : 'Le temps est écoulé. Le virus s\'est propagé...'}
           </p>
         </div>

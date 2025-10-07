@@ -71,15 +71,15 @@ const Home = () => {
       <div className="max-w-2xl w-full space-y-6 md:space-y-8 text-center px-2">
         <div className="space-y-2 md:space-y-4">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-primary animate-fade-in" style={{ fontFamily: 'Orbitron, sans-serif' }}>
-            NEMESIS
+            Protocol Z
           </h1>
           <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground">Le Dernier Vaccin</p>
         </div>
 
         <div className="p-4 md:p-6 bg-background/50 backdrop-blur-md rounded-lg border-2 border-primary/50 space-y-4">
           <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-            Une fuite virale catastrophique s'est produite dans l'installation NEMESIS. 
-            Le Dr Morel a disparu, laissant derrière lui les fragments d'une formule capable 
+            Une fuite virale catastrophique s'est produite dans l'installation Protocol Z. 
+            Le Dr Morel a disparu, laissant derrière lui les fragments d'une formule capable
             de neutraliser le virus. Vous avez <span className="text-primary font-bold">60 minutes</span> pour 
             reconstituer le vaccin avant que le système de confinement ne soit compromis définitivement.
           </p>

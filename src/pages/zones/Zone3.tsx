@@ -7,6 +7,7 @@ import { InteractiveZoneMap } from '@/components/zones/InteractiveZoneMap';
 import { DoorPadlock } from '@/components/game/DoorPadlock';
 import { DistractorModal } from '@/components/game/DistractorModal';
 import { usePuzzleSolver } from '@/hooks/usePuzzleSolver';
+import { useToast } from '@/hooks/use-toast';
 import { AlertTriangle } from 'lucide-react';
 import enigmesData from '@/data/enigmes.json';
 
@@ -18,6 +19,7 @@ interface Zone3Props {
 export const Zone3 = ({ sessionCode, session }: Zone3Props) => {
   const [activePuzzle, setActivePuzzle] = useState<string | null>(null);
   const [showDoorPadlock, setShowDoorPadlock] = useState(false);
+  const { toast } = useToast();
   const zone = (enigmesData.zones as any).zone3;
   const solvedPuzzles = session.solved_puzzles || {};
   const revealedHints = session.revealed_hints || { zone1: [], zone2: [], zone3: [] };
@@ -50,6 +52,11 @@ export const Zone3 = ({ sessionCode, session }: Zone3Props) => {
       solved: !!solvedPuzzles[zone.puzzles.mixer.id],
       onClick: () => {
         if (!solvedPuzzles[zone.puzzles.cryobox.id]) {
+          toast({
+            title: "🔒 Zone verrouillée",
+            description: "Vous devez d'abord ouvrir le coffre cryogénique.",
+            variant: "destructive",
+          });
           return;
         }
         setActivePuzzle('mixer');
@@ -64,6 +71,11 @@ export const Zone3 = ({ sessionCode, session }: Zone3Props) => {
       solved: !!solvedPuzzles[zone.puzzles.final.id],
       onClick: () => {
         if (!solvedPuzzles[zone.puzzles.mixer.id]) {
+          toast({
+            title: "🔒 Zone verrouillée",
+            description: "Vous devez d'abord synthétiser le vaccin.",
+            variant: "destructive",
+          });
           return;
         }
         setActivePuzzle('final');

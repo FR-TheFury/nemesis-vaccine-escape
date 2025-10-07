@@ -1,6 +1,6 @@
-# NEMESIS - Le Dernier Vaccin
+# Protocol Z - Le Dernier Vaccin
 
-Jeu d'énigme coopératif multijoueur où vous devez sauver l'humanité du virus NEMESIS.
+Jeu d'énigme coopératif multijoueur où vous devez sauver l'humanité du virus Protocol Z.
 
 ## Installation locale
 
