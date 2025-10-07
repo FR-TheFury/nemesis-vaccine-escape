@@ -3,7 +3,6 @@ import { CaesarCipher } from '@/components/puzzles/CaesarCipher';
 import { CodeLocker } from '@/components/puzzles/CodeLocker';
 import { Dictaphone } from '@/components/puzzles/Dictaphone';
 import { InteractiveZoneMap } from '@/components/zones/InteractiveZoneMap';
-import { HintsPanel } from '@/components/game/HintsPanel';
 import { DoorPadlock } from '@/components/game/DoorPadlock';
 import { usePuzzleSolver } from '@/hooks/usePuzzleSolver';
 import enigmesData from '@/data/enigmes.json';
@@ -67,13 +66,6 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">{zone.name}</h1>
           <p className="text-sm sm:text-base md:text-lg text-slate-300 px-2">{zone.description}</p>
         </div>
-
-        {/* Panneau des indices révélés */}
-        <HintsPanel 
-          currentZone={1} 
-          revealedHints={revealedHints}
-          className="mb-4"
-        />
 
         <InteractiveZoneMap
           backgroundImage={zone1Background}

@@ -4,7 +4,6 @@ import { CryoBox } from '@/components/puzzles/CryoBox';
 import { LiquidMixer } from '@/components/puzzles/LiquidMixer';
 import { FinalCode } from '@/components/puzzles/FinalCode';
 import { InteractiveZoneMap } from '@/components/zones/InteractiveZoneMap';
-import { HintsPanel } from '@/components/game/HintsPanel';
 import { DoorPadlock } from '@/components/game/DoorPadlock';
 import { usePuzzleSolver } from '@/hooks/usePuzzleSolver';
 import { AlertTriangle } from 'lucide-react';
@@ -86,13 +85,6 @@ export const Zone3 = ({ sessionCode, session }: Zone3Props) => {
           <h1 className="text-4xl font-bold text-white">{zone.name}</h1>
           <p className="text-lg text-slate-300">{zone.description}</p>
         </div>
-
-        {/* Panneau des indices révélés */}
-        <HintsPanel 
-          currentZone={3} 
-          revealedHints={revealedHints}
-          className="mb-4"
-        />
 
         <InteractiveZoneMap
           backgroundColor="bg-gradient-to-br from-red-900 via-orange-900 to-amber-800"
