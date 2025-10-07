@@ -50,15 +50,13 @@ export const InteractiveZoneMap = ({
       </div>
 
       {/* Hotspots cliquables - étincelles subtiles */}
-      {hotspots.map((hotspot) => (
+      {hotspots
+        .filter((hotspot) => !hotspot.solved)
+        .map((hotspot) => (
         <button
           key={hotspot.id}
           onClick={hotspot.onClick}
-          disabled={hotspot.solved}
-          className={cn(
-            "absolute group transition-all duration-500 cursor-pointer",
-            hotspot.solved && "opacity-50"
-          )}
+          className="absolute group transition-all duration-500 cursor-pointer"
           style={{
             left: `${hotspot.x}%`,
             top: `${hotspot.y}%`,
@@ -67,41 +65,20 @@ export const InteractiveZoneMap = ({
           aria-label={hotspot.label}
         >
           {/* Étincelle principale */}
-          <div className={cn(
-            "relative w-3 h-3 rounded-full transition-all duration-300",
-            hotspot.solved 
-              ? "bg-green-400/60 shadow-[0_0_8px_rgba(74,222,128,0.6)]" 
-              : "bg-white/40 shadow-[0_0_12px_rgba(255,255,255,0.8)] group-hover:scale-150 group-hover:bg-white/80"
-          )}>
-            {/* Animation de scintillement pour zones non résolues */}
-            {!hotspot.solved && (
-              <>
-                <div className="absolute inset-0 rounded-full bg-white/60 animate-ping" />
-                <div className="absolute inset-0 rounded-full bg-white/40 animate-pulse" />
-              </>
-            )}
+          <div className="relative w-3 h-3 rounded-full transition-all duration-300 bg-white/40 shadow-[0_0_12px_rgba(255,255,255,0.8)] group-hover:scale-150 group-hover:bg-white/80">
+            {/* Animation de scintillement */}
+            <div className="absolute inset-0 rounded-full bg-white/60 animate-ping" />
+            <div className="absolute inset-0 rounded-full bg-white/40 animate-pulse" />
           </div>
 
           {/* Particules secondaires autour */}
-          {!hotspot.solved && (
-            <>
-              <div className="absolute -top-2 -left-2 w-1 h-1 rounded-full bg-white/30 animate-pulse" style={{ animationDelay: '0.2s' }} />
-              <div className="absolute -top-1 left-3 w-1 h-1 rounded-full bg-white/30 animate-pulse" style={{ animationDelay: '0.4s' }} />
-              <div className="absolute top-3 -right-2 w-1 h-1 rounded-full bg-white/30 animate-pulse" style={{ animationDelay: '0.6s' }} />
-            </>
-          )}
+          <div className="absolute -top-2 -left-2 w-1 h-1 rounded-full bg-white/30 animate-pulse" style={{ animationDelay: '0.2s' }} />
+          <div className="absolute -top-1 left-3 w-1 h-1 rounded-full bg-white/30 animate-pulse" style={{ animationDelay: '0.4s' }} />
+          <div className="absolute top-3 -right-2 w-1 h-1 rounded-full bg-white/30 animate-pulse" style={{ animationDelay: '0.6s' }} />
 
           {/* Label au survol */}
-          <div className={cn(
-            "absolute top-6 left-1/2 -translate-x-1/2 whitespace-nowrap z-50",
-            "px-3 py-1.5 rounded-lg text-sm font-medium backdrop-blur-md border",
-            "opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none",
-            hotspot.solved 
-              ? "bg-green-500/90 border-green-400/50 text-white shadow-lg shadow-green-500/20" 
-              : "bg-primary/90 border-primary/50 text-primary-foreground shadow-lg"
-          )}>
+          <div className="absolute top-6 left-1/2 -translate-x-1/2 whitespace-nowrap z-50 px-3 py-1.5 rounded-lg text-sm font-medium backdrop-blur-md border opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none bg-primary/90 border-primary/50 text-primary-foreground shadow-lg">
             {hotspot.icon} {hotspot.label}
-            {hotspot.solved && " ✓"}
           </div>
         </button>
       ))}

@@ -13,10 +13,6 @@ interface RealtimeSyncCallbacks {
   onPlayerLeave?: (player: Player) => void;
   onPlayerUpdate?: (player: Player) => void;
   onChatMessage?: (message: ChatMessage) => void;
-  onHintRevealed?: (session: Session) => void;
-  onDoorVisibleChanged?: (session: Session) => void;
-  onDoorUnlocked?: (session: Session) => void;
-  onDoorCodesUpdated?: (session: Session) => void;
 }
 
 export const useRealtimeSync = (
@@ -42,7 +38,7 @@ export const useRealtimeSync = (
           filter: `code=eq.${sessionCode}`,
         },
         (payload) => {
-          console.log('Session updated:', payload);
+          console.log('🔄 Session mise à jour en temps réel:', payload.new);
           if (callbacks.onSessionUpdate) {
             callbacks.onSessionUpdate(payload.new as Session);
           }
