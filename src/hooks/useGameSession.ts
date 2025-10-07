@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { generateSessionCode, generateAllDoorCodes } from '@/lib/sessionCode';
+import { generateSessionCode, getAllDoorCodes } from '@/lib/sessionCode';
 import type { Database } from '@/integrations/supabase/types';
 
 type Session = Database['public']['Tables']['sessions']['Row'];
@@ -18,7 +18,7 @@ export const useGameSession = (sessionCode: string | null) => {
     try {
       const code = generateSessionCode();
       const playerId = crypto.randomUUID();
-      const doorCodes = generateAllDoorCodes();
+      const doorCodes = getAllDoorCodes();
 
       console.log('[useGameSession] Generated door codes:', doorCodes);
 

@@ -22,19 +22,20 @@ export const isValidSessionCode = (code: string): boolean => {
 };
 
 /**
- * Génère un code de porte aléatoire à 4 chiffres
+ * Codes de porte fixes basés sur des éléments du tableau périodique
+ * Zone 1: 7926 (Au-Or: 79 + Fe-Fer: 26)
+ * Zone 2: 1147 (Na-Sodium: 11 + Ag-Argent: 47)
+ * Zone 3: 2982 (Cu-Cuivre: 29 + Pb-Plomb: 82)
  */
-export const generateDoorCode = (): string => {
-  return Math.floor(1000 + Math.random() * 9000).toString();
+const FIXED_DOOR_CODES = {
+  zone1: '7926',
+  zone2: '1147',
+  zone3: '2982'
 };
 
 /**
- * Génère tous les codes de porte pour les 3 zones
+ * Retourne les codes de porte fixes pour les 3 zones
  */
-export const generateAllDoorCodes = () => {
-  return {
-    zone1: generateDoorCode(),
-    zone2: generateDoorCode(),
-    zone3: generateDoorCode()
-  };
+export const getAllDoorCodes = () => {
+  return { ...FIXED_DOOR_CODES };
 };

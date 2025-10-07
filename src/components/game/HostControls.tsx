@@ -73,8 +73,8 @@ export const HostControls = ({
 
   const handleGenerateCodes = async () => {
     try {
-      const { generateAllDoorCodes } = await import('@/lib/sessionCode');
-      const newCodes = generateAllDoorCodes();
+      const { getAllDoorCodes } = await import('@/lib/sessionCode');
+      const newCodes = getAllDoorCodes();
       
       await supabase
         .from('sessions')
