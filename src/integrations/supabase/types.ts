@@ -153,6 +153,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      cleanup_session: {
+        Args: { session_code_param: string }
+        Returns: undefined
+      }
     }
     Enums: {
       session_status: "waiting" | "active" | "completed" | "failed"

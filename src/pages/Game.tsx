@@ -20,6 +20,7 @@ import {
   AlertDialogAction 
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 import enigmesData from '@/data/enigmes.json';
 
 const Game = () => {
@@ -33,6 +34,11 @@ const Game = () => {
     {
       onSessionUpdate: (updatedSession) => {
         setSession(updatedSession as any);
+        
+        // Détecter la fin de partie pour tous les joueurs
+        if (updatedSession.status === 'failed' || updatedSession.status === 'completed') {
+          setShowTimeUpDialog(true);
+        }
       },
       onPlayerJoin: (player) => {
         setPlayers((prev: any) => [...prev, player as any]);
@@ -223,13 +229,28 @@ const Game = () => {
       <AlertDialog open={showTimeUpDialog} onOpenChange={setShowTimeUpDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-destructive text-2xl">⏰ Temps écoulé !</AlertDialogTitle>
+            <AlertDialogTitle className="text-destructive text-2xl">
+              {session.status === 'failed' ? '⏰ Temps écoulé !' : '🎉 Mission accomplie !'}
+            </AlertDialogTitle>
             <AlertDialogDescription className="text-lg">
-              Le virus s'est propagé... Mission échouée.
+              {session.status === 'failed' 
+                ? 'Le virus s\'est propagé... Mission échouée.' 
+                : 'Félicitations ! Vous avez sauvé l\'humanité !'}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogAction onClick={() => navigate('/')}>
+            <AlertDialogAction onClick={async () => {
+              // Nettoyer la session avant de retourner à l'accueil
+              if (sessionCode) {
+                try {
+                  await supabase.rpc('cleanup_session', { session_code_param: sessionCode });
+                  console.log('Session cleaned up successfully');
+                } catch (error) {
+                  console.error('Error cleaning up session:', error);
+                }
+              }
+              navigate('/');
+            }}>
               Retour à l'accueil
             </AlertDialogAction>
           </AlertDialogFooter>

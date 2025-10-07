@@ -40,6 +40,35 @@ export const Chat = ({ sessionCode, currentPlayerPseudo }: ChatProps) => {
     };
 
     loadMessages();
+
+    // Écouter les nouveaux messages en temps réel
+    const channel = supabase
+      .channel(`chat:${sessionCode}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'chat_messages',
+          filter: `session_code=eq.${sessionCode}`,
+        },
+        (payload) => {
+          console.log('New chat message:', payload);
+          const newMessage = payload.new as ChatMessage;
+          setMessages((prev) => {
+            // Éviter les doublons
+            if (prev.some((msg) => msg.id === newMessage.id)) {
+              return prev;
+            }
+            return [...prev, newMessage];
+          });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [sessionCode]);
 
   // Auto-scroll vers le bas
@@ -63,17 +92,6 @@ export const Chat = ({ sessionCode, currentPlayerPseudo }: ChatProps) => {
         });
 
       if (!error) {
-        // Optimiste: afficher immédiatement le message localement
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: crypto.randomUUID(),
-            player_pseudo: currentPlayerPseudo,
-            message: inputMessage,
-            type: 'chat',
-            created_at: new Date().toISOString(),
-          } as any,
-        ]);
         setInputMessage('');
       }
     } catch (err) {
