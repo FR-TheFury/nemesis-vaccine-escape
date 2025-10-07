@@ -171,7 +171,7 @@ export const HostControls = ({
                     size="sm"
                     variant={isUnlocked ? "outline" : "default"}
                     onClick={() => handleForceUnlock(zone)}
-                    disabled={isUnlocked || zone > currentZone}
+                    disabled={isUnlocked}
                   >
                     {isUnlocked ? 'Déverrouillée' : 'Forcer le déverrouillage'}
                   </Button>
