@@ -128,8 +128,8 @@ export const Zone3 = ({ sessionCode, session }: Zone3Props) => {
   // Hotspot de la porte finale
   const doorHotspot = doorVisible.zone3 && doorStatus.zone3 === 'locked' ? [{
     id: 'door',
-    x: 50,
-    y: 85,
+    x: 76,
+    y: 13,
     label: 'Mission Finale',
     icon: '🏆',
     solved: false,

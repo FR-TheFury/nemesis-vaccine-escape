@@ -104,8 +104,8 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
   // Hotspot de la porte (uniquement visible quand toutes les énigmes sont résolues)
   const doorHotspot = doorVisible.zone1 && doorStatus.zone1 === 'locked' ? [{
     id: 'door',
-    x: 50,
-    y: 85,
+    x: 76,
+    y: 13,
     label: 'Porte vers Zone 2',
     icon: '🚪',
     solved: false,

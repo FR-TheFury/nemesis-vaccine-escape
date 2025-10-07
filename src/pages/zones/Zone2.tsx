@@ -104,8 +104,8 @@ export const Zone2 = ({ sessionCode, session }: Zone2Props) => {
   // Hotspot de la porte
   const doorHotspot = doorVisible.zone2 && doorStatus.zone2 === 'locked' ? [{
     id: 'door',
-    x: 50,
-    y: 85,
+    x: 76,
+    y: 13,
     label: 'Porte vers Zone 3',
     icon: '🚪',
     solved: false,
