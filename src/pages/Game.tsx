@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useGameSession } from '@/hooks/useGameSession';
 import { useRealtimeSync } from '@/hooks/useRealtimeSync';
+import { usePlayerPresence } from '@/hooks/usePlayerPresence';
 import { useTimer } from '@/hooks/useTimer';
 import { useInventory } from '@/hooks/useInventory';
 import { HUD } from '@/components/game/HUD';
@@ -28,6 +29,12 @@ const Game = () => {
   const navigate = useNavigate();
   const { session, players, currentPlayer, loading, error, setSession, setPlayers } = useGameSession(sessionCode || null);
   const [showTimeUpDialog, setShowTimeUpDialog] = useState(false);
+  
+  // Gérer la présence du joueur
+  usePlayerPresence({
+    sessionCode: sessionCode || '',
+    playerId: currentPlayer?.id || ''
+  });
   
   useRealtimeSync(
     sessionCode || null,
