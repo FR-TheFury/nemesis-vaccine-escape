@@ -71,6 +71,24 @@ export const HostControls = ({
     }
   };
 
+  const handleGenerateCodes = async () => {
+    try {
+      const { generateAllDoorCodes } = await import('@/lib/sessionCode');
+      const newCodes = generateAllDoorCodes();
+      
+      await supabase
+        .from('sessions')
+        .update({ door_codes: newCodes })
+        .eq('code', sessionCode);
+
+      setCodes(newCodes);
+      toast.success('Codes générés avec succès !');
+    } catch (error) {
+      console.error('Error generating codes:', error);
+      toast.error('Erreur lors de la génération des codes');
+    }
+  };
+
   const handleForceUnlock = async (zone: number) => {
     const zoneKey = `zone${zone}`;
     
@@ -126,73 +144,66 @@ export const HostControls = ({
       <CardContent className="space-y-6">
         {/* Configuration des codes */}
         <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <Settings className="w-5 h-5 text-muted-foreground" />
-            <h3 className="font-semibold">Codes des Portes Physiques</h3>
-          </div>
-          
-          <Alert className="bg-blue-950/20 border-blue-500/30">
-            <AlertDescription className="text-sm">
-              💡 Ces codes ont été générés automatiquement. Notez-les sur des papiers et dispersez-les dans votre zone de jeu réelle.
-            </AlertDescription>
-          </Alert>
-          
-          <div className="grid gap-3">
-            {['zone1', 'zone2', 'zone3'].map((zone, idx) => (
-              <div 
-                key={zone} 
-                className="p-4 rounded-lg border-2 border-primary/30 bg-primary/5 space-y-2"
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Settings className="w-5 h-5 text-muted-foreground" />
+              <h3 className="font-semibold">Codes des Portes Physiques</h3>
+            </div>
+            {(!codes.zone1 && !codes.zone2 && !codes.zone3) && (
+              <Button
+                onClick={handleGenerateCodes}
+                variant="outline"
+                size="sm"
               >
-                <div className="flex items-center justify-between">
-                  <Label className="text-base font-semibold">
-                    Code Zone {idx + 1}
-                  </Label>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => handleCopyCode(`Zone ${idx + 1}`, codes[zone as keyof typeof codes])}
+                Générer les codes
+              </Button>
+            )}
+          </div>
+          
+          {(!codes.zone1 && !codes.zone2 && !codes.zone3) ? (
+            <Alert className="bg-orange-950/20 border-orange-500/30">
+              <AlertDescription className="text-sm">
+                ⚠️ Aucun code généré. Cliquez sur "Générer les codes" pour créer les codes des portes.
+              </AlertDescription>
+            </Alert>
+          ) : (
+            <>
+              <Alert className="bg-blue-950/20 border-blue-500/30">
+                <AlertDescription className="text-sm">
+                  💡 Ces codes ont été générés automatiquement. Notez-les sur des papiers et dispersez-les dans votre zone de jeu réelle.
+                </AlertDescription>
+              </Alert>
+              
+              <div className="grid gap-3">
+                {['zone1', 'zone2', 'zone3'].map((zone, idx) => (
+                  <div 
+                    key={zone} 
+                    className="p-4 rounded-lg border-2 border-primary/30 bg-primary/5 space-y-2"
                   >
-                    {copiedZone === zone ? (
-                      <Check className="w-4 h-4 text-green-500" />
-                    ) : (
-                      <Copy className="w-4 h-4" />
-                    )}
-                  </Button>
-                </div>
-                <div className="text-3xl font-mono font-bold text-primary tracking-widest">
-                  {codes[zone as keyof typeof codes] || '----'}
-                </div>
+                    <div className="flex items-center justify-between">
+                      <Label className="text-base font-semibold">
+                        Code Zone {idx + 1}
+                      </Label>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => handleCopyCode(`Zone ${idx + 1}`, codes[zone as keyof typeof codes])}
+                      >
+                        {copiedZone === zone ? (
+                          <Check className="w-4 h-4 text-green-500" />
+                        ) : (
+                          <Copy className="w-4 h-4" />
+                        )}
+                      </Button>
+                    </div>
+                    <div className="text-3xl font-mono font-bold text-primary tracking-widest">
+                      {codes[zone as keyof typeof codes] || '----'}
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-
-          <div className="flex gap-2">
-            <Input
-              type="text"
-              placeholder="Modifier un code manuellement..."
-              className="flex-1 font-mono"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  const target = e.target as HTMLInputElement;
-                  const zoneIdx = parseInt(target.value.charAt(0)) - 1;
-                  if (zoneIdx >= 0 && zoneIdx < 3) {
-                    const newCode = target.value.substring(1).trim();
-                    const zone = `zone${zoneIdx + 1}`;
-                    setCodes(prev => ({ ...prev, [zone]: newCode }));
-                    target.value = '';
-                  }
-                }
-              }}
-            />
-            <Button 
-              onClick={handleSaveCodes} 
-              disabled={isSaving}
-              variant="outline"
-            >
-              <Save className="w-4 h-4 mr-2" />
-              {isSaving ? 'Sauvegarde...' : 'Sauvegarder'}
-            </Button>
-          </div>
+            </>
+          )}
         </div>
 
         {/* État des portes */}
