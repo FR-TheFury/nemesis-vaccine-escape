@@ -36,7 +36,7 @@ export const CodeLocker = ({ isOpen, onClose, correctCode, onSolve, addItem }: C
         });
         toast({
           title: "✓ Code de la porte obtenu !",
-          description: "Vous avez obtenu le code de la porte : 7926",
+          description: "Code : 7926 (Or + Fer). L'énigme 3 est maintenant révélée.",
         });
       } else {
         toast({

@@ -4,9 +4,9 @@ import { toast } from 'sonner';
 
 // Mapping des puzzles vers leurs indices (p1, p2, p3)
 const PUZZLE_TO_HINT_MAP: Record<string, { zone: string; hint: string }> = {
-  'zone1_caesar': { zone: 'zone1', hint: 'p1' },
-  'zone1_locker': { zone: 'zone1', hint: 'p2' },
-  'zone1_audio': { zone: 'zone1', hint: 'p3' },
+  'zone1_audio': { zone: 'zone1', hint: 'p1' },
+  'zone1_caesar': { zone: 'zone1', hint: 'p2' },
+  'zone1_locker': { zone: 'zone1', hint: 'p3' },
   'zone1_test_tubes': { zone: 'zone1', hint: 'p4' },
   'zone1_puzzle': { zone: 'zone1', hint: 'p5' },
   'zone2_dna': { zone: 'zone2', hint: 'p1' },

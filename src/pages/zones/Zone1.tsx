@@ -34,7 +34,7 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
     setActivePuzzle(null);
   };
 
-  // Hotspots pour les énigmes principales (disparaissent quand résolues)
+  // Hotspots des énigmes principales (toujours disponibles jusqu'à résolution)
   const puzzleHotspots = [
     {
       id: 'caesar',
@@ -42,17 +42,8 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
       y: 46,
       label: 'Le Carnet',
       icon: '📖',
-      solved: !!solvedPuzzles[zone.puzzles.caesar.id],
+      solved: solvedPuzzles['zone1_caesar'] || false,
       onClick: () => setActivePuzzle('caesar')
-    },
-    {
-      id: 'locker',
-      x: 88,
-      y: 14,
-      label: 'Le Casier',
-      icon: '🔒',
-      solved: !!solvedPuzzles[zone.puzzles.locker.id],
-      onClick: () => setActivePuzzle('locker')
     },
     {
       id: 'audio',
@@ -60,10 +51,24 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
       y: 7,
       label: 'Le Dictaphone',
       icon: '🎙️',
-      solved: !!solvedPuzzles[zone.puzzles.audio.id],
+      solved: solvedPuzzles['zone1_audio'] || false,
       onClick: () => setActivePuzzle('audio')
     }
   ].filter(h => !h.solved);
+
+  // Le casier n'apparaît QUE si César est résolu ET casier pas encore résolu
+  const conditionalHotspots = [];
+  if (solvedPuzzles['zone1_caesar'] && !solvedPuzzles['zone1_locker']) {
+    conditionalHotspots.push({
+      id: 'locker',
+      x: 88,
+      y: 14,
+      label: 'Le Casier',
+      icon: '🔒',
+      solved: false,
+      onClick: () => setActivePuzzle('locker')
+    });
+  }
 
   // Mini-jeux et distracteurs (disparaissent quand résolus sauf les distracteurs simples)
   const distractorHotspots = [
@@ -118,7 +123,7 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
   }] : [];
 
   // Combiner tous les hotspots visibles
-  const hotspots = [...puzzleHotspots, ...distractorHotspots, ...doorHotspot];
+  const hotspots = [...puzzleHotspots, ...conditionalHotspots, ...distractorHotspots, ...doorHotspot];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-950 via-slate-900 to-slate-950 p-2 sm:p-4">

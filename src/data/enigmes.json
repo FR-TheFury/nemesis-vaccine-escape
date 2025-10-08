@@ -7,11 +7,11 @@
         "caesar": {
           "id": "zone1_caesar",
           "name": "Le Carnet - Chiffrement de César",
-          "encrypted": "KHOOR GRFWHXUV, OD VRXUUH GH OD YpULWp V'RXYUH SDU OD FOp DOISKD.",
+          "encrypted": "OD FOH GH OD SRUWH VH WURXYH GDQV OH FDVLHU VHFXULVH",
           "key": 3,
-          "solution": "ALPHA",
+          "solution": "LA CLE DE LA PORTE SE TROUVE DANS LE CASIER SECURISE",
           "halfFormula": "C17H19NO3",
-          "reward": "Demi-formule α",
+          "reward": "Information sur le casier",
           "hints": [
             "Pensez à un décalage des lettres… classique.",
             "Le médecin aimait Jules… (indice auteur).",
@@ -38,12 +38,12 @@
         "audio": {
           "id": "zone1_audio",
           "name": "Le Dictaphone",
-          "transcript": "Ici Morel… l'explosion… les réactifs… ADN… suivez la séquence… Micro… *coupure*…",
-          "keyword": "ADN",
-          "reward": "Accès Zone 2",
+          "transcript": "Ici Morel... *bruit de fond*... Le confinement... doit rester fermé... le virus ne doit pas se propager... le laboratoire... *coupure*... Zone 2... sécurité maximale...",
+          "keyword": "CONFINEMENT",
+          "reward": "Information sur le confinement",
           "hints": [
             "Écoutez jusqu'au bout.",
-            "Il insiste sur une séquence."
+            "Il insiste sur le confinement."
           ]
         },
         "testTubes": {

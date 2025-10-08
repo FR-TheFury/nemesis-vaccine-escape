@@ -33,8 +33,8 @@ export const CaesarCipher = ({
   const handleSubmit = () => {
     if (key === correctKey) {
       toast({
-        title: "✓ Énigme résolue !",
-        description: "Vous avez déchiffré le message du Dr Morel.",
+        title: "✓ Message déchiffré !",
+        description: "La clé de la porte se trouve dans le casier sécurisé. Le casier est maintenant accessible.",
       });
       onSolve();
       onClose();

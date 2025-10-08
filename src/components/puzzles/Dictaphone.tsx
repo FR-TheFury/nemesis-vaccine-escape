@@ -31,14 +31,22 @@ export const Dictaphone = ({ isOpen, onClose, transcript, onSolve }: DictaphoneP
   };
 
   const handleValidate = () => {
-    if (hasListened) {
+    if (!hasListened) {
       toast({
-        title: "✓ Indice audio compris",
-        description: "Direction la Zone 2 - Laboratoire !",
+        variant: "destructive",
+        title: "Écoutez d'abord",
+        description: "Vous devez écouter le message complet avant de valider.",
       });
-      onSolve();
-      onClose();
+      return;
     }
+
+    toast({
+      title: "🎧 Message du Dr Morel entendu",
+      description: "Un confinement doit être maintenu pour empêcher la propagation du virus.",
+    });
+
+    onSolve();
+    onClose();
   };
 
   return (

@@ -4,9 +4,9 @@
       "id": "zone1",
       "name": "Bureau du Dr Morel",
       "hints": {
-        "p1": "🔍 Indice 1 : Cherchez la boîte bleue près de l'entrée principale. Le premier chiffre est marqué à l'intérieur.",
-        "p2": "🔍 Indice 2 : Le code est écrit en rouge sur le dossier médical. C'est le deuxième chiffre.",
-        "p3": "🔍 Indice 3 : Regardez sous la table du bureau. Le troisième chiffre y est gravé."
+        "p1": "🎙️ Énigme 1 : Message du Dr Morel - Un confinement doit être fermé pour empêcher le virus de se diffuser. Le laboratoire doit rester scellé.",
+        "p2": "📖 Énigme 2 : Message déchiffré - La clé de la porte se trouve dans le casier sécurisé. Résolvez l'équation pour l'ouvrir.",
+        "p3": "🔒 Énigme 3 : Code obtenu - 7926 (Or + Fer). Ce code correspond aux éléments du tableau périodique. Utilisez-le sur la porte dorée."
       }
     },
     {
