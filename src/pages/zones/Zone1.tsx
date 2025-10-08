@@ -205,7 +205,22 @@ export const Zone1 = ({ sessionCode, session, playerPseudo = '' }: Zone1Props) =
         onClose={() => setActivePuzzle(null)}
         title="Archives poussiéreuses"
         icon="📚"
-        content="Des dossiers anciens contenant des rapports d'expériences passées. Rien de pertinent pour votre mission actuelle."
+        content={
+          <div className="space-y-2">
+            <p>
+              Nous sommes le <strong>8 octobre 2025</strong>, je reviens de la salle de confinement numéro <strong>6</strong> où le <strong>patient 0</strong> contaminé par le <strong>VX-9</strong> a été confiné.
+            </p>
+            <p>
+              Suite à la première infection, l'apparition des symptômes est très rapide, selon mes notes, il s'agit de <strong>quelques jours</strong> tout au plus.
+            </p>
+            <p>
+              Les symptômes sont les suivants : <strong>fièvre</strong>, <strong>démence</strong>, <strong>saignement des yeux et du nez</strong>, <strong>jaunisse</strong>.
+            </p>
+            <p>
+              Au vu des symptômes, l'espérance de vie du sujet est de <strong>3 jours</strong>. Je vais continuer de l'étudier pour mettre au point un <strong>vaccin</strong>.
+            </p>
+          </div>
+        }
       />
     </div>
   );
