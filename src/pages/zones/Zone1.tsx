@@ -15,9 +15,10 @@ import zone1Background from '@/assets/zone1-bg.png';
 interface Zone1Props {
   sessionCode: string;
   session: any;
+  playerPseudo?: string;
 }
 
-export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
+export const Zone1 = ({ sessionCode, session, playerPseudo = '' }: Zone1Props) => {
   const [activePuzzle, setActivePuzzle] = useState<string | null>(null);
   const [showDoorPadlock, setShowDoorPadlock] = useState(false);
   const zone = (enigmesData.zones as any).zone1;
@@ -26,8 +27,8 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
   const doorVisible = session.door_visible || { zone1: false, zone2: false, zone3: false };
   const doorStatus = session.door_status || { zone1: 'locked', zone2: 'locked', zone3: 'locked' };
   const doorCodes = session.door_codes || {};
-  const { solvePuzzle } = usePuzzleSolver(sessionCode);
-  const { addItem } = useInventory(sessionCode, session.inventory || []);
+  const { solvePuzzle } = usePuzzleSolver(sessionCode, playerPseudo);
+  const { addItem } = useInventory(sessionCode, session.inventory || [], playerPseudo);
 
   const handleSolvePuzzle = async (puzzleId: string) => {
     await solvePuzzle(puzzleId);

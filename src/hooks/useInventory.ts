@@ -5,7 +5,8 @@ import type { InventoryItem } from '@/lib/gameLogic';
 
 export const useInventory = (
   sessionCode: string | null,
-  currentInventory: InventoryItem[]
+  currentInventory: InventoryItem[],
+  playerPseudo: string = ''
 ) => {
   const { addReward } = useRewardQueue();
 
@@ -34,10 +35,22 @@ export const useInventory = (
         description: item.description,
         icon: item.icon
       });
+
+      // Envoyer un message système dans le chat
+      if (playerPseudo) {
+        await supabase
+          .from('chat_messages')
+          .insert({
+            session_code: sessionCode,
+            player_pseudo: playerPseudo,
+            message: `*${playerPseudo}* a débloqué l'objet "${item.name}"`,
+            type: 'system'
+          });
+      }
     } catch (err) {
       console.error('Error adding item to inventory:', err);
     }
-  }, [sessionCode, currentInventory]);
+  }, [sessionCode, currentInventory, playerPseudo]);
 
   // Retirer un item de l'inventaire
   const removeItem = useCallback(async (itemId: string) => {

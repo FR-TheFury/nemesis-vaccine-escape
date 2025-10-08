@@ -133,21 +133,36 @@ export const Chat = ({ sessionCode, currentPlayerPseudo }: ChatProps) => {
               </p>
             ) : (
               <div className="space-y-1.5 sm:space-y-2">
-                {messages.map((msg) => (
-                  <div
-                    key={msg.id}
-                    className={`text-xs sm:text-sm ${
-                      msg.player_pseudo === currentPlayerPseudo
-                        ? 'text-right'
-                        : 'text-left'
-                    }`}
-                  >
-                    <span className="font-semibold text-primary">
-                      {msg.player_pseudo}:
-                    </span>{' '}
-                    <span className="text-foreground break-words">{msg.message}</span>
-                  </div>
-                ))}
+                {messages.map((msg) => {
+                  const isSystem = msg.type === 'system';
+                  
+                  if (isSystem) {
+                    return (
+                      <div
+                        key={msg.id}
+                        className="text-xs sm:text-sm text-center italic text-muted-foreground bg-accent/20 rounded px-2 py-1 my-1"
+                      >
+                        {msg.message}
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div
+                      key={msg.id}
+                      className={`text-xs sm:text-sm ${
+                        msg.player_pseudo === currentPlayerPseudo
+                          ? 'text-right'
+                          : 'text-left'
+                      }`}
+                    >
+                      <span className="font-semibold text-primary">
+                        {msg.player_pseudo}:
+                      </span>{' '}
+                      <span className="text-foreground break-words">{msg.message}</span>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </ScrollArea>

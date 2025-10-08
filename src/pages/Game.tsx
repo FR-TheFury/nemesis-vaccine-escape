@@ -98,7 +98,11 @@ const Game = () => {
   );
 
   const inventory = (session?.inventory as any[]) || [];
-  const { addItem, removeItem, hasItem } = useInventory(sessionCode || null, inventory);
+  const { addItem, removeItem, hasItem } = useInventory(
+    sessionCode || null, 
+    inventory, 
+    currentPlayer?.pseudo || ''
+  );
 
   useEffect(() => {
     if (!sessionCode) {
@@ -237,11 +241,11 @@ const Game = () => {
   const renderZone = () => {
     switch (currentZone) {
       case 1:
-        return <Zone1 sessionCode={sessionCode || ''} session={session} />;
+        return <Zone1 sessionCode={sessionCode || ''} session={session} playerPseudo={currentPlayer.pseudo} />;
       case 2:
-        return <Zone2 sessionCode={sessionCode || ''} session={session} />;
+        return <Zone2 sessionCode={sessionCode || ''} session={session} playerPseudo={currentPlayer.pseudo} />;
       case 3:
-        return <Zone3 sessionCode={sessionCode || ''} session={session} />;
+        return <Zone3 sessionCode={sessionCode || ''} session={session} playerPseudo={currentPlayer.pseudo} />;
       default:
         return <GameEnd session={session} players={players} />;
     }

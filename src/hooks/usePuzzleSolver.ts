@@ -18,7 +18,7 @@ const PUZZLE_TO_HINT_MAP: Record<string, { zone: string; hint: string }> = {
   'zone3_final': { zone: 'zone3', hint: 'p3' },
 };
 
-export const usePuzzleSolver = (sessionCode: string | null) => {
+export const usePuzzleSolver = (sessionCode: string | null, playerPseudo: string = '') => {
   const { addReward } = useRewardQueue();
   
   const solvePuzzle = useCallback(async (puzzleId: string) => {
@@ -53,6 +53,18 @@ export const usePuzzleSolver = (sessionCode: string | null) => {
           title: `Énigme ${hintMapping.hint.replace('p', '')}`,
           description: hintContent || 'Un nouvel indice a été révélé !'
         });
+
+        // Envoyer un message système dans le chat
+        if (playerPseudo) {
+          await supabase
+            .from('chat_messages')
+            .insert({
+              session_code: sessionCode,
+              player_pseudo: playerPseudo,
+              message: `*${playerPseudo}* a débloqué l'énigme ${hintMapping.hint.replace('p', '')}`,
+              type: 'system'
+            });
+        }
       }
 
       // Vérifier si les 3 puzzles de la zone actuelle sont résolus

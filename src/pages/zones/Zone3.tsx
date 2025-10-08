@@ -15,9 +15,10 @@ import zone3Background from '@/assets/zone3-bg.png';
 interface Zone3Props {
   sessionCode: string;
   session: any;
+  playerPseudo?: string;
 }
 
-export const Zone3 = ({ sessionCode, session }: Zone3Props) => {
+export const Zone3 = ({ sessionCode, session, playerPseudo = '' }: Zone3Props) => {
   const [activePuzzle, setActivePuzzle] = useState<string | null>(null);
   const [showDoorPadlock, setShowDoorPadlock] = useState(false);
   const { toast } = useToast();
@@ -27,7 +28,7 @@ export const Zone3 = ({ sessionCode, session }: Zone3Props) => {
   const doorVisible = session.door_visible || { zone1: false, zone2: false, zone3: false };
   const doorStatus = session.door_status || { zone1: 'locked', zone2: 'locked', zone3: 'locked' };
   const doorCodes = session.door_codes || {};
-  const { solvePuzzle } = usePuzzleSolver(sessionCode);
+  const { solvePuzzle } = usePuzzleSolver(sessionCode, playerPseudo);
 
   const handleSolvePuzzle = async (puzzleId: string) => {
     await solvePuzzle(puzzleId);
