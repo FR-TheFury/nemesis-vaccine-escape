@@ -35,24 +35,24 @@ export const Zone3 = ({ sessionCode, session, playerPseudo = '' }: Zone3Props) =
     setActivePuzzle(null);
   };
 
-  // Hotspots pour les énigmes principales (disparaissent après résolution)
+  // Hotspots pour les énigmes principales (restent visibles, marqués solved quand résolus)
   const puzzleHotspots = [
-    !solvedPuzzles[zone.puzzles.cryobox.id] && {
+    {
       id: 'cryobox',
       x: 30,
       y: 50,
       label: 'Coffre cryogénique',
       icon: '❄️',
-      solved: false,
+      solved: !!solvedPuzzles[zone.puzzles.cryobox.id],
       onClick: () => setActivePuzzle('cryobox')
     },
-    !solvedPuzzles[zone.puzzles.mixer.id] && {
+    {
       id: 'mixer',
       x: 50,
       y: 60,
       label: 'Table de synthèse',
       icon: '🧪',
-      solved: false,
+      solved: !!solvedPuzzles[zone.puzzles.mixer.id],
       onClick: () => {
         if (!solvedPuzzles[zone.puzzles.cryobox.id]) {
           toast({
@@ -65,13 +65,13 @@ export const Zone3 = ({ sessionCode, session, playerPseudo = '' }: Zone3Props) =
         setActivePuzzle('mixer');
       }
     },
-    !solvedPuzzles[zone.puzzles.final.id] && {
+    {
       id: 'final',
       x: 70,
       y: 45,
       label: 'Code final',
       icon: '🔐',
-      solved: false,
+      solved: !!solvedPuzzles[zone.puzzles.final.id],
       onClick: () => {
         if (!solvedPuzzles[zone.puzzles.mixer.id]) {
           toast({
@@ -84,7 +84,7 @@ export const Zone3 = ({ sessionCode, session, playerPseudo = '' }: Zone3Props) =
         setActivePuzzle('final');
       }
     }
-  ].filter(Boolean);
+  ];
 
   // Distracteurs
   const distractorHotspots = [

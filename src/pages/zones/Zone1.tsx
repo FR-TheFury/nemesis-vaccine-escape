@@ -35,27 +35,27 @@ export const Zone1 = ({ sessionCode, session, playerPseudo = '' }: Zone1Props) =
     setActivePuzzle(null);
   };
 
-  // Hotspots des énigmes principales (disparaissent après résolution)
+  // Hotspots des énigmes principales (restent visibles, marqués solved quand résolus)
   const puzzleHotspots = [
-    !solvedPuzzles['zone1_caesar'] && {
+    {
       id: 'caesar',
       x: 58,
       y: 46,
       label: 'Le Carnet',
       icon: '📖',
-      solved: false,
+      solved: solvedPuzzles['zone1_caesar'] || false,
       onClick: () => setActivePuzzle('caesar')
     },
-    !solvedPuzzles['zone1_audio'] && {
+    {
       id: 'audio',
       x: 39,
       y: 7,
       label: 'Le Dictaphone',
       icon: '🎙️',
-      solved: false,
+      solved: solvedPuzzles['zone1_audio'] || false,
       onClick: () => setActivePuzzle('audio')
     }
-  ].filter(Boolean);
+  ];
 
   // Le casier n'apparaît QUE si César est résolu ET casier pas encore résolu
   const conditionalHotspots = [];
@@ -71,24 +71,24 @@ export const Zone1 = ({ sessionCode, session, playerPseudo = '' }: Zone1Props) =
     });
   }
 
-  // Mini-jeux et distracteurs (disparaissent après résolution)
+  // Mini-jeux et distracteurs (restent visibles, marqués solved quand résolus)
   const distractorHotspots = [
-    !solvedPuzzles['zone1_puzzle'] && {
+    {
       id: 'puzzle',
       x: 69.5,
       y: 45,
       label: 'Panneau de contrôle',
       icon: '🖥️',
-      solved: false,
+      solved: !!solvedPuzzles['zone1_puzzle'],
       onClick: () => setActivePuzzle('puzzle')
     },
-    !solvedPuzzles['zone1_test_tubes'] && {
+    {
       id: 'test-tubes',
       x: 72,
       y: 85,
       label: 'Fioles et tubes à essai',
       icon: '🧪',
-      solved: false,
+      solved: !!solvedPuzzles['zone1_test_tubes'],
       onClick: () => setActivePuzzle('test-tubes')
     },
     {
@@ -109,7 +109,7 @@ export const Zone1 = ({ sessionCode, session, playerPseudo = '' }: Zone1Props) =
       solved: false,
       onClick: () => setActivePuzzle('dusty-files')
     }
-  ].filter(Boolean);
+  ];
 
   // Hotspot de la porte (toujours visible sauf si déverrouillée)
   const doorHotspot = doorStatus.zone1 === 'locked' ? [{

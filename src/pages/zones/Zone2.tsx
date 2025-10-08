@@ -31,36 +31,36 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
     setActivePuzzle(null);
   };
 
-  // Hotspots pour les énigmes principales (disparaissent après résolution)
+  // Hotspots pour les énigmes principales (restent visibles, marqués solved quand résolus)
   const puzzleHotspots = [
-    !solvedPuzzles[zone.puzzles.dna.id] && {
+    {
       id: 'dna',
       x: 25,
       y: 45,
       label: 'Séquence ADN',
       icon: '🧬',
-      solved: false,
+      solved: !!solvedPuzzles[zone.puzzles.dna.id],
       onClick: () => setActivePuzzle('dna')
     },
-    !solvedPuzzles[zone.puzzles.microscope.id] && {
+    {
       id: 'microscope',
       x: 50,
       y: 35,
       label: 'Microscope UV',
       icon: '🔬',
-      solved: false,
+      solved: !!solvedPuzzles[zone.puzzles.microscope.id],
       onClick: () => setActivePuzzle('microscope')
     },
-    !solvedPuzzles[zone.puzzles.periodic.id] && {
+    {
       id: 'periodic',
       x: 75,
       y: 55,
       label: 'Tableau périodique',
       icon: '⚗️',
-      solved: false,
+      solved: !!solvedPuzzles[zone.puzzles.periodic.id],
       onClick: () => setActivePuzzle('periodic')
     }
-  ].filter(Boolean);
+  ];
 
   // Distracteurs
   const distractorHotspots = [
