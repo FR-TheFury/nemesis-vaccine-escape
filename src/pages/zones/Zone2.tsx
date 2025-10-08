@@ -31,36 +31,36 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
     setActivePuzzle(null);
   };
 
-  // Hotspots pour les énigmes principales
+  // Hotspots pour les énigmes principales (disparaissent après résolution)
   const puzzleHotspots = [
-    {
+    !solvedPuzzles[zone.puzzles.dna.id] && {
       id: 'dna',
       x: 25,
       y: 45,
       label: 'Séquence ADN',
       icon: '🧬',
-      solved: !!solvedPuzzles[zone.puzzles.dna.id],
+      solved: false,
       onClick: () => setActivePuzzle('dna')
     },
-    {
+    !solvedPuzzles[zone.puzzles.microscope.id] && {
       id: 'microscope',
       x: 50,
       y: 35,
       label: 'Microscope UV',
       icon: '🔬',
-      solved: !!solvedPuzzles[zone.puzzles.microscope.id],
+      solved: false,
       onClick: () => setActivePuzzle('microscope')
     },
-    {
+    !solvedPuzzles[zone.puzzles.periodic.id] && {
       id: 'periodic',
       x: 75,
       y: 55,
       label: 'Tableau périodique',
       icon: '⚗️',
-      solved: !!solvedPuzzles[zone.puzzles.periodic.id],
+      solved: false,
       onClick: () => setActivePuzzle('periodic')
     }
-  ];
+  ].filter(Boolean);
 
   // Distracteurs
   const distractorHotspots = [
@@ -114,9 +114,7 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
     onClick: () => setShowDoorPadlock(true)
   }] : [];
 
-  const hotspots = doorVisible.zone2 
-    ? doorHotspot 
-    : [...puzzleHotspots, ...distractorHotspots];
+  const hotspots = [...puzzleHotspots, ...distractorHotspots, ...doorHotspot];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-950 via-emerald-900 to-slate-950 p-4">

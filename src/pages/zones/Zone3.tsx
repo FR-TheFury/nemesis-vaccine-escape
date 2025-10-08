@@ -35,24 +35,24 @@ export const Zone3 = ({ sessionCode, session, playerPseudo = '' }: Zone3Props) =
     setActivePuzzle(null);
   };
 
-  // Hotspots pour les énigmes principales
+  // Hotspots pour les énigmes principales (disparaissent après résolution)
   const puzzleHotspots = [
-    {
+    !solvedPuzzles[zone.puzzles.cryobox.id] && {
       id: 'cryobox',
       x: 30,
       y: 50,
       label: 'Coffre cryogénique',
       icon: '❄️',
-      solved: !!solvedPuzzles[zone.puzzles.cryobox.id],
+      solved: false,
       onClick: () => setActivePuzzle('cryobox')
     },
-    {
+    !solvedPuzzles[zone.puzzles.mixer.id] && {
       id: 'mixer',
       x: 50,
       y: 60,
       label: 'Table de synthèse',
       icon: '🧪',
-      solved: !!solvedPuzzles[zone.puzzles.mixer.id],
+      solved: false,
       onClick: () => {
         if (!solvedPuzzles[zone.puzzles.cryobox.id]) {
           toast({
@@ -65,13 +65,13 @@ export const Zone3 = ({ sessionCode, session, playerPseudo = '' }: Zone3Props) =
         setActivePuzzle('mixer');
       }
     },
-    {
+    !solvedPuzzles[zone.puzzles.final.id] && {
       id: 'final',
       x: 70,
       y: 45,
       label: 'Code final',
       icon: '🔐',
-      solved: !!solvedPuzzles[zone.puzzles.final.id],
+      solved: false,
       onClick: () => {
         if (!solvedPuzzles[zone.puzzles.mixer.id]) {
           toast({
@@ -84,7 +84,7 @@ export const Zone3 = ({ sessionCode, session, playerPseudo = '' }: Zone3Props) =
         setActivePuzzle('final');
       }
     }
-  ];
+  ].filter(Boolean);
 
   // Distracteurs
   const distractorHotspots = [
@@ -138,9 +138,7 @@ export const Zone3 = ({ sessionCode, session, playerPseudo = '' }: Zone3Props) =
     onClick: () => setShowDoorPadlock(true)
   }] : [];
 
-  const hotspots = doorVisible.zone3 
-    ? doorHotspot 
-    : [...puzzleHotspots, ...distractorHotspots];
+  const hotspots = [...puzzleHotspots, ...distractorHotspots, ...doorHotspot];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-950 via-orange-900 to-slate-950 p-4">
