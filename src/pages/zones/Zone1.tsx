@@ -34,8 +34,8 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
   const puzzleHotspots = [
     {
       id: 'caesar',
-      x: 50,
-      y: 50,
+      x: 58,
+      y: 46,
       label: 'Le Carnet',
       icon: '📖',
       solved: !!solvedPuzzles[zone.puzzles.caesar.id],
@@ -43,8 +43,8 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
     },
     {
       id: 'locker',
-      x: 76,
-      y: 13,
+      x: 88,
+      y: 14,
       label: 'Le Casier',
       icon: '🔒',
       solved: !!solvedPuzzles[zone.puzzles.locker.id],
@@ -52,8 +52,8 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
     },
     {
       id: 'audio',
-      x: 35,
-      y: 25,
+      x: 39,
+      y: 7,
       label: 'Le Dictaphone',
       icon: '🎙️',
       solved: !!solvedPuzzles[zone.puzzles.audio.id],
@@ -65,8 +65,8 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
   const distractorHotspots = [
     {
       id: 'control-panel',
-      x: 15,
-      y: 65,
+      x: 69.5,
+      y: 45,
       label: 'Panneau de contrôle',
       icon: '🖥️',
       solved: false,
@@ -74,8 +74,8 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
     },
     {
       id: 'old-computer',
-      x: 85,
-      y: 60,
+      x: 72,
+      y: 85,
       label: 'Ordinateur ancien',
       icon: '💻',
       solved: false,
@@ -83,8 +83,8 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
     },
     {
       id: 'empty-safe',
-      x: 20,
-      y: 80,
+      x: 13,
+      y: 54,
       label: 'Petit coffre',
       icon: '📦',
       solved: false,
@@ -92,8 +92,8 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
     },
     {
       id: 'dusty-files',
-      x: 70,
-      y: 75,
+      x: 39.5,
+      y:80,
       label: 'Archives poussiéreuses',
       icon: '📚',
       solved: false,
