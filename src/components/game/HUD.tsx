@@ -102,10 +102,15 @@ export const HUD = ({
           onClick={() => setShowInventory(!showInventory)}
           variant="outline"
           size="icon"
-          className="h-8 w-8 sm:h-10 sm:w-10"
+          className="h-8 w-8 sm:h-10 sm:w-10 relative"
           title={showInventory ? "Cacher l'inventaire" : "Afficher l'inventaire"}
         >
           <Package className="h-3 w-3 sm:h-4 sm:w-4" />
+          {inventory.length > 0 && (
+            <span className="absolute -top-1 -right-1 w-4 h-4 bg-primary text-primary-foreground text-xs rounded-full flex items-center justify-center">
+              {inventory.length}
+            </span>
+          )}
         </Button>
         
         {/* Bouton Indices révélés */}
