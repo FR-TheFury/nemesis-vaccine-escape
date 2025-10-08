@@ -6,7 +6,7 @@
       "hints": {
         "p1": "🎙️ Énigme 1 : Message du Dr Morel - Un confinement doit être fermé pour empêcher le virus de se diffuser. Le laboratoire doit rester scellé.",
         "p2": "📖 Énigme 2 : Message déchiffré - La clé de la porte se trouve dans le casier sécurisé. Résolvez l'équation pour l'ouvrir.",
-        "p3": "🔒 Énigme 3 : Code obtenu - 7926 (Or + Fer). Ce code correspond aux éléments du tableau périodique. Utilisez-le sur la porte dorée."
+        "p3": "🔐 Énigme 3 : Charades du code de la porte\n\n1️⃣ Je suis le métal des rois et des pharaons, brillant et précieux. Mon numéro atomique ?\n→ Or (Au) = 79\n\n2️⃣ Je suis l'élément principal de l'acier, forgé dans le feu. Mon numéro atomique ?\n→ Fer (Fe) = 26\n\n💡 Solution : 79 + 26 = 7926"
       }
     },
     {

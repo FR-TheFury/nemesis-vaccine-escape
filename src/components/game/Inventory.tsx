@@ -1,13 +1,16 @@
+import { useState } from 'react';
 import { Package } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import type { InventoryItem } from '@/lib/gameLogic';
+import { PeriodicTableModal } from './PeriodicTableModal';
 
 interface InventoryProps {
   items: InventoryItem[];
 }
 
 export const Inventory = ({ items }: InventoryProps) => {
+  const [showPeriodicTable, setShowPeriodicTable] = useState(false);
   return (
     <div className="fixed bottom-2 left-1/2 -translate-x-1/2 z-40 w-[calc(100%-1rem)] sm:w-full max-w-2xl px-2 sm:px-4">
       <div className="bg-background/95 backdrop-blur-md border-2 border-primary rounded-lg p-2 sm:p-4">
@@ -29,8 +32,13 @@ export const Inventory = ({ items }: InventoryProps) => {
               {items.map((item) => (
                 <div
                   key={item.id}
-                  className="group relative px-2 py-1.5 sm:px-4 sm:py-2 bg-accent/50 hover:bg-accent rounded-md border border-border transition-colors"
+                  className="group relative px-2 py-1.5 sm:px-4 sm:py-2 bg-accent/50 hover:bg-accent rounded-md border border-border transition-colors cursor-pointer"
                   title={item.description}
+                  onClick={() => {
+                    if (item.id === 'periodic_table') {
+                      setShowPeriodicTable(true);
+                    }
+                  }}
                 >
                   <p className="text-xs sm:text-sm font-medium">{item.name}</p>
                   {item.description && (
@@ -44,6 +52,11 @@ export const Inventory = ({ items }: InventoryProps) => {
           )}
         </ScrollArea>
       </div>
+      
+      <PeriodicTableModal 
+        isOpen={showPeriodicTable} 
+        onClose={() => setShowPeriodicTable(false)} 
+      />
     </div>
   );
 };

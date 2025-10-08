@@ -30,13 +30,13 @@ export const CodeLocker = ({ isOpen, onClose, correctCode, onSolve, addItem }: C
     if (code === correctCode) {
       if (addItem) {
         addItem({
-          id: 'door_code_zone1',
-          name: 'Code de la porte : 7926',
-          description: 'Code pour ouvrir la porte vers la Zone 2'
+          id: 'periodic_table',
+          name: 'Tableau Périodique',
+          description: 'Cliquez pour consulter les éléments chimiques'
         });
         toast({
-          title: "✓ Code de la porte obtenu !",
-          description: "Code : 7926 (Or + Fer). L'énigme 3 est maintenant révélée.",
+          title: "✓ Casier déverrouillé !",
+          description: "Vous avez obtenu le Tableau Périodique des Éléments. L'énigme 3 est maintenant révélée.",
         });
       } else {
         toast({

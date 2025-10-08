@@ -1,74 +1,19 @@
 import { useState } from 'react';
-import { Lock, Unlock, AlertCircle, FlaskConical } from 'lucide-react';
+import { Lock, Unlock, AlertCircle } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
-
-// Éléments chimiques utilisés dans les codes
-const CHEMICAL_ELEMENTS = [
-  { symbol: 'H', name: 'Hydrogène', number: 1 },
-  { symbol: 'He', name: 'Hélium', number: 2 },
-  { symbol: 'Li', name: 'Lithium', number: 3 },
-  { symbol: 'Be', name: 'Béryllium', number: 4 },
-  { symbol: 'B', name: 'Bore', number: 5 },
-  { symbol: 'C', name: 'Carbone', number: 6 },
-  { symbol: 'N', name: 'Azote', number: 7 },
-  { symbol: 'O', name: 'Oxygène', number: 8 },
-  { symbol: 'F', name: 'Fluor', number: 9 },
-  { symbol: 'Ne', name: 'Néon', number: 10 },
-  { symbol: 'Na', name: 'Sodium', number: 11 },
-  { symbol: 'Mg', name: 'Magnésium', number: 12 },
-  { symbol: 'Al', name: 'Aluminium', number: 13 },
-  { symbol: 'Si', name: 'Silicium', number: 14 },
-  { symbol: 'P', name: 'Phosphore', number: 15 },
-  { symbol: 'S', name: 'Soufre', number: 16 },
-  { symbol: 'Cl', name: 'Chlore', number: 17 },
-  { symbol: 'Ar', name: 'Argon', number: 18 },
-  { symbol: 'Fe', name: 'Fer', number: 26 },
-  { symbol: 'Cu', name: 'Cuivre', number: 29 },
-  { symbol: 'Zn', name: 'Zinc', number: 30 },
-  { symbol: 'Ag', name: 'Argent', number: 47 },
-  { symbol: 'Au', name: 'Or', number: 79 },
-  { symbol: 'Pb', name: 'Plomb', number: 82 },
-];
-
-// Charades par zone
-const RIDDLES = {
-  zone1: {
-    riddle1: "Je suis le métal des rois et des pharaons, brillant et précieux. Mon numéro atomique ?",
-    answer1: "Or (Au) - 79",
-    riddle2: "Je suis l'élément principal de l'acier, forgé dans le feu. Mon numéro atomique ?",
-    answer2: "Fer (Fe) - 26",
-    solution: "Code: 79 + 26 = 7926"
-  },
-  zone2: {
-    riddle1: "Je suis un métal alcalin, présent dans le sel de table. Mon numéro atomique ?",
-    answer1: "Sodium (Na) - 11",
-    riddle2: "Je suis un métal précieux, utilisé en bijouterie et photographie. Mon numéro atomique ?",
-    answer2: "Argent (Ag) - 47",
-    solution: "Code: 11 + 47 = 1147"
-  },
-  zone3: {
-    riddle1: "Je suis un métal rougeâtre, excellent conducteur d'électricité. Mon numéro atomique ?",
-    answer1: "Cuivre (Cu) - 29",
-    riddle2: "Je suis un métal lourd, autrefois utilisé dans les peintures. Mon numéro atomique ?",
-    answer2: "Plomb (Pb) - 82",
-    solution: "Code: 29 + 82 = 2982"
-  }
-};
 
 interface DoorPadlockProps {
   isOpen: boolean;
   onClose: () => void;
   sessionCode: string;
   currentZone: number;
-  doorCode: string; // Le code correct pour cette porte
+  doorCode: string;
   onUnlock: () => void;
 }
 
@@ -94,16 +39,13 @@ export const DoorPadlock = ({
     setIsValidating(true);
     setError('');
 
-    // Normaliser les codes (enlever espaces, tirets)
     const normalizedInput = code.replace(/[\s-]/g, '').toUpperCase();
     const normalizedDoorCode = doorCode.replace(/[\s-]/g, '').toUpperCase();
 
     if (normalizedInput === normalizedDoorCode) {
-      // Code correct !
       setIsSuccess(true);
       
       try {
-        // Déverrouiller la porte et passer à la zone suivante
         const zoneKey = `zone${currentZone}`;
         
         const { data: session } = await supabase
@@ -142,11 +84,9 @@ export const DoorPadlock = ({
         setIsValidating(false);
       }
     } else {
-      // Code incorrect
       setError('Code incorrect. Vérifiez les indices et réessayez.');
       setIsValidating(false);
       
-      // Animation shake
       const input = document.getElementById('door-code-input');
       if (input) {
         input.classList.add('animate-shake');
@@ -157,7 +97,7 @@ export const DoorPadlock = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-2xl max-h-[90vh]">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-2xl">
             {isSuccess ? (
@@ -175,88 +115,13 @@ export const DoorPadlock = ({
           <DialogDescription>
             {isSuccess 
               ? 'Accès accordé à la zone suivante !'
-              : 'Résolvez les charades pour trouver les éléments et composer le code.'
+              : 'Entrez le code à 4 chiffres pour déverrouiller la porte.'
             }
           </DialogDescription>
         </DialogHeader>
 
         {!isSuccess && (
-          <Tabs defaultValue="riddles" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="riddles">Charades</TabsTrigger>
-              <TabsTrigger value="periodic">
-                <FlaskConical className="w-4 h-4 mr-2" />
-                Tableau Périodique
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="riddles" className="space-y-4 mt-4">
-              <div className="space-y-4">
-                {/* Charade 1 */}
-                <div className="p-4 rounded-lg bg-primary/5 border-2 border-primary/20">
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
-                      <span className="text-primary font-bold">1</span>
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">
-                        {RIDDLES[`zone${currentZone}` as keyof typeof RIDDLES].riddle1}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Charade 2 */}
-                <div className="p-4 rounded-lg bg-primary/5 border-2 border-primary/20">
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
-                      <span className="text-primary font-bold">2</span>
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">
-                        {RIDDLES[`zone${currentZone}` as keyof typeof RIDDLES].riddle2}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </TabsContent>
-
-            <TabsContent value="periodic" className="mt-4">
-              <ScrollArea className="h-[300px] w-full rounded-md border p-4">
-                <div className="space-y-2">
-                  <h3 className="font-semibold text-sm mb-3 flex items-center gap-2">
-                    <FlaskConical className="w-4 h-4" />
-                    Tableau Périodique des Éléments
-                  </h3>
-                  <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-                    {CHEMICAL_ELEMENTS.map((element) => (
-                      <div
-                        key={element.symbol}
-                        className="p-2 rounded-lg border bg-card hover:bg-accent transition-colors"
-                      >
-                        <div className="text-xs text-muted-foreground text-right">
-                          {element.number}
-                        </div>
-                        <div className="text-xl font-bold text-center text-primary">
-                          {element.symbol}
-                        </div>
-                        <div className="text-xs text-center text-muted-foreground truncate">
-                          {element.name}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </ScrollArea>
-            </TabsContent>
-          </Tabs>
-        )}
-
-        {/* Input du code */}
-        {!isSuccess && (
-          <div className="space-y-4 pt-4 border-t">
+          <div className="space-y-4 pt-4">
             <div className="space-y-2">
               <Input
                 id="door-code-input"
