@@ -13,11 +13,15 @@ import { cn } from '@/lib/utils';
 // Charades par zone
 const RIDDLES = {
   zone1: {
-    riddle1: "Je suis le métal des rois et des pharaons, brillant et précieux. Mon numéro atomique ?",
-    answer1: "Or (Au) - 79",
-    riddle2: "Je suis l'élément principal de l'acier, forgé dans le feu. Mon numéro atomique ?",
-    answer2: "Fer (Fe) - 26",
-    solution: "Code: 79 + 26 = 7926"
+    riddle1: "Mon numéro correspondant à l'élément du tableau périodique le plus présent dans le soleil !",
+    answer1: "Azote (N) - 7",
+    riddle2: "Se numéro et celui de la version du virus !",
+    answer2: "VX-9 - 9",
+    riddle3: "Mon numéro et celui de l'élément périodique de l'hélium Visible Sur notre Tableau périodique trouvé dans le casier !",
+    answer3: "Hélium (He) - 2",
+    riddle4: "Nombre de face d'un dé à jouer !",
+    answer4: "6 faces",
+    solution: "Code: 7926"
   },
   zone2: {
     riddle1: "Je suis un métal alcalin, présent dans le sel de table. Mon numéro atomique ?",
@@ -279,6 +283,36 @@ export const HostControls = ({
                         💡 Réponse: {riddles.answer2}
                       </div>
                     </div>
+                    
+                    {/* Charade 3 */}
+                    {zone === 1 && 'riddle3' in riddles && (
+                      <div className="p-3 rounded-lg bg-background/50 border">
+                        <div className="flex items-start gap-2 mb-2">
+                          <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                            <span className="text-xs font-bold text-primary">3</span>
+                          </div>
+                          <p className="text-sm">{riddles.riddle3}</p>
+                        </div>
+                        <div className="text-sm font-semibold text-green-600 bg-green-950/20 p-2 rounded">
+                          💡 Réponse: {riddles.answer3}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Charade 4 */}
+                    {zone === 1 && 'riddle4' in riddles && (
+                      <div className="p-3 rounded-lg bg-background/50 border">
+                        <div className="flex items-start gap-2 mb-2">
+                          <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                            <span className="text-xs font-bold text-primary">4</span>
+                          </div>
+                          <p className="text-sm">{riddles.riddle4}</p>
+                        </div>
+                        <div className="text-sm font-semibold text-green-600 bg-green-950/20 p-2 rounded">
+                          💡 Réponse: {riddles.answer4}
+                        </div>
+                      </div>
+                    )}
                     
                     {/* Solution finale */}
                     <div className="p-3 rounded-lg bg-orange-950/20 border-2 border-orange-500/30">
