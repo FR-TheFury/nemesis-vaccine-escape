@@ -1,6 +1,8 @@
 import { useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { useRewardQueue } from './useRewardQueue';
+import hintsData from '@/data/hints.json';
 
 // Mapping des puzzles vers leurs indices (p1, p2, p3)
 // Les mini-jeux/distracteurs (test_tubes, puzzle) ne sont pas mappés car ils ne révèlent pas d'indices
@@ -17,6 +19,8 @@ const PUZZLE_TO_HINT_MAP: Record<string, { zone: string; hint: string }> = {
 };
 
 export const usePuzzleSolver = (sessionCode: string | null) => {
+  const { addReward } = useRewardQueue();
+  
   const solvePuzzle = useCallback(async (puzzleId: string) => {
     if (!sessionCode) return;
 
@@ -39,7 +43,16 @@ export const usePuzzleSolver = (sessionCode: string | null) => {
       
       if (hintMapping && !revealedHints[hintMapping.zone].includes(hintMapping.hint)) {
         revealedHints[hintMapping.zone] = [...revealedHints[hintMapping.zone], hintMapping.hint];
-        toast.success('🔍 Un nouvel indice a été révélé !');
+        
+        // Récupérer le contenu de l'indice
+        const zoneHints = (hintsData as any)[hintMapping.zone];
+        const hintContent = zoneHints?.[hintMapping.hint];
+        
+        addReward({
+          type: 'hint',
+          title: `Énigme ${hintMapping.hint.replace('p', '')}`,
+          description: hintContent || 'Un nouvel indice a été révélé !'
+        });
       }
 
       // Vérifier si les 3 puzzles de la zone actuelle sont résolus

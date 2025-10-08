@@ -5,7 +5,9 @@ import { useRealtimeSync } from '@/hooks/useRealtimeSync';
 import { usePlayerPresence } from '@/hooks/usePlayerPresence';
 import { useTimer } from '@/hooks/useTimer';
 import { useInventory } from '@/hooks/useInventory';
+import { useRewardQueue } from '@/hooks/useRewardQueue';
 import { HUD } from '@/components/game/HUD';
+import { RewardModal } from '@/components/game/RewardModal';
 import { Zone1 } from './zones/Zone1';
 import { Zone2 } from './zones/Zone2';
 import { Zone3 } from './zones/Zone3';
@@ -29,6 +31,7 @@ const Game = () => {
   const navigate = useNavigate();
   const { session, players, currentPlayer, loading, error, setSession, setPlayers } = useGameSession(sessionCode || null);
   const [showTimeUpDialog, setShowTimeUpDialog] = useState(false);
+  const { currentReward, showNext } = useRewardQueue();
   
   // Gérer la présence du joueur
   usePlayerPresence({
@@ -243,6 +246,15 @@ const Game = () => {
       />
       
       {renderZone()}
+
+      <RewardModal
+        isOpen={currentReward !== null}
+        onClose={showNext}
+        type={currentReward?.type || 'hint'}
+        title={currentReward?.title || ''}
+        description={currentReward?.description || ''}
+        icon={currentReward?.icon}
+      />
 
       <AlertDialog open={showTimeUpDialog} onOpenChange={setShowTimeUpDialog}>
         <AlertDialogContent>

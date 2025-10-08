@@ -70,7 +70,7 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
     });
   }
 
-  // Mini-jeux et distracteurs (disparaissent quand résolus sauf les distracteurs simples)
+  // Mini-jeux et distracteurs (restent visibles même après résolution)
   const distractorHotspots = [
     {
       id: 'puzzle',
@@ -108,7 +108,7 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
       solved: false,
       onClick: () => setActivePuzzle('dusty-files')
     }
-  ].filter(h => !h.solved || (h.id !== 'puzzle' && h.id !== 'test-tubes'));
+  ];
 
   // Hotspot de la porte (toujours visible sauf si déverrouillée)
   const doorHotspot = doorStatus.zone1 === 'locked' ? [{

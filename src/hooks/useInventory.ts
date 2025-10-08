@@ -1,12 +1,14 @@
 import { useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
+import { useRewardQueue } from './useRewardQueue';
 import type { InventoryItem } from '@/lib/gameLogic';
 
 export const useInventory = (
   sessionCode: string | null,
   currentInventory: InventoryItem[]
 ) => {
+  const { addReward } = useRewardQueue();
+
   // Ajouter un item à l'inventaire
   const addItem = useCallback(async (item: InventoryItem) => {
     if (!sessionCode) return;
@@ -25,9 +27,12 @@ export const useInventory = (
         .update({ inventory: newInventory as any })
         .eq('code', sessionCode);
       
-      // Afficher un message de succès
-      toast.success(`🎁 Objet trouvé : ${item.name}`, {
-        description: item.description
+      // Ajouter à la file d'attente des récompenses
+      addReward({
+        type: 'item',
+        title: item.name,
+        description: item.description,
+        icon: item.icon
       });
     } catch (err) {
       console.error('Error adding item to inventory:', err);
