@@ -148,6 +148,7 @@ export const Zone1 = ({ sessionCode, session, playerPseudo = '' }: Zone1Props) =
         encryptedText={zone.puzzles.caesar.encrypted}
         correctKey={zone.puzzles.caesar.key}
         onSolve={() => handleSolvePuzzle(zone.puzzles.caesar.id)}
+        isSolved={!!solvedPuzzles[zone.puzzles.caesar.id]}
       />
 
       <CodeLocker
@@ -156,6 +157,7 @@ export const Zone1 = ({ sessionCode, session, playerPseudo = '' }: Zone1Props) =
         correctCode={zone.puzzles.locker.code}
         onSolve={() => handleSolvePuzzle(zone.puzzles.locker.id)}
         addItem={addItem}
+        isSolved={!!solvedPuzzles[zone.puzzles.locker.id]}
       />
 
       <Dictaphone
@@ -163,6 +165,7 @@ export const Zone1 = ({ sessionCode, session, playerPseudo = '' }: Zone1Props) =
         onClose={() => setActivePuzzle(null)}
         transcript={zone.puzzles.audio.transcript}
         onSolve={() => handleSolvePuzzle(zone.puzzles.audio.id)}
+        isSolved={!!solvedPuzzles[zone.puzzles.audio.id]}
       />
 
       <DoorPadlock
@@ -182,6 +185,7 @@ export const Zone1 = ({ sessionCode, session, playerPseudo = '' }: Zone1Props) =
         onClose={() => setActivePuzzle(null)}
         onSolve={() => handleSolvePuzzle('zone1_test_tubes')}
         addItem={addItem}
+        isSolved={!!solvedPuzzles['zone1_test_tubes']}
       />
 
       <PuzzleBoard
@@ -189,6 +193,7 @@ export const Zone1 = ({ sessionCode, session, playerPseudo = '' }: Zone1Props) =
         onClose={() => setActivePuzzle(null)}
         onSolve={() => handleSolvePuzzle('zone1_puzzle')}
         addItem={addItem}
+        isSolved={!!solvedPuzzles['zone1_puzzle']}
       />
       
       {/* Distracteurs simples */}

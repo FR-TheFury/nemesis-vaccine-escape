@@ -10,6 +10,7 @@ interface TestTubesProps {
   onClose: () => void;
   onSolve: () => void;
   addItem: (item: InventoryItem) => void;
+  isSolved?: boolean;
 }
 
 const SOLUTION = [3, 7, 4, 2];
@@ -20,7 +21,7 @@ const TUBE_COLORS = [
   'from-purple-400 to-purple-600'
 ];
 
-export const TestTubes = ({ isOpen, onClose, onSolve, addItem }: TestTubesProps) => {
+export const TestTubes = ({ isOpen, onClose, onSolve, addItem, isSolved = false }: TestTubesProps) => {
   const [levels, setLevels] = useState([0, 0, 0, 0]);
   const [solved, setSolved] = useState(false);
 
@@ -68,81 +69,91 @@ export const TestTubes = ({ isOpen, onClose, onSolve, addItem }: TestTubesProps)
           </DialogDescription>
         </DialogHeader>
 
-        {/* Zone des énigmes */}
-        <div className="grid grid-cols-4 gap-4 py-4 px-2 bg-secondary/50 rounded-lg">
-          <div className="text-center space-y-1">
-            <div className="text-2xl">🔷</div>
-            <p className="text-xs font-medium">Les côtés d'un triangle</p>
-          </div>
-          <div className="text-center space-y-1">
-            <div className="text-2xl">🔷</div>
-            <p className="text-xs font-medium">Les jours d'une semaine</p>
-          </div>
-          <div className="text-center space-y-1">
-            <div className="text-2xl">🔷</div>
-            <p className="text-xs font-medium">Les points cardinaux</p>
-          </div>
-          <div className="text-center space-y-1">
-            <div className="text-2xl">🔷</div>
-            <p className="text-xs font-medium">Une paire, un duo</p>
-          </div>
-        </div>
 
-        <div className="grid grid-cols-4 gap-6 py-6">
-          {levels.map((level, index) => (
-            <div key={index} className="flex flex-col items-center gap-3">
-              <div className="text-sm font-medium text-muted-foreground">
-                Fiole {index + 1}
+        {isSolved ? (
+          <div className="p-6 bg-green-500/10 border-2 border-green-500 rounded-lg text-center">
+            <p className="text-2xl font-bold text-green-500">✓ Validé</p>
+            <p className="text-sm text-muted-foreground mt-2">Cette énigme a déjà été résolue</p>
+          </div>
+        ) : (
+          <>
+            {/* Zone des énigmes */}
+            <div className="grid grid-cols-4 gap-4 py-4 px-2 bg-secondary/50 rounded-lg">
+              <div className="text-center space-y-1">
+                <div className="text-2xl">🔷</div>
+                <p className="text-xs font-medium">Les côtés d'un triangle</p>
               </div>
-              
-              {/* Tube visuel */}
-              <div className="relative w-16 h-64 bg-slate-800 rounded-lg border-2 border-slate-600 overflow-hidden">
-                <div 
-                  className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t ${TUBE_COLORS[index]} transition-all duration-300`}
-                  style={{ height: `${level * 10}%` }}
-                />
-                {/* Graduations */}
-                {[...Array(11)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="absolute left-0 right-0 border-t border-slate-600/50"
-                    style={{ bottom: `${i * 10}%` }}
-                  />
-                ))}
+              <div className="text-center space-y-1">
+                <div className="text-2xl">🔷</div>
+                <p className="text-xs font-medium">Les jours d'une semaine</p>
               </div>
-
-              {/* Affichage du niveau */}
-              <div className="text-xl font-bold text-white">
-                {level}
+              <div className="text-center space-y-1">
+                <div className="text-2xl">🔷</div>
+                <p className="text-xs font-medium">Les points cardinaux</p>
               </div>
-
-              {/* Boutons de contrôle */}
-              <div className="flex gap-2">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => handleAdjust(index, -1)}
-                  disabled={level === 0 || solved}
-                >
-                  <Minus className="w-4 h-4" />
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => handleAdjust(index, 1)}
-                  disabled={level === 10 || solved}
-                >
-                  <Plus className="w-4 h-4" />
-                </Button>
+              <div className="text-center space-y-1">
+                <div className="text-2xl">🔷</div>
+                <p className="text-xs font-medium">Une paire, un duo</p>
               </div>
             </div>
-          ))}
-        </div>
 
-        {solved && (
-          <div className="text-center text-green-400 font-semibold animate-pulse">
-            ✓ Configuration correcte !
-          </div>
+            <div className="grid grid-cols-4 gap-6 py-6">
+              {levels.map((level, index) => (
+                <div key={index} className="flex flex-col items-center gap-3">
+                  <div className="text-sm font-medium text-muted-foreground">
+                    Fiole {index + 1}
+                  </div>
+                  
+                  {/* Tube visuel */}
+                  <div className="relative w-16 h-64 bg-slate-800 rounded-lg border-2 border-slate-600 overflow-hidden">
+                    <div 
+                      className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t ${TUBE_COLORS[index]} transition-all duration-300`}
+                      style={{ height: `${level * 10}%` }}
+                    />
+                    {/* Graduations */}
+                    {[...Array(11)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="absolute left-0 right-0 border-t border-slate-600/50"
+                        style={{ bottom: `${i * 10}%` }}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Affichage du niveau */}
+                  <div className="text-xl font-bold text-white">
+                    {level}
+                  </div>
+
+                  {/* Boutons de contrôle */}
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleAdjust(index, -1)}
+                      disabled={level === 0 || solved}
+                    >
+                      <Minus className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleAdjust(index, 1)}
+                      disabled={level === 10 || solved}
+                    >
+                      <Plus className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {solved && (
+              <div className="text-center text-green-400 font-semibold animate-pulse">
+                ✓ Configuration correcte !
+              </div>
+            )}
+          </>
         )}
       </DialogContent>
     </Dialog>

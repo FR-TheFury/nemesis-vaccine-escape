@@ -9,6 +9,7 @@ interface PuzzleBoardProps {
   onClose: () => void;
   onSolve: () => void;
   addItem: (item: InventoryItem) => void;
+  isSolved?: boolean;
 }
 
 type Board = (number | null)[];
@@ -40,11 +41,11 @@ const shuffleBoard = (): Board => {
   return board;
 };
 
-const isSolved = (board: Board): boolean => {
+const isPuzzleSolved = (board: Board): boolean => {
   return board.every((val, idx) => val === WINNING_CONFIG[idx]);
 };
 
-export const PuzzleBoard = ({ isOpen, onClose, onSolve, addItem }: PuzzleBoardProps) => {
+export const PuzzleBoard = ({ isOpen, onClose, onSolve, addItem, isSolved = false }: PuzzleBoardProps) => {
   const [board, setBoard] = useState<Board>(() => shuffleBoard());
   const [solved, setSolved] = useState(false);
 
@@ -55,7 +56,7 @@ export const PuzzleBoard = ({ isOpen, onClose, onSolve, addItem }: PuzzleBoardPr
   }, [isOpen, solved]);
 
   useEffect(() => {
-    if (isSolved(board) && !solved) {
+    if (isPuzzleSolved(board) && !solved) {
       setSolved(true);
       toast.success('Puzzle résolu ! Informations récupérées.');
       addItem({
@@ -106,34 +107,43 @@ export const PuzzleBoard = ({ isOpen, onClose, onSolve, addItem }: PuzzleBoardPr
         </DialogHeader>
 
         <div className="py-6">
-          <div className="grid grid-cols-3 gap-2 max-w-sm mx-auto">
-            {board.map((tile, index) => (
-              <Button
-                key={index}
-                onClick={() => handleTileClick(index)}
-                disabled={tile === null || solved}
-                className={`h-24 text-3xl font-bold transition-all ${
-                  tile === null
-                    ? 'bg-slate-900 cursor-default'
-                    : 'bg-gradient-to-br from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500'
-                }`}
-                variant="default"
-              >
-                {tile !== null ? tile : ''}
-              </Button>
-            ))}
-          </div>
-
-          {solved && (
-            <div className="mt-6 p-4 bg-green-900/30 border border-green-500 rounded-lg">
-              <p className="text-center text-green-400 font-semibold mb-2">
-                ✓ Puzzle résolu !
-              </p>
-              <p className="text-sm text-center text-slate-300">
-                Le virus VX-9 est un agent pathogène synthétique de classe 4.
-                Hautement contagieux. Vaccin requis immédiatement.
-              </p>
+          {isSolved ? (
+            <div className="p-6 bg-green-500/10 border-2 border-green-500 rounded-lg text-center">
+              <p className="text-2xl font-bold text-green-500">✓ Validé</p>
+              <p className="text-sm text-muted-foreground mt-2">Cette énigme a déjà été résolue</p>
             </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-3 gap-2 max-w-sm mx-auto">
+                {board.map((tile, index) => (
+                  <Button
+                    key={index}
+                    onClick={() => handleTileClick(index)}
+                    disabled={tile === null || solved}
+                    className={`h-24 text-3xl font-bold transition-all ${
+                      tile === null
+                        ? 'bg-slate-900 cursor-default'
+                        : 'bg-gradient-to-br from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500'
+                    }`}
+                    variant="default"
+                  >
+                    {tile !== null ? tile : ''}
+                  </Button>
+                ))}
+              </div>
+
+              {solved && (
+                <div className="mt-6 p-4 bg-green-900/30 border border-green-500 rounded-lg">
+                  <p className="text-center text-green-400 font-semibold mb-2">
+                    ✓ Puzzle résolu !
+                  </p>
+                  <p className="text-sm text-center text-slate-300">
+                    Le virus VX-9 est un agent pathogène synthétique de classe 4.
+                    Hautement contagieux. Vaccin requis immédiatement.
+                  </p>
+                </div>
+              )}
+            </>
           )}
         </div>
       </DialogContent>

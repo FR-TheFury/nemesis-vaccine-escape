@@ -10,9 +10,10 @@ interface FinalCodeProps {
   letters: string[];
   solution: string;
   onSolve: () => void;
+  isSolved?: boolean;
 }
 
-export const FinalCode = ({ isOpen, onClose, letters, solution, onSolve }: FinalCodeProps) => {
+export const FinalCode = ({ isOpen, onClose, letters, solution, onSolve, isSolved = false }: FinalCodeProps) => {
   const [selectedLetters, setSelectedLetters] = useState<string[]>([]);
   const [availableLetters, setAvailableLetters] = useState<string[]>([...letters]);
   const { toast } = useToast();
@@ -55,67 +56,76 @@ export const FinalCode = ({ isOpen, onClose, letters, solution, onSolve }: Final
         </DialogHeader>
         
         <div className="space-y-4">
-          <div className="p-4 bg-gradient-to-r from-primary/20 to-destructive/20 border-2 border-primary rounded-md animate-pulse">
-            <p className="text-sm font-bold text-center">🧬 SÉQUENCE D'ACTIVATION</p>
-            <p className="text-xs text-muted-foreground text-center mt-1">
-              Ordonnez les lettres pour former le mot final
-            </p>
-          </div>
+          {isSolved ? (
+            <div className="p-6 bg-green-500/10 border-2 border-green-500 rounded-lg text-center">
+              <p className="text-2xl font-bold text-green-500">✓ Validé</p>
+              <p className="text-sm text-muted-foreground mt-2">Cette énigme a déjà été résolue</p>
+            </div>
+          ) : (
+            <>
+              <div className="p-4 bg-gradient-to-r from-primary/20 to-destructive/20 border-2 border-primary rounded-md animate-pulse">
+                <p className="text-sm font-bold text-center">🧬 SÉQUENCE D'ACTIVATION</p>
+                <p className="text-xs text-muted-foreground text-center mt-1">
+                  Ordonnez les lettres pour former le mot final
+                </p>
+              </div>
 
-          {/* Selected letters display */}
-          <div className="p-4 bg-muted rounded-md min-h-[60px] flex items-center justify-center gap-2">
-            {selectedLetters.length === 0 ? (
-              <span className="text-muted-foreground text-sm">Sélectionnez les lettres...</span>
-            ) : (
-              selectedLetters.map((letter, idx) => (
-                <div
-                  key={idx}
-                  className="w-10 h-10 bg-primary text-primary-foreground rounded-md flex items-center justify-center font-bold text-lg"
+              {/* Selected letters display */}
+              <div className="p-4 bg-muted rounded-md min-h-[60px] flex items-center justify-center gap-2">
+                {selectedLetters.length === 0 ? (
+                  <span className="text-muted-foreground text-sm">Sélectionnez les lettres...</span>
+                ) : (
+                  selectedLetters.map((letter, idx) => (
+                    <div
+                      key={idx}
+                      className="w-10 h-10 bg-primary text-primary-foreground rounded-md flex items-center justify-center font-bold text-lg"
+                    >
+                      {letter}
+                    </div>
+                  ))
+                )}
+              </div>
+
+              {/* Available letters */}
+              <div className="grid grid-cols-6 gap-2">
+                {availableLetters.map((letter, idx) => (
+                  <Button
+                    key={idx}
+                    onClick={() => handleLetterClick(letter, idx)}
+                    variant="outline"
+                    className="h-12 text-lg font-bold"
+                  >
+                    {letter}
+                  </Button>
+                ))}
+              </div>
+
+              <div className="flex gap-2">
+                <Button
+                  onClick={handleReset}
+                  variant="destructive"
+                  className="flex-1"
+                  disabled={selectedLetters.length === 0}
                 >
-                  {letter}
-                </div>
-              ))
-            )}
-          </div>
+                  <Shuffle className="mr-2 h-4 w-4" />
+                  Réinitialiser
+                </Button>
+                <Button
+                  onClick={handleSubmit}
+                  disabled={selectedLetters.length !== letters.length}
+                  className="flex-1"
+                >
+                  ✓ Activer
+                </Button>
+              </div>
 
-          {/* Available letters */}
-          <div className="grid grid-cols-6 gap-2">
-            {availableLetters.map((letter, idx) => (
-              <Button
-                key={idx}
-                onClick={() => handleLetterClick(letter, idx)}
-                variant="outline"
-                className="h-12 text-lg font-bold"
-              >
-                {letter}
-              </Button>
-            ))}
-          </div>
-
-          <div className="flex gap-2">
-            <Button
-              onClick={handleReset}
-              variant="destructive"
-              className="flex-1"
-              disabled={selectedLetters.length === 0}
-            >
-              <Shuffle className="mr-2 h-4 w-4" />
-              Réinitialiser
-            </Button>
-            <Button
-              onClick={handleSubmit}
-              disabled={selectedLetters.length !== letters.length}
-              className="flex-1"
-            >
-              ✓ Activer
-            </Button>
-          </div>
-
-          <div className="p-3 bg-accent/50 rounded-md">
-            <p className="text-xs text-muted-foreground text-center">
-              💡 Le but de toute cette mission...
-            </p>
-          </div>
+              <div className="p-3 bg-accent/50 rounded-md">
+                <p className="text-xs text-muted-foreground text-center">
+                  💡 Le but de toute cette mission...
+                </p>
+              </div>
+            </>
+          )}
         </div>
       </DialogContent>
     </Dialog>

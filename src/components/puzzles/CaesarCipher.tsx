@@ -12,6 +12,7 @@ interface CaesarCipherProps {
   encryptedText: string;
   correctKey: number;
   onSolve: () => void;
+  isSolved?: boolean;
 }
 
 export const CaesarCipher = ({ 
@@ -19,7 +20,8 @@ export const CaesarCipher = ({
   onClose, 
   encryptedText, 
   correctKey,
-  onSolve 
+  onSolve,
+  isSolved = false
 }: CaesarCipherProps) => {
   const [key, setKey] = useState<number>(0);
   const [decoded, setDecoded] = useState<string>('');
@@ -58,38 +60,47 @@ export const CaesarCipher = ({
         </DialogHeader>
         
         <div className="space-y-4">
-          <div className="p-4 bg-muted rounded-md font-mono text-center text-lg">
-            {encryptedText}
-          </div>
+          {isSolved ? (
+            <div className="p-6 bg-green-500/10 border-2 border-green-500 rounded-lg text-center">
+              <p className="text-2xl font-bold text-green-500">✓ Validé</p>
+              <p className="text-sm text-muted-foreground mt-2">Cette énigme a déjà été résolue</p>
+            </div>
+          ) : (
+            <>
+              <div className="p-4 bg-muted rounded-md font-mono text-center text-lg">
+                {encryptedText}
+              </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="key">Clé de décalage (0-25)</Label>
-            <div className="flex gap-2">
-              <Input
-                id="key"
-                type="number"
-                min={0}
-                max={25}
-                value={key}
-                onChange={(e) => setKey(Number(e.target.value))}
-                placeholder="Entrez la clé"
-              />
-              <Button onClick={handleDecode} variant="outline">
-                Déchiffrer
+              <div className="space-y-2">
+                <Label htmlFor="key">Clé de décalage (0-25)</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="key"
+                    type="number"
+                    min={0}
+                    max={25}
+                    value={key}
+                    onChange={(e) => setKey(Number(e.target.value))}
+                    placeholder="Entrez la clé"
+                  />
+                  <Button onClick={handleDecode} variant="outline">
+                    Déchiffrer
+                  </Button>
+                </div>
+              </div>
+
+              {decoded && (
+                <div className="p-4 bg-accent rounded-md">
+                  <p className="text-sm font-bold mb-1">Résultat:</p>
+                  <p className="font-mono">{decoded}</p>
+                </div>
+              )}
+
+              <Button onClick={handleSubmit} className="w-full">
+                Valider la solution
               </Button>
-            </div>
-          </div>
-
-          {decoded && (
-            <div className="p-4 bg-accent rounded-md">
-              <p className="text-sm font-bold mb-1">Résultat:</p>
-              <p className="font-mono">{decoded}</p>
-            </div>
+            </>
           )}
-
-          <Button onClick={handleSubmit} className="w-full">
-            Valider la solution
-          </Button>
         </div>
       </DialogContent>
     </Dialog>

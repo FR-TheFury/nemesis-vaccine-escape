@@ -169,6 +169,7 @@ export const Zone3 = ({ sessionCode, session, playerPseudo = '' }: Zone3Props) =
         onClose={() => setActivePuzzle(null)}
         correctCode={zone.puzzles.cryobox.solution}
         onSolve={() => handleSolvePuzzle(zone.puzzles.cryobox.id)}
+        isSolved={!!solvedPuzzles[zone.puzzles.cryobox.id]}
       />
 
       <LiquidMixer
@@ -176,6 +177,7 @@ export const Zone3 = ({ sessionCode, session, playerPseudo = '' }: Zone3Props) =
         onClose={() => setActivePuzzle(null)}
         correctSequence={zone.puzzles.mixer.sequence}
         onSolve={() => handleSolvePuzzle(zone.puzzles.mixer.id)}
+        isSolved={!!solvedPuzzles[zone.puzzles.mixer.id]}
       />
 
       <FinalCode
@@ -184,6 +186,7 @@ export const Zone3 = ({ sessionCode, session, playerPseudo = '' }: Zone3Props) =
         letters={zone.puzzles.final.letters}
         solution={zone.puzzles.final.solution}
         onSolve={() => handleSolvePuzzle(zone.puzzles.final.id)}
+        isSolved={!!solvedPuzzles[zone.puzzles.final.id]}
       />
 
       <DoorPadlock
