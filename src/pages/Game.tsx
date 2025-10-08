@@ -259,12 +259,12 @@ const Game = () => {
       <AlertDialog open={showTimeUpDialog} onOpenChange={setShowTimeUpDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-destructive text-2xl">
-              {session.status === 'failed' ? '⏰ Temps écoulé !' : '🎉 Mission accomplie !'}
+            <AlertDialogTitle className={session.status === 'failed' ? 'text-destructive text-2xl' : 'text-primary text-2xl'}>
+              {session.status === 'failed' ? '💀 GAME OVER' : '🎉 Mission accomplie !'}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-lg">
               {session.status === 'failed' 
-                ? 'Le virus s\'est propagé... Mission échouée.' 
+                ? 'Le temps est écoulé. Le virus Z s\'est propagé dans le monde entier... L\'humanité est perdue.' 
                 : 'Félicitations ! Vous avez sauvé l\'humanité !'}
             </AlertDialogDescription>
           </AlertDialogHeader>
