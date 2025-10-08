@@ -57,16 +57,16 @@ export const Zone1 = ({ sessionCode, session, playerPseudo = '' }: Zone1Props) =
     }
   ];
 
-  // Le casier n'apparaît QUE si César est résolu ET casier pas encore résolu
+  // Le casier apparaît si César est résolu et reste visible après
   const conditionalHotspots = [];
-  if (solvedPuzzles['zone1_caesar'] && !solvedPuzzles['zone1_locker']) {
+  if (solvedPuzzles['zone1_caesar']) {
     conditionalHotspots.push({
       id: 'locker',
       x: 88,
       y: 14,
       label: 'Le Casier',
       icon: '🔒',
-      solved: false,
+      solved: !!solvedPuzzles['zone1_locker'],
       onClick: () => setActivePuzzle('locker')
     });
   }

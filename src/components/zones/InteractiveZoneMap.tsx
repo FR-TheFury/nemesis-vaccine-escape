@@ -43,12 +43,6 @@ export const InteractiveZoneMap = ({
         <div className="absolute inset-0 bg-black/20" />
       </div>
 
-      {/* Titre de la zone */}
-      <div className="absolute top-2 left-2 sm:top-4 sm:left-4 z-10">
-        <Badge variant="secondary" className="text-xs sm:text-sm md:text-lg px-2 py-1 sm:px-3 sm:py-1.5 md:px-4 md:py-2 backdrop-blur-sm bg-background/80">
-          {zoneName}
-        </Badge>
-      </div>
 
       {/* Hotspots cliquables - étincelles subtiles */}
       {hotspots.map((hotspot) => (
