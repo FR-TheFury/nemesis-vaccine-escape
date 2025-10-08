@@ -62,10 +62,31 @@ export const TestTubes = ({ isOpen, onClose, onSolve, addItem }: TestTubesProps)
             <span>🧪</span>
             Fioles et tubes à essai
           </DialogTitle>
-          <DialogDescription>
-            Ajustez les niveaux de liquide dans chaque fiole pour atteindre la configuration correcte.
+          <DialogDescription className="space-y-2">
+            <p>Ces fioles contiennent des échantillons critiques. Le Dr Morel a laissé des indices sur les niveaux précis requis.</p>
+            <p className="text-sm font-medium">Déchiffrez les énigmes pour trouver le niveau de chaque fiole :</p>
           </DialogDescription>
         </DialogHeader>
+
+        {/* Zone des énigmes */}
+        <div className="grid grid-cols-4 gap-4 py-4 px-2 bg-secondary/50 rounded-lg">
+          <div className="text-center space-y-1">
+            <div className="text-2xl">🔷</div>
+            <p className="text-xs font-medium">Les côtés d'un triangle</p>
+          </div>
+          <div className="text-center space-y-1">
+            <div className="text-2xl">🔷</div>
+            <p className="text-xs font-medium">Les jours d'une semaine</p>
+          </div>
+          <div className="text-center space-y-1">
+            <div className="text-2xl">🔷</div>
+            <p className="text-xs font-medium">Les points cardinaux</p>
+          </div>
+          <div className="text-center space-y-1">
+            <div className="text-2xl">🔷</div>
+            <p className="text-xs font-medium">Une paire, un duo</p>
+          </div>
+        </div>
 
         <div className="grid grid-cols-4 gap-6 py-6">
           {levels.map((level, index) => (
