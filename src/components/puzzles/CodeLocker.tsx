@@ -2,15 +2,17 @@ import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import type { InventoryItem } from '@/lib/gameLogic';
 
 interface CodeLockerProps {
   isOpen: boolean;
   onClose: () => void;
   correctCode: string;
   onSolve: () => void;
+  addItem?: (item: InventoryItem) => void;
 }
 
-export const CodeLocker = ({ isOpen, onClose, correctCode, onSolve }: CodeLockerProps) => {
+export const CodeLocker = ({ isOpen, onClose, correctCode, onSolve, addItem }: CodeLockerProps) => {
   const [code, setCode] = useState<string>('');
   const { toast } = useToast();
 
@@ -26,10 +28,22 @@ export const CodeLocker = ({ isOpen, onClose, correctCode, onSolve }: CodeLocker
 
   const handleSubmit = () => {
     if (code === correctCode) {
-      toast({
-        title: "✓ Casier déverrouillé !",
-        description: "Le badge magnétique est maintenant accessible.",
-      });
+      if (addItem) {
+        addItem({
+          id: 'door_code_zone1',
+          name: 'Code de la porte : 7926',
+          description: 'Code pour ouvrir la porte vers la Zone 2'
+        });
+        toast({
+          title: "✓ Code de la porte obtenu !",
+          description: "Vous avez obtenu le code de la porte : 7926",
+        });
+      } else {
+        toast({
+          title: "✓ Casier déverrouillé !",
+          description: "Le badge magnétique est maintenant accessible.",
+        });
+      }
       onSolve();
       onClose();
     } else {
@@ -46,9 +60,12 @@ export const CodeLocker = ({ isOpen, onClose, correctCode, onSolve }: CodeLocker
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Casier sécurisé - Code 4 chiffres</DialogTitle>
+          <DialogTitle className="flex items-center gap-2 text-2xl">
+            <span>🔒</span>
+            Casier sécurisé
+          </DialogTitle>
           <DialogDescription>
-            Entrez le code à 4 chiffres pour déverrouiller le casier
+            Le Dr. Morel a caché le code de la porte dans ce casier sécurisé. Vous devez résoudre l'équation inscrite sur la boîte pour l'ouvrir.
           </DialogDescription>
         </DialogHeader>
         

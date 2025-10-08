@@ -30,7 +30,12 @@ export const validatePuzzleSolution = (puzzleId: string, userAnswer: string): bo
     for (const puzzle of Object.values(zone.puzzles)) {
       if (puzzle.id === puzzleId) {
         const normalizedAnswer = userAnswer.trim().toUpperCase();
-        const normalizedSolution = String(puzzle.solution).toUpperCase();
+        // Gérer les différents types de puzzles
+        const solutionValue = 'solution' in puzzle ? puzzle.solution : 
+                            'code' in puzzle ? puzzle.code : 
+                            'keyword' in puzzle ? puzzle.keyword : null;
+        if (!solutionValue) return false;
+        const normalizedSolution = String(solutionValue).toUpperCase();
         return normalizedAnswer === normalizedSolution;
       }
     }

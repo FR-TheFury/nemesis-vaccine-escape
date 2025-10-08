@@ -2,10 +2,13 @@ import { useState } from 'react';
 import { CaesarCipher } from '@/components/puzzles/CaesarCipher';
 import { CodeLocker } from '@/components/puzzles/CodeLocker';
 import { Dictaphone } from '@/components/puzzles/Dictaphone';
+import { TestTubes } from '@/components/puzzles/TestTubes';
+import { PuzzleBoard } from '@/components/puzzles/PuzzleBoard';
 import { InteractiveZoneMap } from '@/components/zones/InteractiveZoneMap';
 import { DoorPadlock } from '@/components/game/DoorPadlock';
 import { DistractorModal } from '@/components/game/DistractorModal';
 import { usePuzzleSolver } from '@/hooks/usePuzzleSolver';
+import { useInventory } from '@/hooks/useInventory';
 import enigmesData from '@/data/enigmes.json';
 import zone1Background from '@/assets/zone1-bg.png';
 
@@ -24,13 +27,14 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
   const doorStatus = session.door_status || { zone1: 'locked', zone2: 'locked', zone3: 'locked' };
   const doorCodes = session.door_codes || {};
   const { solvePuzzle } = usePuzzleSolver(sessionCode);
+  const { addItem } = useInventory(sessionCode, session.inventory || []);
 
   const handleSolvePuzzle = async (puzzleId: string) => {
     await solvePuzzle(puzzleId);
     setActivePuzzle(null);
   };
 
-  // Hotspots pour les énigmes principales
+  // Hotspots pour les énigmes principales (disparaissent quand résolues)
   const puzzleHotspots = [
     {
       id: 'caesar',
@@ -59,27 +63,27 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
       solved: !!solvedPuzzles[zone.puzzles.audio.id],
       onClick: () => setActivePuzzle('audio')
     }
-  ];
+  ].filter(h => !h.solved);
 
-  // Distracteurs
+  // Mini-jeux et distracteurs (disparaissent quand résolus sauf les distracteurs simples)
   const distractorHotspots = [
     {
-      id: 'control-panel',
+      id: 'puzzle',
       x: 69.5,
       y: 45,
       label: 'Panneau de contrôle',
       icon: '🖥️',
-      solved: false,
-      onClick: () => setActivePuzzle('control-panel')
+      solved: !!solvedPuzzles['zone1_puzzle'],
+      onClick: () => setActivePuzzle('puzzle')
     },
     {
-      id: 'old-computer',
+      id: 'test-tubes',
       x: 72,
       y: 85,
-      label: 'Ordinateur ancien',
-      icon: '💻',
-      solved: false,
-      onClick: () => setActivePuzzle('old-computer')
+      label: 'Fioles et tubes à essai',
+      icon: '🧪',
+      solved: !!solvedPuzzles['zone1_test_tubes'],
+      onClick: () => setActivePuzzle('test-tubes')
     },
     {
       id: 'empty-safe',
@@ -93,15 +97,15 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
     {
       id: 'dusty-files',
       x: 39.5,
-      y:80,
+      y: 80,
       label: 'Archives poussiéreuses',
       icon: '📚',
       solved: false,
       onClick: () => setActivePuzzle('dusty-files')
     }
-  ];
+  ].filter(h => !h.solved || (h.id !== 'puzzle' && h.id !== 'test-tubes'));
 
-  // Hotspot de la porte (uniquement visible quand toutes les énigmes sont résolues)
+  // Hotspot de la porte (visible EN PLUS des autres quand les 3 énigmes principales sont résolues)
   const doorHotspot = doorVisible.zone1 && doorStatus.zone1 === 'locked' ? [{
     id: 'door',
     x: 76,
@@ -113,10 +117,8 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
     onClick: () => setShowDoorPadlock(true)
   }] : [];
 
-  // Afficher les énigmes + distracteurs SAUF si la porte est visible
-  const hotspots = doorVisible.zone1 
-    ? doorHotspot 
-    : [...puzzleHotspots, ...distractorHotspots];
+  // Combiner tous les hotspots visibles
+  const hotspots = [...puzzleHotspots, ...distractorHotspots, ...doorHotspot];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-950 via-slate-900 to-slate-950 p-2 sm:p-4">
@@ -147,6 +149,7 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
         onClose={() => setActivePuzzle(null)}
         correctCode={zone.puzzles.locker.code}
         onSolve={() => handleSolvePuzzle(zone.puzzles.locker.id)}
+        addItem={addItem}
       />
 
       <Dictaphone
@@ -167,23 +170,22 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
         }}
       />
 
-      {/* Distracteurs */}
-      <DistractorModal
-        isOpen={activePuzzle === 'control-panel'}
+      {/* Mini-jeux */}
+      <TestTubes
+        isOpen={activePuzzle === 'test-tubes'}
         onClose={() => setActivePuzzle(null)}
-        title="Panneau de contrôle"
-        icon="🖥️"
-        content="Les écrans affichent des données obsolètes datant de plusieurs années. Les boutons ne répondent plus."
+        onSolve={() => handleSolvePuzzle('zone1_test_tubes')}
+        addItem={addItem}
+      />
+
+      <PuzzleBoard
+        isOpen={activePuzzle === 'puzzle'}
+        onClose={() => setActivePuzzle(null)}
+        onSolve={() => handleSolvePuzzle('zone1_puzzle')}
+        addItem={addItem}
       />
       
-      <DistractorModal
-        isOpen={activePuzzle === 'old-computer'}
-        onClose={() => setActivePuzzle(null)}
-        title="Ordinateur ancien"
-        icon="💻"
-        content="L'ordinateur est hors service. Un message d'erreur clignote : 'SYSTÈME CORROMPU - RÉCUPÉRATION IMPOSSIBLE'."
-      />
-      
+      {/* Distracteurs simples */}
       <DistractorModal
         isOpen={activePuzzle === 'empty-safe'}
         onClose={() => setActivePuzzle(null)}

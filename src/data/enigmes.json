@@ -45,6 +45,19 @@
             "Écoutez jusqu'au bout.",
             "Il insiste sur une séquence."
           ]
+        },
+        "testTubes": {
+          "id": "zone1_test_tubes",
+          "name": "Fioles à niveau",
+          "solution": [3, 7, 4, 2],
+          "reward": "Note de niveaux",
+          "hints": []
+        },
+        "puzzle": {
+          "id": "zone1_puzzle",
+          "name": "Puzzle viral",
+          "reward": "Informations virus VX-9",
+          "hints": []
         }
       }
     },
