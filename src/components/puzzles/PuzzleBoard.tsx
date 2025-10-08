@@ -101,7 +101,7 @@ export const PuzzleBoard = ({ isOpen, onClose, onSolve, addItem }: PuzzleBoardPr
           </DialogTitle>
           <DialogDescription>
             Réorganisez les pièces du puzzle en cliquant sur les cases adjacentes à l'espace vide.
-            Reconstituez l'image pour révéler les informations sur le virus.
+            Reconstituez la liste de 1 à 8 de gauche a droite, pour révéler les informations sur le virus.
           </DialogDescription>
         </DialogHeader>
 

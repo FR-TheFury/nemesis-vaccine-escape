@@ -35,8 +35,8 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
   const puzzleHotspots = [
     {
       id: 'dna',
-      x: 25,
-      y: 45,
+      x: 35,
+      y: 50,
       label: 'Séquence ADN',
       icon: '🧬',
       solved: !!solvedPuzzles[zone.puzzles.dna.id],
@@ -44,8 +44,8 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
     },
     {
       id: 'microscope',
-      x: 50,
-      y: 35,
+      x: 29,
+      y: 20,
       label: 'Microscope UV',
       icon: '🔬',
       solved: !!solvedPuzzles[zone.puzzles.microscope.id],
@@ -53,8 +53,8 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
     },
     {
       id: 'periodic',
-      x: 75,
-      y: 55,
+      x: 50,
+      y: 15,
       label: 'Tableau périodique',
       icon: '⚗️',
       solved: !!solvedPuzzles[zone.puzzles.periodic.id],
@@ -67,7 +67,7 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
     {
       id: 'samples',
       x: 15,
-      y: 65,
+      y: 75,
       label: 'Échantillons',
       icon: '🧪',
       solved: false,
@@ -75,8 +75,8 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
     },
     {
       id: 'monitor',
-      x: 85,
-      y: 40,
+      x:90,
+      y: 95,
       label: 'Écran de monitoring',
       icon: '📊',
       solved: false,
@@ -84,8 +84,8 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
     },
     {
       id: 'notes',
-      x: 40,
-      y: 70,
+      x: 53.5,
+      y: 55,
       label: 'Notes de laboratoire',
       icon: '📝',
       solved: false,
@@ -93,7 +93,7 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
     },
     {
       id: 'centrifuge',
-      x: 65,
+      x: 18,
       y: 25,
       label: 'Centrifugeuse',
       icon: '⚙️',
