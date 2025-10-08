@@ -189,7 +189,16 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
         onClose={() => setActivePuzzle(null)}
         title="Notes de laboratoire"
         icon="📝"
-        content="Un cahier rempli de notes manuscrites illisibles et de schémas incompréhensibles. Les pages sont jaunies et datent de plusieurs années."
+        content={
+          <div className="space-y-2">
+            <p>
+              Nous sommes le <strong>10 octobre 2025</strong>, j'ai prélevé des échantillons du virus <strong>VX-9</strong> sur le sujet. J'ai fait des tests en mettant ce virus dans <strong>1 mol d'acide chlorhydrique</strong>, échec du test, le virus à survécu.
+            </p>
+            <p>
+              Nous devons l'éradiquer, c'était une erreur.. j'ai pris <strong>4 gouttes de pétrole brut</strong> et j'ai observe sa réaction avec le virus au microscope, le virus s'est développé environ <strong>2 fois plus vite</strong> que dans l'acide, et <strong>5 fois plus vite</strong> dans le sang et les cellules, y'a t-il une solution pour en venir à bout.. Je n'aurais pas du...
+            </p>
+          </div>
+        }
       />
       
       <DistractorModal

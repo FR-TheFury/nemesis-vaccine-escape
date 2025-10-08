@@ -13,42 +13,42 @@
 @layer base {
   :root {
     /* 🌈 Couleurs principales */
-    --background: 220 25% 10%;
-    --foreground: 210 100% 98%;
+    --background: 150 30% 8%;
+    --foreground: 120 100% 95%;
 
-    --card: 220 20% 15%;
-    --card-foreground: 210 100% 98%;
+    --card: 150 35% 12%;
+    --card-foreground: 120 100% 95%;
 
-    --popover: 220 25% 12%;
-    --popover-foreground: 210 100% 98%;
+    --popover: 150 35% 12%;
+    --popover-foreground: 120 100% 95%;
 
-    /* 🔵 Cyan tech - Couleur principale */
-    --primary: 190 100% 50%;
-    --primary-foreground: 220 25% 10%;
-    --primary-glow: 190 100% 70%;
+    /* 🟢 Vert fluo - Couleur principale */
+    --primary: 120 100% 50%;
+    --primary-foreground: 150 30% 8%;
+    --primary-glow: 120 100% 60%;
 
     /* 🟢 Vert bio - Couleur secondaire */
-    --secondary: 145 65% 45%;
-    --secondary-foreground: 220 25% 10%;
-    --secondary-glow: 145 80% 65%;
+    --secondary: 140 80% 45%;
+    --secondary-foreground: 150 30% 8%;
+    --secondary-glow: 140 100% 60%;
 
-    /* 🟣 Violet UV - Accent */
-    --accent: 270 80% 60%;
-    --accent-foreground: 210 100% 98%;
-    --accent-glow: 270 100% 75%;
+    /* 💚 Vert néon - Accent */
+    --accent: 140 100% 45%;
+    --accent-foreground: 120 100% 95%;
+    --accent-glow: 140 100% 55%;
 
     /* ⚠️ Rouge danger */
     --destructive: 0 85% 55%;
-    --destructive-foreground: 210 100% 98%;
+    --destructive-foreground: 120 100% 95%;
     --warning: 35 100% 50%;
 
     /* 🎨 Surfaces & textures */
-    --muted: 220 15% 20%;
-    --muted-foreground: 210 20% 70%;
+    --muted: 150 25% 17%;
+    --muted-foreground: 120 20% 65%;
 
-    --border: 220 20% 25%;
-    --input: 220 20% 20%;
-    --ring: 190 100% 50%;
+    --border: 120 80% 30%;
+    --input: 150 25% 17%;
+    --ring: 120 100% 50%;
 
     /* 📐 Radius */
     --radius: 0.75rem;
@@ -64,7 +64,7 @@
     --zone3-secondary: 0 65% 40%;
 
     /* ✨ Effets */
-    --glow-cyan: 0 0 20px hsl(190 100% 50% / 0.6);
+    --glow-cyan: 0 0 20px hsl(120 100% 50% / 0.6);
     --glow-green: 0 0 20px hsl(145 65% 45% / 0.6);
     --glow-violet: 0 0 20px hsl(270 80% 60% / 0.6);
     --glow-red: 0 0 20px hsl(0 85% 55% / 0.6);

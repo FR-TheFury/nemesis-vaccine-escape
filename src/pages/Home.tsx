@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from '@/components/ui/label';
 import { useGameSession } from '@/hooks/useGameSession';
 import { useToast } from '@/hooks/use-toast';
+import homeBg from '@/assets/home-bg.png';
 
 const Home = () => {
   const [pseudo, setPseudo] = useState('');
@@ -67,8 +68,13 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-background to-primary/5 flex items-center justify-center p-4">
-      <div className="max-w-2xl w-full space-y-6 md:space-y-8 text-center px-2">
+    <div className="min-h-screen relative flex items-center justify-center p-4">
+      <div 
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: `url(${homeBg})` }}
+      />
+      <div className="absolute inset-0 bg-black/60" />
+      <div className="relative z-10 max-w-2xl w-full space-y-6 md:space-y-8 text-center px-2">
         <div className="space-y-2 md:space-y-4">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-primary animate-fade-in" style={{ fontFamily: 'Orbitron, sans-serif' }}>
             Protocol Z
