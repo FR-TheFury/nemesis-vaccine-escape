@@ -83,7 +83,11 @@ export const HintsPanel = ({ currentZone, revealedHints, className }: HintsPanel
                   <AccordionContent>
                     <div className="space-y-3 pt-2">
                       <div className="p-4 bg-muted/50 rounded-lg border-l-4 border-primary animate-fade-in">
-                        <p className="text-base leading-relaxed">{puzzle.hint}</p>
+                        <div className="text-base leading-relaxed space-y-3">
+                          {puzzle.hint.split('\n\n').map((paragraph, i) => (
+                            <p key={i}>{paragraph}</p>
+                          ))}
+                        </div>
                       </div>
                       <Button
                         variant="outline"
