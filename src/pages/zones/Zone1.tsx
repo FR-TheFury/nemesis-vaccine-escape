@@ -110,8 +110,8 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
     }
   ].filter(h => !h.solved || (h.id !== 'puzzle' && h.id !== 'test-tubes'));
 
-  // Hotspot de la porte (visible EN PLUS des autres quand les 3 énigmes principales sont résolues)
-  const doorHotspot = doorVisible.zone1 && doorStatus.zone1 === 'locked' ? [{
+  // Hotspot de la porte (toujours visible sauf si déverrouillée)
+  const doorHotspot = doorStatus.zone1 === 'locked' ? [{
     id: 'door',
     x: 76,
     y: 13,
