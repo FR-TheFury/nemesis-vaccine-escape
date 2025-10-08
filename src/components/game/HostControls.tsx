@@ -1,11 +1,22 @@
 import { useState, useEffect } from 'react';
-import { Settings, Lock, Unlock, Save, Shield, Copy, Check, FlaskConical } from 'lucide-react';
+import { Settings, Lock, Unlock, Save, Shield, Copy, Check, FlaskConical, XCircle } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { 
+  AlertDialog, 
+  AlertDialogAction, 
+  AlertDialogCancel, 
+  AlertDialogContent, 
+  AlertDialogDescription, 
+  AlertDialogFooter, 
+  AlertDialogHeader, 
+  AlertDialogTitle, 
+  AlertDialogTrigger 
+} from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
@@ -61,6 +72,7 @@ export const HostControls = ({
   });
   const [isSaving, setIsSaving] = useState(false);
   const [copiedZone, setCopiedZone] = useState<string | null>(null);
+  const [isClosingSession, setIsClosingSession] = useState(false);
 
   // Synchroniser les codes avec les props
   useEffect(() => {
@@ -158,6 +170,19 @@ export const HostControls = ({
   const getDoorStatusIcon = (zone: string) => {
     const status = doorStatus[zone];
     return status === 'unlocked' ? <Unlock className="w-5 h-5" /> : <Lock className="w-5 h-5" />;
+  };
+
+  const handleCloseSession = async () => {
+    setIsClosingSession(true);
+    try {
+      await supabase.rpc('cleanup_session', { session_code_param: sessionCode });
+      toast.success('Session fermée avec succès');
+    } catch (error) {
+      console.error('Error closing session:', error);
+      toast.error('Erreur lors de la fermeture de la session');
+    } finally {
+      setIsClosingSession(false);
+    }
   };
 
   return (
@@ -371,6 +396,42 @@ export const HostControls = ({
             Utilisez cette fonction uniquement en cas de nécessité.
           </AlertDescription>
         </Alert>
+
+        {/* Bouton de fermeture de session */}
+        <div className="pt-4 border-t">
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button 
+                variant="destructive" 
+                className="w-full"
+                size="lg"
+              >
+                <XCircle className="w-5 h-5 mr-2" />
+                Fermer la session
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Confirmer la fermeture de la session</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Êtes-vous sûr de vouloir fermer cette session ? Cette action est irréversible.
+                  <br /><br />
+                  <strong>Tous les joueurs seront redirigés vers la page d'accueil et toutes les données de la session seront supprimées.</strong>
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Annuler</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleCloseSession}
+                  disabled={isClosingSession}
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                >
+                  {isClosingSession ? 'Fermeture...' : 'Confirmer la fermeture'}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
       </CardContent>
     </Card>
   );

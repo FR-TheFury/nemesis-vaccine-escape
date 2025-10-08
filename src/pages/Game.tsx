@@ -39,6 +39,32 @@ const Game = () => {
     playerId: currentPlayer?.id || ''
   });
   
+  // Écouter la suppression de la session
+  useEffect(() => {
+    if (!sessionCode) return;
+
+    const channel = supabase
+      .channel('session-deletion')
+      .on(
+        'postgres_changes',
+        {
+          event: 'DELETE',
+          schema: 'public',
+          table: 'sessions',
+          filter: `code=eq.${sessionCode}`
+        },
+        () => {
+          toast.error('La session a été fermée par le Game Master');
+          navigate('/');
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [sessionCode, navigate]);
+
   useRealtimeSync(
     sessionCode || null,
     {
