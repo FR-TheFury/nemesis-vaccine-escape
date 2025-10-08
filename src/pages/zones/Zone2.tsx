@@ -137,12 +137,14 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
         onClose={() => setActivePuzzle(null)}
         correctSequence={zone.puzzles.dna.sequence}
         onSolve={() => handleSolvePuzzle(zone.puzzles.dna.id)}
+        isSolved={!!solvedPuzzles[zone.puzzles.dna.id]}
       />
 
       <Microscope
         isOpen={activePuzzle === 'microscope'}
         onClose={() => setActivePuzzle(null)}
         onSolve={() => handleSolvePuzzle(zone.puzzles.microscope.id)}
+        isSolved={!!solvedPuzzles[zone.puzzles.microscope.id]}
       />
 
       <PeriodicTable
@@ -151,6 +153,7 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
         equations={zone.puzzles.periodic.equations}
         halfFormula={zone.puzzles.periodic.halfFormula}
         onSolve={() => handleSolvePuzzle(zone.puzzles.periodic.id)}
+        isSolved={!!solvedPuzzles[zone.puzzles.periodic.id]}
       />
 
       <DoorPadlock

@@ -9,6 +9,7 @@ interface DNASequenceProps {
   onClose: () => void;
   correctSequence: string[];
   onSolve: () => void;
+  isSolved?: boolean;
 }
 
 const TUBE_COLORS = {
@@ -18,7 +19,7 @@ const TUBE_COLORS = {
   G: 'bg-yellow-500',
 };
 
-export const DNASequence = ({ isOpen, onClose, correctSequence, onSolve }: DNASequenceProps) => {
+export const DNASequence = ({ isOpen, onClose, correctSequence, onSolve, isSolved = false }: DNASequenceProps) => {
   const [sequence, setSequence] = useState<string[]>(Array(correctSequence.length).fill(''));
   const { toast } = useToast();
 
@@ -60,56 +61,65 @@ export const DNASequence = ({ isOpen, onClose, correctSequence, onSolve }: DNASe
         </DialogHeader>
         
         <div className="space-y-4">
-          <p className="text-sm text-muted-foreground">
-            Placez les tubes dans le bon ordre pour reconstituer la séquence.
-          </p>
-
-          {/* Séquence actuelle */}
-          <div className="flex flex-wrap justify-center gap-1 max-w-full overflow-x-auto">
-            {sequence.map((base, index) => (
-              <div
-                key={index}
-                className={cn(
-                  "w-10 h-14 sm:w-12 sm:h-16 rounded-md border-2 flex items-center justify-center text-white font-bold text-base sm:text-lg flex-shrink-0",
-                  base ? TUBE_COLORS[base as keyof typeof TUBE_COLORS] : "border-dashed border-muted bg-muted/20"
-                )}
-              >
-                {base || '?'}
-              </div>
-            ))}
-          </div>
-
-          {/* Palette de tubes */}
-          <div className="p-3 sm:p-4 bg-muted rounded-md">
-            <p className="text-sm font-bold mb-2">Tubes disponibles:</p>
-            <div className="flex justify-center gap-2 flex-wrap">
-              {(['A', 'T', 'C', 'G'] as const).map((base) => (
-                <Button
-                  key={base}
-                  onClick={() => handleTubeClick(base)}
-                  className={cn(
-                    "w-10 h-10 sm:w-12 sm:h-12 text-white font-bold flex-shrink-0",
-                    TUBE_COLORS[base]
-                  )}
-                >
-                  {base}
-                </Button>
-              ))}
+          {isSolved ? (
+            <div className="p-6 bg-green-500/10 border-2 border-green-500 rounded-lg text-center">
+              <p className="text-2xl font-bold text-green-500">✓ Validé</p>
+              <p className="text-sm text-muted-foreground mt-2">Cette énigme a déjà été résolue</p>
             </div>
-          </div>
+          ) : (
+            <>
+              <p className="text-sm text-muted-foreground">
+                Placez les tubes dans le bon ordre pour reconstituer la séquence.
+              </p>
 
-          <div className="flex gap-2">
-            <Button onClick={handleReset} variant="outline" className="flex-1">
-              Réinitialiser
-            </Button>
-            <Button 
-              onClick={handleSubmit} 
-              className="flex-1"
-              disabled={sequence.includes('')}
-            >
-              Valider
-            </Button>
-          </div>
+              {/* Séquence actuelle */}
+              <div className="flex flex-wrap justify-center gap-1 max-w-full overflow-x-auto">
+                {sequence.map((base, index) => (
+                  <div
+                    key={index}
+                    className={cn(
+                      "w-10 h-14 sm:w-12 sm:h-16 rounded-md border-2 flex items-center justify-center text-white font-bold text-base sm:text-lg flex-shrink-0",
+                      base ? TUBE_COLORS[base as keyof typeof TUBE_COLORS] : "border-dashed border-muted bg-muted/20"
+                    )}
+                  >
+                    {base || '?'}
+                  </div>
+                ))}
+              </div>
+
+              {/* Palette de tubes */}
+              <div className="p-3 sm:p-4 bg-muted rounded-md">
+                <p className="text-sm font-bold mb-2">Tubes disponibles:</p>
+                <div className="flex justify-center gap-2 flex-wrap">
+                  {(['A', 'T', 'C', 'G'] as const).map((base) => (
+                    <Button
+                      key={base}
+                      onClick={() => handleTubeClick(base)}
+                      className={cn(
+                        "w-10 h-10 sm:w-12 sm:h-12 text-white font-bold flex-shrink-0",
+                        TUBE_COLORS[base]
+                      )}
+                    >
+                      {base}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <Button onClick={handleReset} variant="outline" className="flex-1">
+                  Réinitialiser
+                </Button>
+                <Button 
+                  onClick={handleSubmit} 
+                  className="flex-1"
+                  disabled={sequence.includes('')}
+                >
+                  Valider
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       </DialogContent>
     </Dialog>

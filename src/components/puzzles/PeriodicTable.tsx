@@ -17,9 +17,10 @@ interface PeriodicTableProps {
   equations: Equation[];
   halfFormula: string;
   onSolve: () => void;
+  isSolved?: boolean;
 }
 
-export const PeriodicTable = ({ isOpen, onClose, equations, halfFormula, onSolve }: PeriodicTableProps) => {
+export const PeriodicTable = ({ isOpen, onClose, equations, halfFormula, onSolve, isSolved = false }: PeriodicTableProps) => {
   const [answers, setAnswers] = useState<string[]>(equations.map(() => ''));
   const { toast } = useToast();
 
@@ -63,48 +64,57 @@ export const PeriodicTable = ({ isOpen, onClose, equations, halfFormula, onSolve
         </DialogHeader>
         
         <div className="space-y-4">
-          <div className="p-4 bg-primary/10 border border-primary/50 rounded-md">
-            <p className="text-sm font-bold text-primary">🧪 ANALYSE CHIMIQUE</p>
-            <p className="text-xs text-muted-foreground mt-1">
-              Résolvez les équations pour trouver les symboles atomiques
-            </p>
-          </div>
-
-          <div className="space-y-3">
-            {equations.map((eq, idx) => (
-              <div key={idx} className="space-y-2">
-                <Label htmlFor={`eq-${idx}`}>
-                  Équation {idx + 1}: <span className="font-mono">{eq.operation} = ?</span>
-                </Label>
-                <Input
-                  id={`eq-${idx}`}
-                  value={answers[idx]}
-                  onChange={(e) => {
-                    const newAnswers = [...answers];
-                    newAnswers[idx] = e.target.value;
-                    setAnswers(newAnswers);
-                  }}
-                  placeholder="Symbole (ex: Cl, O, H)"
-                  className="font-mono uppercase"
-                  maxLength={2}
-                />
+          {isSolved ? (
+            <div className="p-6 bg-green-500/10 border-2 border-green-500 rounded-lg text-center">
+              <p className="text-2xl font-bold text-green-500">✓ Validé</p>
+              <p className="text-sm text-muted-foreground mt-2">Cette énigme a déjà été résolue</p>
+            </div>
+          ) : (
+            <>
+              <div className="p-4 bg-primary/10 border border-primary/50 rounded-md">
+                <p className="text-sm font-bold text-primary">🧪 ANALYSE CHIMIQUE</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Résolvez les équations pour trouver les symboles atomiques
+                </p>
               </div>
-            ))}
-          </div>
 
-          <div className="p-3 bg-muted rounded-md">
-            <p className="text-xs text-muted-foreground">
-              💡 Indice: Le numéro atomique indique la position dans le tableau périodique
-            </p>
-          </div>
+              <div className="space-y-3">
+                {equations.map((eq, idx) => (
+                  <div key={idx} className="space-y-2">
+                    <Label htmlFor={`eq-${idx}`}>
+                      Équation {idx + 1}: <span className="font-mono">{eq.operation} = ?</span>
+                    </Label>
+                    <Input
+                      id={`eq-${idx}`}
+                      value={answers[idx]}
+                      onChange={(e) => {
+                        const newAnswers = [...answers];
+                        newAnswers[idx] = e.target.value;
+                        setAnswers(newAnswers);
+                      }}
+                      placeholder="Symbole (ex: Cl, O, H)"
+                      className="font-mono uppercase"
+                      maxLength={2}
+                    />
+                  </div>
+                ))}
+              </div>
 
-          <Button 
-            onClick={handleSubmit} 
-            className="w-full"
-            disabled={answers.some(a => a.trim() === '')}
-          >
-            Valider les symboles
-          </Button>
+              <div className="p-3 bg-muted rounded-md">
+                <p className="text-xs text-muted-foreground">
+                  💡 Indice: Le numéro atomique indique la position dans le tableau périodique
+                </p>
+              </div>
+
+              <Button 
+                onClick={handleSubmit} 
+                className="w-full"
+                disabled={answers.some(a => a.trim() === '')}
+              >
+                Valider les symboles
+              </Button>
+            </>
+          )}
         </div>
       </DialogContent>
     </Dialog>
