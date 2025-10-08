@@ -3,12 +3,11 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 // Mapping des puzzles vers leurs indices (p1, p2, p3)
+// Les mini-jeux/distracteurs (test_tubes, puzzle) ne sont pas mappés car ils ne révèlent pas d'indices
 const PUZZLE_TO_HINT_MAP: Record<string, { zone: string; hint: string }> = {
   'zone1_audio': { zone: 'zone1', hint: 'p1' },
   'zone1_caesar': { zone: 'zone1', hint: 'p2' },
   'zone1_locker': { zone: 'zone1', hint: 'p3' },
-  'zone1_test_tubes': { zone: 'zone1', hint: 'p4' },
-  'zone1_puzzle': { zone: 'zone1', hint: 'p5' },
   'zone2_dna': { zone: 'zone2', hint: 'p1' },
   'zone2_microscope': { zone: 'zone2', hint: 'p2' },
   'zone2_periodic': { zone: 'zone2', hint: 'p3' },

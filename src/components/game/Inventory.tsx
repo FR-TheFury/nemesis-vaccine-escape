@@ -13,7 +13,13 @@ export const Inventory = ({ items }: InventoryProps) => {
   const [showPeriodicTable, setShowPeriodicTable] = useState(false);
   return (
     <div className="fixed bottom-2 left-1/2 -translate-x-1/2 z-40 w-[calc(100%-1rem)] sm:w-full max-w-2xl px-2 sm:px-4">
-      <div className="bg-background/95 backdrop-blur-md border-2 border-primary rounded-lg p-2 sm:p-4">
+      <div className="bg-background/95 backdrop-blur-md border-2 border-primary rounded-lg p-2 sm:p-4 relative">
+        {items.length > 0 && (
+          <span className="absolute -top-1 -right-1 flex h-3 w-3">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+          </span>
+        )}
         <div className="flex items-center gap-1.5 sm:gap-2 mb-2 sm:mb-3">
           <Package className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
           <h3 className="font-bold text-sm sm:text-lg">Inventaire</h3>

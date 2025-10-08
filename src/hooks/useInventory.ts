@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 import type { InventoryItem } from '@/lib/gameLogic';
 
 export const useInventory = (
@@ -23,6 +24,11 @@ export const useInventory = (
         .from('sessions')
         .update({ inventory: newInventory as any })
         .eq('code', sessionCode);
+      
+      // Afficher un message de succès
+      toast.success(`🎁 Objet trouvé : ${item.name}`, {
+        description: item.description
+      });
     } catch (err) {
       console.error('Error adding item to inventory:', err);
     }

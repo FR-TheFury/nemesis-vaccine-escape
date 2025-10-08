@@ -34,7 +34,7 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
     setActivePuzzle(null);
   };
 
-  // Hotspots des énigmes principales (toujours disponibles jusqu'à résolution)
+  // Hotspots des énigmes principales (restent visibles même après résolution)
   const puzzleHotspots = [
     {
       id: 'caesar',
@@ -54,7 +54,7 @@ export const Zone1 = ({ sessionCode, session }: Zone1Props) => {
       solved: solvedPuzzles['zone1_audio'] || false,
       onClick: () => setActivePuzzle('audio')
     }
-  ].filter(h => !h.solved);
+  ];
 
   // Le casier n'apparaît QUE si César est résolu ET casier pas encore résolu
   const conditionalHotspots = [];
