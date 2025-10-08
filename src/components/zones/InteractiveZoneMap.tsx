@@ -51,9 +51,7 @@ export const InteractiveZoneMap = ({
       </div>
 
       {/* Hotspots cliquables - étincelles subtiles */}
-      {hotspots
-        .filter((hotspot) => !hotspot.solved)
-        .map((hotspot) => (
+      {hotspots.map((hotspot) => (
         <button
           key={hotspot.id}
           onClick={hotspot.onClick}
