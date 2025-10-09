@@ -39,8 +39,8 @@ export const Zone3 = ({ sessionCode, session, playerPseudo = '' }: Zone3Props) =
   const puzzleHotspots = [
     {
       id: 'cryobox',
-      x: 30,
-      y: 50,
+      x: 27,
+      y: 75,
       label: 'Coffre cryogénique',
       icon: '❄️',
       solved: !!solvedPuzzles[zone.puzzles.cryobox.id],
@@ -48,7 +48,7 @@ export const Zone3 = ({ sessionCode, session, playerPseudo = '' }: Zone3Props) =
     },
     {
       id: 'mixer',
-      x: 50,
+      x: 86,
       y: 60,
       label: 'Table de synthèse',
       icon: '🧪',
@@ -67,8 +67,8 @@ export const Zone3 = ({ sessionCode, session, playerPseudo = '' }: Zone3Props) =
     },
     {
       id: 'final',
-      x: 70,
-      y: 45,
+      x: 20,
+      y: 60,
       label: 'Code final',
       icon: '🔐',
       solved: !!solvedPuzzles[zone.puzzles.final.id],
@@ -90,8 +90,8 @@ export const Zone3 = ({ sessionCode, session, playerPseudo = '' }: Zone3Props) =
   const distractorHotspots = [
     {
       id: 'terminal',
-      x: 15,
-      y: 35,
+      x: 65,
+      y: 60,
       label: 'Terminal sécurisé',
       icon: '🖥️',
       solved: false,
@@ -99,8 +99,8 @@ export const Zone3 = ({ sessionCode, session, playerPseudo = '' }: Zone3Props) =
     },
     {
       id: 'documents',
-      x: 85,
-      y: 65,
+      x: 82,
+      y: 32,
       label: 'Documents classifiés',
       icon: '📄',
       solved: false,
@@ -108,8 +108,8 @@ export const Zone3 = ({ sessionCode, session, playerPseudo = '' }: Zone3Props) =
     },
     {
       id: 'scanner',
-      x: 45,
-      y: 25,
+      x: 18,
+      y: 10,
       label: 'Scanner biométrique',
       icon: '👁️',
       solved: false,
@@ -117,8 +117,8 @@ export const Zone3 = ({ sessionCode, session, playerPseudo = '' }: Zone3Props) =
     },
     {
       id: 'storage',
-      x: 65,
-      y: 75,
+      x: 68,
+      y: 10,
       label: 'Armoire frigorifique',
       icon: '🧊',
       solved: false,
@@ -129,7 +129,7 @@ export const Zone3 = ({ sessionCode, session, playerPseudo = '' }: Zone3Props) =
   // Hotspot de la porte finale
   const doorHotspot = [{
     id: 'door',
-    x: 76,
+    x: 39,
     y: 13,
     label: 'Mission Finale',
     icon: '🏆',
