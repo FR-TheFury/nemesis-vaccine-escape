@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Configuration - MODIFIEZ CES LIGNES AVEC VOS INFORMATIONS
+# Configuration
 CORRECT_NAME="Teo Debay"
 CORRECT_EMAIL="teodebaypro@gmail.com"
 
 echo "=========================================="
 echo "Réécriture de l'historique Git"
-echo "Remplacement de lovable-devbot par $CORRECT_NAME"
+echo "Remplacement de gpt-engineer-app[bot] par $CORRECT_NAME"
 echo "=========================================="
 echo ""
 
@@ -18,12 +18,13 @@ git filter-branch -f --env-filter "
 CORRECT_NAME=\"$CORRECT_NAME\"
 CORRECT_EMAIL=\"$CORRECT_EMAIL\"
 
-if [ \"\$GIT_COMMITTER_NAME\" = \"lovable-devbot\" ]
+# Remplacer gpt-engineer-app[bot]
+if [ \"\$GIT_COMMITTER_NAME\" = \"gpt-engineer-app[bot]\" ]
 then
     export GIT_COMMITTER_NAME=\"\$CORRECT_NAME\"
     export GIT_COMMITTER_EMAIL=\"\$CORRECT_EMAIL\"
 fi
-if [ \"\$GIT_AUTHOR_NAME\" = \"lovable-devbot\" ]
+if [ \"\$GIT_AUTHOR_NAME\" = \"gpt-engineer-app[bot]\" ]
 then
     export GIT_AUTHOR_NAME=\"\$CORRECT_NAME\"
     export GIT_AUTHOR_EMAIL=\"\$CORRECT_EMAIL\"
