@@ -73,27 +73,27 @@ const Game = () => {
     };
   }, [sessionCode, navigate]);
 
-  // Mémoriser les callbacks pour éviter les re-souscriptions
-  const handleSessionUpdate = useCallback((updatedSession: any) => {
+  // Callbacks pour le temps réel (pas de useCallback pour éviter les problèmes de capture)
+  const handleSessionUpdate = (updatedSession: any) => {
     setSession(updatedSession);
     
     // Détecter la fin de partie pour tous les joueurs
     if (updatedSession.status === 'failed' || updatedSession.status === 'completed') {
       setShowTimeUpDialog(true);
     }
-  }, []);
+  };
   
-  const handlePlayerJoin = useCallback((player: any) => {
+  const handlePlayerJoin = (player: any) => {
     setPlayers((prev: any) => [...prev, player]);
-  }, []);
+  };
   
-  const handlePlayerUpdate = useCallback((player: any) => {
+  const handlePlayerUpdate = (player: any) => {
     setPlayers((prev: any) => prev.map((p: any) => p.id === player.id ? player : p));
-  }, []);
+  };
   
-  const handlePlayerLeave = useCallback((player: any) => {
+  const handlePlayerLeave = (player: any) => {
     setPlayers((prev: any) => prev.map((p: any) => p.id === player.id ? player : p));
-  }, []);
+  };
 
   useRealtimeSync(
     sessionCode || null,

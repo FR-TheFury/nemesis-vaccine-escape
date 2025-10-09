@@ -22,10 +22,8 @@ export const useRealtimeSync = (
   // Utiliser useRef pour stocker les callbacks et éviter les re-souscriptions
   const callbacksRef = useRef(callbacks);
   
-  // Mettre à jour la ref quand les callbacks changent
-  useEffect(() => {
-    callbacksRef.current = callbacks;
-  }, [callbacks]);
+  // Mettre à jour la ref à chaque rendu (pas besoin de useEffect)
+  callbacksRef.current = callbacks;
   
   useEffect(() => {
     if (!sessionCode) return;
