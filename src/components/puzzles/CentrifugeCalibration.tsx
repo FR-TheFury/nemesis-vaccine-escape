@@ -27,28 +27,36 @@ export const CentrifugeCalibration = ({
 }: CentrifugeCalibrationProps) => {
   const [rpm, setRpm] = useState([5000]);
   const [time, setTime] = useState([60]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
-  const handleValidate = () => {
-    const rpmValue = rpm[0];
-    const timeValue = time[0];
+  const handleValidate = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    
+    try {
+      const rpmValue = rpm[0];
+      const timeValue = time[0];
 
-    const rpmInRange = Math.abs(rpmValue - targetRPM) <= toleranceRPM;
-    const timeInRange = Math.abs(timeValue - targetTime) <= toleranceTime;
+      const rpmInRange = Math.abs(rpmValue - targetRPM) <= toleranceRPM;
+      const timeInRange = Math.abs(timeValue - targetTime) <= toleranceTime;
 
-    if (rpmInRange && timeInRange) {
-      toast({
-        title: "✅ Calibration réussie !",
-        description: `La centrifugeuse est correctement calibrée : ${rpmValue} RPM, ${timeValue}s`,
-      });
-      onSolve();
-      onClose();
-    } else {
-      toast({
-        title: "❌ Calibration incorrecte",
-        description: "Les valeurs ne correspondent pas. Vérifiez les notes du Dr Morel.",
-        variant: "destructive"
-      });
+      if (rpmInRange && timeInRange) {
+        toast({
+          title: "✅ Calibration réussie !",
+          description: `La centrifugeuse est correctement calibrée : ${rpmValue} RPM, ${timeValue}s`,
+        });
+        onSolve();
+        onClose();
+      } else {
+        toast({
+          title: "❌ Calibration incorrecte",
+          description: "Les valeurs ne correspondent pas. Vérifiez les notes du Dr Morel.",
+          variant: "destructive"
+        });
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -117,8 +125,9 @@ export const CentrifugeCalibration = ({
               onClick={handleValidate}
               className="w-full"
               size="lg"
+              disabled={isSubmitting}
             >
-              🚀 Lancer la calibration
+              {isSubmitting ? '⏳ Calibration...' : '🚀 Lancer la calibration'}
             </Button>
           </div>
         )}

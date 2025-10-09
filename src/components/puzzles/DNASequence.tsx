@@ -21,6 +21,7 @@ const TUBE_COLORS = {
 
 export const DNASequence = ({ isOpen, onClose, correctSequence, onSolve, isSolved = false }: DNASequenceProps) => {
   const [sequence, setSequence] = useState<string[]>(Array(correctSequence.length).fill(''));
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
   const handleTubeClick = (base: string) => {
@@ -36,20 +37,27 @@ export const DNASequence = ({ isOpen, onClose, correctSequence, onSolve, isSolve
     setSequence(Array(correctSequence.length).fill(''));
   };
 
-  const handleSubmit = () => {
-    if (JSON.stringify(sequence) === JSON.stringify(correctSequence)) {
-      toast({
-        title: "✓ Séquence ADN validée !",
-        description: "La reconstruction est parfaite.",
-      });
-      onSolve();
-      onClose();
-    } else {
-      toast({
-        title: "✗ Séquence incorrecte",
-        description: "La structure ADN ne correspond pas.",
-        variant: "destructive",
-      });
+  const handleSubmit = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    
+    try {
+      if (JSON.stringify(sequence) === JSON.stringify(correctSequence)) {
+        toast({
+          title: "✓ Séquence ADN validée !",
+          description: "La reconstruction est parfaite.",
+        });
+        onSolve();
+        onClose();
+      } else {
+        toast({
+          title: "✗ Séquence incorrecte",
+          description: "La structure ADN ne correspond pas.",
+          variant: "destructive",
+        });
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -113,9 +121,9 @@ export const DNASequence = ({ isOpen, onClose, correctSequence, onSolve, isSolve
                 <Button 
                   onClick={handleSubmit} 
                   className="flex-1"
-                  disabled={sequence.includes('')}
+                  disabled={sequence.includes('') || isSubmitting}
                 >
-                  Valider
+                  {isSubmitting ? 'Validation...' : 'Valider'}
                 </Button>
               </div>
             </>

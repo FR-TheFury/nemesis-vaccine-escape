@@ -16,6 +16,7 @@ interface DictaphoneProps {
 
 export const Dictaphone = ({ isOpen, onClose, transcript, onSolve, isSolved = false }: DictaphoneProps) => {
   const [hasListened, setHasListened] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const { isPlaying, play, pause, stop } = useAudio(audioFile);
 
@@ -41,7 +42,9 @@ export const Dictaphone = ({ isOpen, onClose, transcript, onSolve, isSolved = fa
     }
   };
 
-  const handleValidate = () => {
+  const handleValidate = async () => {
+    if (isSubmitting) return;
+    
     if (!hasListened) {
       toast({
         variant: "destructive",
@@ -51,13 +54,19 @@ export const Dictaphone = ({ isOpen, onClose, transcript, onSolve, isSolved = fa
       return;
     }
 
-    toast({
-      title: "🎧 Message du Dr Morel entendu",
-      description: "Un confinement doit être maintenu pour empêcher la propagation du virus.",
-    });
+    setIsSubmitting(true);
+    
+    try {
+      toast({
+        title: "🎧 Message du Dr Morel entendu",
+        description: "Un confinement doit être maintenu pour empêcher la propagation du virus.",
+      });
 
-    onSolve();
-    onClose();
+      onSolve();
+      onClose();
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -112,8 +121,8 @@ export const Dictaphone = ({ isOpen, onClose, transcript, onSolve, isSolved = fa
                     </p>
                   </div>
                   
-                  <Button onClick={handleValidate} className="w-full" variant="default">
-                    Compris - Continuer
+                  <Button onClick={handleValidate} className="w-full" variant="default" disabled={isSubmitting}>
+                    {isSubmitting ? 'Validation...' : 'Compris - Continuer'}
                   </Button>
                 </div>
               )}

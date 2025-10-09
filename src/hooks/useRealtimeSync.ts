@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import type { Database } from '@/integrations/supabase/types';
@@ -19,6 +19,14 @@ export const useRealtimeSync = (
   sessionCode: string | null,
   callbacks: RealtimeSyncCallbacks
 ) => {
+  // Utiliser useRef pour stocker les callbacks et éviter les re-souscriptions
+  const callbacksRef = useRef(callbacks);
+  
+  // Mettre à jour la ref quand les callbacks changent
+  useEffect(() => {
+    callbacksRef.current = callbacks;
+  }, [callbacks]);
+  
   useEffect(() => {
     if (!sessionCode) return;
 
@@ -39,8 +47,8 @@ export const useRealtimeSync = (
         },
         (payload) => {
           console.log('🔄 Session mise à jour en temps réel:', payload.new);
-          if (callbacks.onSessionUpdate) {
-            callbacks.onSessionUpdate(payload.new as Session);
+          if (callbacksRef.current.onSessionUpdate) {
+            callbacksRef.current.onSessionUpdate(payload.new as Session);
           }
         }
       );
@@ -56,8 +64,8 @@ export const useRealtimeSync = (
         },
         (payload) => {
           console.log('Player joined:', payload);
-          if (callbacks.onPlayerJoin) {
-            callbacks.onPlayerJoin(payload.new as Player);
+          if (callbacksRef.current.onPlayerJoin) {
+            callbacksRef.current.onPlayerJoin(payload.new as Player);
           }
         }
       );
@@ -74,10 +82,10 @@ export const useRealtimeSync = (
           console.log('Player updated:', payload);
           const player = payload.new as Player;
           
-          if (!player.is_connected && callbacks.onPlayerLeave) {
-            callbacks.onPlayerLeave(player);
-          } else if (callbacks.onPlayerUpdate) {
-            callbacks.onPlayerUpdate(player);
+          if (!player.is_connected && callbacksRef.current.onPlayerLeave) {
+            callbacksRef.current.onPlayerLeave(player);
+          } else if (callbacksRef.current.onPlayerUpdate) {
+            callbacksRef.current.onPlayerUpdate(player);
           }
         }
       );
@@ -93,8 +101,8 @@ export const useRealtimeSync = (
         },
         (payload) => {
           console.log('Chat message received:', payload);
-          if (callbacks.onChatMessage) {
-            callbacks.onChatMessage(payload.new as ChatMessage);
+          if (callbacksRef.current.onChatMessage) {
+            callbacksRef.current.onChatMessage(payload.new as ChatMessage);
           }
         }
       );
@@ -111,5 +119,5 @@ export const useRealtimeSync = (
         supabase.removeChannel(channel);
       }
     };
-  }, [sessionCode, callbacks]);
+  }, [sessionCode]); // Retirer callbacks des dépendances
 };

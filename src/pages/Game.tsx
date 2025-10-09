@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useGameSession } from '@/hooks/useGameSession';
 import { useRealtimeSync } from '@/hooks/useRealtimeSync';
@@ -73,26 +73,35 @@ const Game = () => {
     };
   }, [sessionCode, navigate]);
 
+  // Mémoriser les callbacks pour éviter les re-souscriptions
+  const handleSessionUpdate = useCallback((updatedSession: any) => {
+    setSession(updatedSession);
+    
+    // Détecter la fin de partie pour tous les joueurs
+    if (updatedSession.status === 'failed' || updatedSession.status === 'completed') {
+      setShowTimeUpDialog(true);
+    }
+  }, []);
+  
+  const handlePlayerJoin = useCallback((player: any) => {
+    setPlayers((prev: any) => [...prev, player]);
+  }, []);
+  
+  const handlePlayerUpdate = useCallback((player: any) => {
+    setPlayers((prev: any) => prev.map((p: any) => p.id === player.id ? player : p));
+  }, []);
+  
+  const handlePlayerLeave = useCallback((player: any) => {
+    setPlayers((prev: any) => prev.map((p: any) => p.id === player.id ? player : p));
+  }, []);
+
   useRealtimeSync(
     sessionCode || null,
     {
-      onSessionUpdate: (updatedSession) => {
-        setSession(updatedSession as any);
-        
-        // Détecter la fin de partie pour tous les joueurs
-        if (updatedSession.status === 'failed' || updatedSession.status === 'completed') {
-          setShowTimeUpDialog(true);
-        }
-      },
-      onPlayerJoin: (player) => {
-        setPlayers((prev: any) => [...prev, player as any]);
-      },
-      onPlayerUpdate: (player) => {
-        setPlayers((prev: any) => prev.map((p: any) => p.id === player.id ? player : p));
-      },
-      onPlayerLeave: (player) => {
-        setPlayers((prev: any) => prev.map((p: any) => p.id === player.id ? player : p));
-      },
+      onSessionUpdate: handleSessionUpdate,
+      onPlayerJoin: handlePlayerJoin,
+      onPlayerUpdate: handlePlayerUpdate,
+      onPlayerLeave: handlePlayerLeave,
     }
   );
 

@@ -36,6 +36,7 @@ export const CaesarCipher = ({
 }: CaesarCipherProps) => {
   const [key, setKey] = useState<number>(0);
   const [decoded, setDecoded] = useState<string>('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
   const handleDecode = () => {
@@ -43,30 +44,37 @@ export const CaesarCipher = ({
     setDecoded(result);
   };
 
-  const handleSubmit = () => {
-    if (key === correctKey) {
-      toast({
-        title: "✓ Message déchiffré !",
-        description: "La clé de la porte se trouve dans le casier sécurisé. Le casier est maintenant accessible.",
-      });
-      
-      if (addItem) {
-        addItem({
-          id: 'half_formula_alpha',
-          name: 'Demi-formule α',
-          description: halfFormula,
-          icon: '🧪'
+  const handleSubmit = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    
+    try {
+      if (key === correctKey) {
+        toast({
+          title: "✓ Message déchiffré !",
+          description: "La clé de la porte se trouve dans le casier sécurisé. Le casier est maintenant accessible.",
+        });
+        
+        if (addItem) {
+          addItem({
+            id: 'half_formula_alpha',
+            name: 'Demi-formule α',
+            description: halfFormula,
+            icon: '🧪'
+          });
+        }
+        
+        onSolve();
+        onClose();
+      } else {
+        toast({
+          title: "✗ Incorrect",
+          description: "Ce n'est pas la bonne clé de déchiffrement.",
+          variant: "destructive",
         });
       }
-      
-      onSolve();
-      onClose();
-    } else {
-      toast({
-        title: "✗ Incorrect",
-        description: "Ce n'est pas la bonne clé de déchiffrement.",
-        variant: "destructive",
-      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -115,8 +123,8 @@ export const CaesarCipher = ({
                 </div>
               )}
 
-              <Button onClick={handleSubmit} className="w-full">
-                Valider la solution
+              <Button onClick={handleSubmit} className="w-full" disabled={isSubmitting}>
+                {isSubmitting ? 'Validation...' : 'Valider la solution'}
               </Button>
             </>
           )}
