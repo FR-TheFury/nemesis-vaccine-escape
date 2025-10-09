@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { DNASequence } from '@/components/puzzles/DNASequence';
 import { Microscope } from '@/components/puzzles/Microscope';
 import { PeriodicTable } from '@/components/puzzles/PeriodicTable';
+import { ColorTubesPuzzle } from '@/components/puzzles/ColorTubesPuzzle';
 import { InteractiveZoneMap } from '@/components/zones/InteractiveZoneMap';
 import { DoorPadlock } from '@/components/game/DoorPadlock';
 import { DistractorModal } from '@/components/game/DistractorModal';
@@ -59,20 +60,20 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
       icon: '⚗️',
       solved: !!solvedPuzzles[zone.puzzles.periodic.id],
       onClick: () => setActivePuzzle('periodic')
+    },
+    {
+      id: 'samples',
+      x: 15,
+      y: 75,
+      label: 'Tri des échantillons',
+      icon: '🧪',
+      solved: !!solvedPuzzles[zone.puzzles.samples?.id],
+      onClick: () => setActivePuzzle('samples')
     }
   ];
 
   // Distracteurs
   const distractorHotspots = [
-    {
-      id: 'samples',
-      x: 15,
-      y: 75,
-      label: 'Échantillons',
-      icon: '🧪',
-      solved: false,
-      onClick: () => setActivePuzzle('samples')
-    },
     {
       id: 'monitor',
       x:90,
@@ -156,6 +157,13 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
         isSolved={!!solvedPuzzles[zone.puzzles.periodic.id]}
       />
 
+      <ColorTubesPuzzle
+        isOpen={activePuzzle === 'samples'}
+        onClose={() => setActivePuzzle(null)}
+        onSolve={() => handleSolvePuzzle(zone.puzzles.samples?.id || 'zone2_samples')}
+        isSolved={!!solvedPuzzles[zone.puzzles.samples?.id]}
+      />
+
       <DoorPadlock
         isOpen={showDoorPadlock}
         onClose={() => setShowDoorPadlock(false)}
@@ -168,14 +176,6 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
       />
 
       {/* Distracteurs */}
-      <DistractorModal
-        isOpen={activePuzzle === 'samples'}
-        onClose={() => setActivePuzzle(null)}
-        title="Échantillons biologiques"
-        icon="🧪"
-        content="Des tubes à essai contenant des échantillons déjà analysés. Les étiquettes indiquent 'Traitement terminé - Archivé'."
-      />
-      
       <DistractorModal
         isOpen={activePuzzle === 'monitor'}
         onClose={() => setActivePuzzle(null)}

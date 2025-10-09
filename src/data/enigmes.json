@@ -105,6 +105,22 @@
             "L'ordre est celui des équations.",
             "Cl, O, H… ça complète une formule."
           ]
+        },
+        "samples": {
+          "id": "zone2_samples",
+          "name": "Tri des échantillons",
+          "initialState": [
+            ["red", "blue", "green", "red"],
+            ["green", "red", "blue", "green"],
+            ["blue", "green", "red", "blue"],
+            []
+          ],
+          "reward": "Échantillons triés correctement",
+          "hints": [
+            "Utilisez le tube vide pour les transferts temporaires.",
+            "Commencez par isoler une couleur complète.",
+            "Pensez à l'ordre inverse - quelle couleur finir en premier ?"
+          ]
         }
       }
     },

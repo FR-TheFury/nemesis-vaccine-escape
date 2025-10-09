@@ -168,19 +168,44 @@ export const Microscope = ({ isOpen, onClose, onSolve, isSolved = false }: Micro
                   Analyse en cours...
                 </p>
               ) : (
-                <div className="space-y-3">
+                <div className="space-y-4">
+                  {/* Étape 1 : Séquence originale */}
+                  <div className="bg-muted/50 p-3 rounded-lg border border-border">
+                    <p className="text-xs text-muted-foreground mb-1">Étape 1 : Séquence UV révélée</p>
+                    <p className="text-lg font-mono font-bold text-center tracking-wider text-foreground">
+                      {originalSequence}
+                    </p>
+                  </div>
+
+                  {/* Étape 2 : Séquence après delta */}
+                  <div className="bg-muted/50 p-3 rounded-lg border border-primary/50">
+                    <p className="text-xs text-muted-foreground mb-1">Étape 2 : Après décalage Δ={DELTA}</p>
+                    <p className="text-lg font-mono font-bold text-center tracking-wider text-primary">
+                      {decodedSequence.split('').map((char, idx) => (
+                        <span key={idx} className={POSITIONS.includes(idx + 1) ? 'text-accent underline decoration-2' : ''}>
+                          {char}
+                        </span>
+                      ))}
+                    </p>
+                    <p className="text-xs text-accent text-center mt-1">
+                      Positions {POSITIONS.join(', ')} soulignées
+                    </p>
+                  </div>
+
+                  {/* Étape 3 : Input du joueur */}
                   <div className="space-y-2">
                     <label className="text-sm font-medium">
-                      Entrez le résultat déchiffré :
+                      Étape 3 : Extrayez les positions {POSITIONS.join(', ')}
                     </label>
                     <Input
                       value={userAnswer}
                       onChange={(e) => setUserAnswer(e.target.value.toUpperCase())}
-                      placeholder="Votre réponse..."
+                      placeholder="Entrez les 3 lettres..."
                       maxLength={3}
                       className="text-center text-xl font-mono"
                     />
                   </div>
+
                   <div className="flex gap-2">
                     <Button onClick={handleSubmit} className="flex-1">
                       Valider
