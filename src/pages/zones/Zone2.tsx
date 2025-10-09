@@ -66,8 +66,8 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
     },
     {
       id: 'samples',
-      x: 15,
-      y: 75,
+      x: 69,
+      y: 20,
       label: 'Tri des échantillons',
       icon: '🧪',
       solved: !!solvedPuzzles[samplesId],
@@ -88,8 +88,8 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
   const distractorHotspots = [
     {
       id: 'monitor',
-      x:90,
-      y: 95,
+      x:91,
+      y: 90,
       label: 'Écran de monitoring',
       icon: '📊',
       solved: false,
