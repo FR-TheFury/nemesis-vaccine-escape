@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Volume2, Play, Pause } from 'lucide-react';
+import { useAudio } from '@/hooks/useAudio';
+import audioFile from '@/assets/zone1-audio.mp3';
 
 interface DictaphoneProps {
   isOpen: boolean;
@@ -13,22 +15,30 @@ interface DictaphoneProps {
 }
 
 export const Dictaphone = ({ isOpen, onClose, transcript, onSolve, isSolved = false }: DictaphoneProps) => {
-  const [isPlaying, setIsPlaying] = useState(false);
   const [hasListened, setHasListened] = useState(false);
   const { toast } = useToast();
+  const { isPlaying, play, pause, stop } = useAudio(audioFile);
+
+  useEffect(() => {
+    // Nettoyer l'audio quand on ferme le dialog
+    return () => {
+      stop();
+    };
+  }, [isOpen]);
 
   const handlePlay = () => {
-    setIsPlaying(true);
-    
-    // Simulate audio playback
-    setTimeout(() => {
-      setIsPlaying(false);
-      setHasListened(true);
-      toast({
-        title: "🎧 Message écouté",
-        description: "Poursuivez vers le Laboratoire de Microbiologie",
-      });
-    }, 8000); // 8 seconds simulated playback
+    if (isPlaying) {
+      pause();
+    } else {
+      play();
+      if (!hasListened) {
+        setHasListened(true);
+        toast({
+          title: "🎧 Message en cours",
+          description: "Écoutez attentivement le message du Dr Morel",
+        });
+      }
+    }
   };
 
   const handleValidate = () => {
