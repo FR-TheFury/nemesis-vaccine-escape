@@ -193,9 +193,25 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
       <DistractorModal
         isOpen={activePuzzle === 'monitor'}
         onClose={() => setActivePuzzle(null)}
-        title="Écran de monitoring"
-        icon="📊"
-        content="L'écran affiche des graphiques de température et d'humidité de la pièce. Tout semble dans les normes, mais aucune information utile."
+        title="Instructions de calibration"
+        icon="📋"
+        content={
+          <div className="space-y-3">
+            <p className="font-semibold text-primary">Notes du Dr. Morel - Protocole de calibration de la centrifugeuse :</p>
+            <div className="space-y-2">
+              <p className="text-sm">Paramètres requis pour l'analyse des échantillons biologiques :</p>
+              <ul className="list-disc list-inside space-y-1 text-sm pl-2">
+                <li><strong>Vitesse de rotation (RPM) :</strong> 7200 tours/minute</li>
+                <li><strong>Tolérance RPM :</strong> ±50 tours/minute</li>
+                <li><strong>Durée de centrifugation :</strong> 90 secondes</li>
+                <li><strong>Tolérance durée :</strong> ±5 secondes</li>
+              </ul>
+              <p className="text-sm font-semibold text-amber-600 dark:text-amber-400 mt-3">
+                ⚠️ IMPORTANT : Ces paramètres doivent être respectés avec précision pour garantir l'intégrité des échantillons.
+              </p>
+            </div>
+          </div>
+        }
       />
       
       <DistractorModal
