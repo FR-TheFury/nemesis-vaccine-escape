@@ -13,19 +13,30 @@ interface FinalCodeProps {
   isSolved?: boolean;
 }
 
+// Fonction pour mélanger un tableau (Fisher-Yates)
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
+
 export const FinalCode = ({ isOpen, onClose, letters, solution, onSolve, isSolved = false }: FinalCodeProps) => {
   const [selectedLetters, setSelectedLetters] = useState<string[]>([]);
-  const [availableLetters, setAvailableLetters] = useState<string[]>([...letters]);
+  const [availableLetters, setAvailableLetters] = useState<string[]>(shuffleArray([...letters]));
   const { toast } = useToast();
 
   const handleLetterClick = (letter: string, index: number) => {
     setSelectedLetters([...selectedLetters, letter]);
-    setAvailableLetters(availableLetters.filter((_, i) => i !== index));
+    const remaining = availableLetters.filter((_, i) => i !== index);
+    setAvailableLetters(shuffleArray(remaining));
   };
 
   const handleReset = () => {
     setSelectedLetters([]);
-    setAvailableLetters([...letters]);
+    setAvailableLetters(shuffleArray([...letters]));
   };
 
   const handleSubmit = () => {
