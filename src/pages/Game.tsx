@@ -75,7 +75,8 @@ const Game = () => {
 
   // Callbacks pour le temps réel (pas de useCallback pour éviter les problèmes de capture)
   const handleSessionUpdate = (updatedSession: any) => {
-    setSession(updatedSession);
+    // Fusionner l'update au lieu d'écraser pour garder tous les champs
+    setSession((prev: any) => (prev ? { ...prev, ...updatedSession } : updatedSession));
     
     // Détecter la fin de partie pour tous les joueurs
     if (updatedSession.status === 'failed' || updatedSession.status === 'completed') {
@@ -152,7 +153,15 @@ const Game = () => {
   }
 
   if (!session || !currentPlayer) {
-    return null;
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="text-center space-y-4">
+          <h1 className="text-2xl font-bold">Protocol Z</h1>
+          <p className="text-muted-foreground">Reconnexion des données de session...</p>
+          <Button onClick={() => navigate('/')}>Retour à l'accueil</Button>
+        </div>
+      </div>
+    );
   }
 
   const isHost = currentPlayer.is_host;
@@ -196,6 +205,12 @@ const Game = () => {
     }
   };
 
+  const preloadWithTimeout = (promise: Promise<any>, ms = 8000) =>
+    Promise.race([
+      promise,
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Preload timeout')), ms))
+    ]);
+
   const handleStartGame = async () => {
     if (!sessionCode) return;
     
@@ -206,10 +221,14 @@ const Game = () => {
         .update({ is_preloading: true })
         .eq('code', sessionCode);
       
-      // 2. Précharger tous les assets
+      // 2. Précharger tous les assets avec timeout
       setIsPreloading(true);
       setPreloadProgress(0);
-      await preloadAssets();
+      try {
+        await preloadWithTimeout(preloadAssets());
+      } catch (timeoutError) {
+        console.warn('Preload timeout, continuing anyway:', timeoutError);
+      }
       
       // 3. Démarrer la partie et arrêter le préchargement
       await supabase
@@ -221,13 +240,16 @@ const Game = () => {
         })
         .eq('code', sessionCode);
       
-      // 4. Mise à jour optimiste locale
-      setSession(prev => prev ? { 
-        ...prev, 
-        status: 'active', 
-        timer_running: true,
-        is_preloading: false 
-      } : prev);
+      // 4. Refresh complet de la session pour éviter les données partielles
+      const { data: freshSession, error: fetchErr } = await supabase
+        .from('sessions')
+        .select('*')
+        .eq('code', sessionCode)
+        .single();
+      
+      if (!fetchErr && freshSession) {
+        setSession(freshSession);
+      }
       
       setIsPreloading(false);
       toast.success('Partie lancée !');
