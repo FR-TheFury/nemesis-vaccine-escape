@@ -30,6 +30,12 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
   const samplesId = zone.puzzles.samples?.id || 'zone2_samples';
   const centrifugeId = zone.puzzles.centrifuge?.id || 'zone2_centrifuge';
 
+  // Vérifier si les 3 énigmes principales sont résolues
+  const mainPuzzlesSolved = 
+    !!solvedPuzzles[zone.puzzles.dna.id] &&
+    !!solvedPuzzles[zone.puzzles.microscope.id] &&
+    !!solvedPuzzles[zone.puzzles.periodic.id];
+
   const handleSolvePuzzle = async (puzzleId: string) => {
     await solvePuzzle(puzzleId);
     setActivePuzzle(null);
@@ -104,7 +110,8 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
       solved: false,
       onClick: () => setActivePuzzle('notes')
     },
-    {
+    // Ajouter le hotspot "Code" uniquement si les 3 énigmes principales sont résolues
+    ...(mainPuzzlesSolved ? [{
       id: 'Code',
       x: 15,
       y: 77,
@@ -112,7 +119,7 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
       icon: '🔐',
       solved: false,
       onClick: () => setActivePuzzle('Code')
-    }
+    }] : [])
   ];
 
   // Hotspot de la porte
