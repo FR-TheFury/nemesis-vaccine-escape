@@ -164,8 +164,9 @@
           },
           "reward": "Réaction chimique activée",
           "hints": [
-            "Refroidir, stabiliser, activer.",
-            "L'activation vient en dernier."
+            "Lisez attentivement les instructions du Dr. Morel dans l'interface de synthèse.",
+            "Bleu pour refroidir, Vert pour stabiliser, Rouge pour activer.",
+            "L'ordre logique : on refroidit d'abord, puis on stabilise, et enfin on active la réaction."
           ]
         },
         "final": {

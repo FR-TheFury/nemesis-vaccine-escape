@@ -110,7 +110,7 @@ export const PeriodicTable = ({ isOpen, onClose, equations, halfFormula, onSolve
                         newAnswers[idx] = e.target.value;
                         setAnswers(newAnswers);
                       }}
-                      placeholder="Symbole (ex: Cl, O, H)"
+                      placeholder="Ex: H, O, C..."
                       className="font-mono uppercase"
                       maxLength={2}
                     />

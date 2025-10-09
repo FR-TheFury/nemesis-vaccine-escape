@@ -7,9 +7,10 @@ import { HintButton } from './HintButton';
 import { HintsPanel } from './HintsPanel';
 import { HostControls } from './HostControls';
 import { FacilityMap } from './FacilityMap';
+import { HelpSheetsModal } from './HelpSheetsModal';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Package, Map, Users, FileText, Shield } from 'lucide-react';
+import { Package, Map, Users, FileText, Shield, BookOpen } from 'lucide-react';
 import type { InventoryItem } from '@/lib/gameLogic';
 
 interface Player {
@@ -67,6 +68,7 @@ export const HUD = ({
   const [showInventory, setShowInventory] = useState(true);
   const [showHintsDialog, setShowHintsDialog] = useState(false);
   const [showHostDialog, setShowHostDialog] = useState(false);
+  const [showHelpSheets, setShowHelpSheets] = useState(false);
 
   return (
     <>
@@ -138,6 +140,17 @@ export const HUD = ({
           </DialogContent>
         </Dialog>
 
+        {/* Bouton Fiches d'aide */}
+        <Button
+          onClick={() => setShowHelpSheets(true)}
+          variant="outline"
+          size="icon"
+          className="h-8 w-8 sm:h-10 sm:w-10 border-blue-500/50"
+          title="Fiches d'aide"
+        >
+          <BookOpen className="h-3 w-3 sm:h-4 sm:w-4 text-blue-500" />
+        </Button>
+
         {/* Bouton Contrôles Game Master (host uniquement) */}
         {isHost && (
           <Dialog open={showHostDialog} onOpenChange={setShowHostDialog}>
@@ -196,6 +209,11 @@ export const HUD = ({
         maxHints={maxHints}
         currentPuzzleId={currentPuzzleId}
         puzzleHints={puzzleHints}
+      />
+
+      <HelpSheetsModal 
+        isOpen={showHelpSheets} 
+        onClose={() => setShowHelpSheets(false)} 
       />
     </>
   );

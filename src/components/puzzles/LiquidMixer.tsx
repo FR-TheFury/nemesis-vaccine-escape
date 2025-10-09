@@ -102,9 +102,22 @@ export const LiquidMixer = ({ isOpen, onClose, correctSequence, onSolve, isSolve
                  "🎉 VACCIN STABLE !"}
               </div>
 
+              {/* Indice pour l'ordre */}
+              <div className="p-4 bg-muted/50 rounded-lg border-l-4 border-primary space-y-2">
+                <p className="text-sm font-semibold text-primary">📋 Instructions du Dr. Morel :</p>
+                <div className="text-xs space-y-1">
+                  <p>1. <span className="text-blue-400 font-bold">REFROIDIR</span> : Stabiliser la température de base</p>
+                  <p>2. <span className="text-green-400 font-bold">STABILISER</span> : Équilibrer la composition moléculaire</p>
+                  <p>3. <span className="text-red-400 font-bold">ACTIVER</span> : Déclencher la réaction finale</p>
+                </div>
+                <p className="text-xs text-muted-foreground italic mt-2">
+                  💡 Respectez cet ordre pour une synthèse réussie !
+                </p>
+              </div>
+
               {/* Flacons disponibles */}
               <div className="grid grid-cols-3 gap-2">
-                {(['Bleu', 'Vert', 'Rouge'] as const).map((liquid) => (
+                {(['Rouge', 'Bleu', 'Vert'] as const).map((liquid) => (
                   <Button
                     key={liquid}
                     onClick={() => handleLiquidAdd(liquid)}
