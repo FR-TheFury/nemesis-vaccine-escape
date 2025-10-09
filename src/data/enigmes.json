@@ -124,7 +124,7 @@
         },
         "centrifuge": {
           "id": "zone2_centrifuge",
-          "name": "Centrifuge - Calibration",
+          "name": "Centrifugeuse - Calibration",
           "targetRPM": 7200,
           "targetTime": 90,
           "toleranceRPM": 50,

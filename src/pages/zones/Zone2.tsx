@@ -28,6 +28,7 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
   const doorCodes = session.door_codes || {};
   const { solvePuzzle } = usePuzzleSolver(sessionCode, playerPseudo);
   const samplesId = zone.puzzles.samples?.id || 'zone2_samples';
+  const centrifugeId = zone.puzzles.centrifuge?.id || 'zone2_centrifuge';
 
   const handleSolvePuzzle = async (puzzleId: string) => {
     await solvePuzzle(puzzleId);
@@ -78,7 +79,7 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
       y: 25,
       label: 'Centrifugeuse',
       icon: '⚙️',
-      solved: !!solvedPuzzles[zone.puzzles.centrifuge?.id],
+      solved: !!solvedPuzzles[centrifugeId],
       onClick: () => setActivePuzzle('centrifuge')
     }
   ];
@@ -173,8 +174,8 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
         targetTime={zone.puzzles.centrifuge?.targetTime || 90}
         toleranceRPM={zone.puzzles.centrifuge?.toleranceRPM || 50}
         toleranceTime={zone.puzzles.centrifuge?.toleranceTime || 5}
-        onSolve={() => handleSolvePuzzle(zone.puzzles.centrifuge?.id || 'zone2_centrifuge')}
-        isSolved={!!solvedPuzzles[zone.puzzles.centrifuge?.id]}
+        onSolve={() => handleSolvePuzzle(centrifugeId)}
+        isSolved={!!solvedPuzzles[centrifugeId]}
       />
 
       <DoorPadlock
