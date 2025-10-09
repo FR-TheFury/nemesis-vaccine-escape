@@ -24,13 +24,7 @@ export const CaesarCipher = ({
   isSolved = false
 }: CaesarCipherProps) => {
   const [key, setKey] = useState<number>(0);
-  const [decoded, setDecoded] = useState<string>('');
   const { toast } = useToast();
-
-  const handleDecode = () => {
-    const result = caesarDecode(encryptedText, key);
-    setDecoded(result);
-  };
 
   const handleSubmit = () => {
     if (key === correctKey) {
@@ -73,28 +67,16 @@ export const CaesarCipher = ({
 
               <div className="space-y-2">
                 <Label htmlFor="key">Clé de décalage (0-25)</Label>
-                <div className="flex gap-2">
-                  <Input
-                    id="key"
-                    type="number"
-                    min={0}
-                    max={25}
-                    value={key}
-                    onChange={(e) => setKey(Number(e.target.value))}
-                    placeholder="Entrez la clé"
-                  />
-                  <Button onClick={handleDecode} variant="outline">
-                    Déchiffrer
-                  </Button>
-                </div>
+                <Input
+                  id="key"
+                  type="number"
+                  min={0}
+                  max={25}
+                  value={key}
+                  onChange={(e) => setKey(Number(e.target.value))}
+                  placeholder="Entrez la clé"
+                />
               </div>
-
-              {decoded && (
-                <div className="p-4 bg-accent rounded-md">
-                  <p className="text-sm font-bold mb-1">Résultat:</p>
-                  <p className="font-mono">{decoded}</p>
-                </div>
-              )}
 
               <Button onClick={handleSubmit} className="w-full">
                 Valider la solution
