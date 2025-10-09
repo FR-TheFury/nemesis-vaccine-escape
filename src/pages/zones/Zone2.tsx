@@ -107,7 +107,7 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
   ];
 
   // Hotspot de la porte
-  const doorHotspot = doorVisible.zone2 && doorStatus.zone2 === 'locked' ? [{
+  const doorHotspot = [{
     id: 'door',
     x: 95,
     y: 50,
@@ -116,7 +116,7 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
     solved: false,
     isDoor: true,
     onClick: () => setShowDoorPadlock(true)
-  }] : [];
+  }];
 
   const hotspots = [...puzzleHotspots, ...distractorHotspots, ...doorHotspot];
 
