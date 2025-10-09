@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useAudio } from '@/hooks/useAudio';
 import { Lock, Unlock, Shield, Syringe } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -12,6 +12,9 @@ type Phase = 'validation' | 'unlock' | 'containment' | 'victory' | 'complete';
 export const FinalCinematic = ({ onComplete }: FinalCinematicProps) => {
   const [phase, setPhase] = useState<Phase>('validation');
   const [progress, setProgress] = useState(0);
+  
+  const currentPhaseIndexRef = useRef(0);
+  const startTimeRef = useRef(Date.now());
 
   useEffect(() => {
     const timings = {
@@ -23,22 +26,26 @@ export const FinalCinematic = ({ onComplete }: FinalCinematicProps) => {
     };
 
     const phases: Phase[] = ['validation', 'unlock', 'containment', 'victory', 'complete'];
-    let currentPhaseIndex = 0;
-    let startTime = Date.now();
+    
+    // Réinitialiser au montage
+    currentPhaseIndexRef.current = 0;
+    startTimeRef.current = Date.now();
+    setPhase('validation');
+    setProgress(0);
 
     const updateProgress = () => {
-      const elapsed = Date.now() - startTime;
-      const currentPhase = phases[currentPhaseIndex];
+      const elapsed = Date.now() - startTimeRef.current;
+      const currentPhase = phases[currentPhaseIndexRef.current];
       const phaseDuration = timings[currentPhase];
       const phaseProgress = Math.min((elapsed / phaseDuration) * 100, 100);
       
       setProgress(phaseProgress);
 
       if (elapsed >= phaseDuration) {
-        currentPhaseIndex++;
-        if (currentPhaseIndex < phases.length) {
-          setPhase(phases[currentPhaseIndex]);
-          startTime = Date.now();
+        currentPhaseIndexRef.current++;
+        if (currentPhaseIndexRef.current < phases.length) {
+          setPhase(phases[currentPhaseIndexRef.current]);
+          startTimeRef.current = Date.now();
         } else {
           onComplete();
         }
