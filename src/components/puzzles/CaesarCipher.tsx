@@ -6,12 +6,21 @@ import { Label } from '@/components/ui/label';
 import { caesarDecode } from '@/lib/gameLogic';
 import { useToast } from '@/hooks/use-toast';
 
+interface InventoryItem {
+  id: string;
+  name: string;
+  description: string;
+  icon?: string;
+}
+
 interface CaesarCipherProps {
   isOpen: boolean;
   onClose: () => void;
   encryptedText: string;
   correctKey: number;
+  halfFormula: string;
   onSolve: () => void;
+  addItem?: (item: InventoryItem) => void;
   isSolved?: boolean;
 }
 
@@ -20,7 +29,9 @@ export const CaesarCipher = ({
   onClose, 
   encryptedText, 
   correctKey,
+  halfFormula,
   onSolve,
+  addItem,
   isSolved = false
 }: CaesarCipherProps) => {
   const [key, setKey] = useState<number>(0);
@@ -38,6 +49,16 @@ export const CaesarCipher = ({
         title: "✓ Message déchiffré !",
         description: "La clé de la porte se trouve dans le casier sécurisé. Le casier est maintenant accessible.",
       });
+      
+      if (addItem) {
+        addItem({
+          id: 'half_formula_alpha',
+          name: 'Demi-formule α',
+          description: halfFormula,
+          icon: '🧪'
+        });
+      }
+      
       onSolve();
       onClose();
     } else {

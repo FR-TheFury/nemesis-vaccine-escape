@@ -147,7 +147,9 @@ export const Zone1 = ({ sessionCode, session, playerPseudo = '' }: Zone1Props) =
         onClose={() => setActivePuzzle(null)}
         encryptedText={zone.puzzles.caesar.encrypted}
         correctKey={zone.puzzles.caesar.key}
+        halfFormula={zone.puzzles.caesar.halfFormula}
         onSolve={() => handleSolvePuzzle(zone.puzzles.caesar.id)}
+        addItem={addItem}
         isSolved={!!solvedPuzzles[zone.puzzles.caesar.id]}
       />
 

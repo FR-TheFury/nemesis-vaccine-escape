@@ -8,6 +8,7 @@ import { InteractiveZoneMap } from '@/components/zones/InteractiveZoneMap';
 import { DoorPadlock } from '@/components/game/DoorPadlock';
 import { DistractorModal } from '@/components/game/DistractorModal';
 import { usePuzzleSolver } from '@/hooks/usePuzzleSolver';
+import { useInventory } from '@/hooks/useInventory';
 import enigmesData from '@/data/enigmes.json';
 import zone2Background from '@/assets/zone2-bg.png';
 
@@ -27,6 +28,7 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
   const doorStatus = session.door_status || { zone1: 'locked', zone2: 'locked', zone3: 'locked' };
   const doorCodes = session.door_codes || {};
   const { solvePuzzle } = usePuzzleSolver(sessionCode, playerPseudo);
+  const { addItem } = useInventory(sessionCode, session.inventory || [], playerPseudo);
   const samplesId = zone.puzzles.samples?.id || 'zone2_samples';
   const centrifugeId = zone.puzzles.centrifuge?.id || 'zone2_centrifuge';
 
@@ -173,6 +175,7 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
         equations={zone.puzzles.periodic.equations}
         halfFormula={zone.puzzles.periodic.halfFormula}
         onSolve={() => handleSolvePuzzle(zone.puzzles.periodic.id)}
+        addItem={addItem}
         isSolved={!!solvedPuzzles[zone.puzzles.periodic.id]}
       />
 

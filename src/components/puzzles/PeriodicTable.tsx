@@ -11,16 +11,24 @@ interface Equation {
   symbol: string;
 }
 
+interface InventoryItem {
+  id: string;
+  name: string;
+  description: string;
+  icon?: string;
+}
+
 interface PeriodicTableProps {
   isOpen: boolean;
   onClose: () => void;
   equations: Equation[];
   halfFormula: string;
   onSolve: () => void;
+  addItem?: (item: InventoryItem) => void;
   isSolved?: boolean;
 }
 
-export const PeriodicTable = ({ isOpen, onClose, equations, halfFormula, onSolve, isSolved = false }: PeriodicTableProps) => {
+export const PeriodicTable = ({ isOpen, onClose, equations, halfFormula, onSolve, addItem, isSolved = false }: PeriodicTableProps) => {
   const [answers, setAnswers] = useState<string[]>(equations.map(() => ''));
   const { toast } = useToast();
 
@@ -35,6 +43,16 @@ export const PeriodicTable = ({ isOpen, onClose, equations, halfFormula, onSolve
         title: "✓ Tableau résolu !",
         description: `Formule β obtenue : ${halfFormula}`,
       });
+      
+      if (addItem) {
+        addItem({
+          id: 'half_formula_beta',
+          name: 'Demi-formule β',
+          description: halfFormula,
+          icon: '⚗️'
+        });
+      }
+      
       onSolve();
       onClose();
     } else {
