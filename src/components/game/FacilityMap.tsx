@@ -55,7 +55,7 @@ export const FacilityMap = ({ currentZone, solvedPuzzles, doorStatus = {}, onZon
   };
 
   return (
-    <Card className="fixed top-16 left-2 sm:top-4 sm:left-4 z-[60] p-2 sm:p-4 bg-background/95 backdrop-blur-md border-2 border-primary">
+    <Card className="fixed top-28 left-2 sm:top-4 sm:left-4 z-[60] p-2 sm:p-4 bg-background/95 backdrop-blur-md border-2 border-primary">
       <div className="space-y-2 sm:space-y-3">
         <h3 className="text-xs sm:text-sm font-bold flex items-center gap-1.5 sm:gap-2">
           🗺️ Plan
