@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Volume2, Play, Pause } from 'lucide-react';
 import { useAudio } from '@/hooks/useAudio';
-import audioFile from '@/assets/zone1-audio.mp3';
+import audioFile from '@/assets/Zone-1-audio.mp3';
 
 interface DictaphoneProps {
   isOpen: boolean;
