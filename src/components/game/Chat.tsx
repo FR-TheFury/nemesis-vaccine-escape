@@ -100,7 +100,7 @@ export const Chat = ({ sessionCode, currentPlayerPseudo }: ChatProps) => {
   };
 
   return (
-    <div className="fixed right-2 bottom-20 sm:right-4 sm:bottom-24 z-40">
+    <div className="fixed right-2 bottom-20 sm:right-4 sm:bottom-24 z-[60]">
       {!isExpanded ? (
         <Button
           onClick={() => setIsExpanded(true)}

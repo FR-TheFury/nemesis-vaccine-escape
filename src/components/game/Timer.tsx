@@ -16,7 +16,7 @@ export const Timer = ({ timeRemaining, isRunning, formatTime, isHost, onToggle }
 
   return (
     <div className={cn(
-      "fixed top-2 right-2 sm:top-4 sm:right-4 z-50 px-3 py-2 sm:px-6 sm:py-3 rounded-lg backdrop-blur-md border-2 transition-all",
+      "fixed top-2 right-2 sm:top-4 sm:right-4 z-[60] px-3 py-2 sm:px-6 sm:py-3 rounded-lg backdrop-blur-md border-2 transition-all",
       isCritical ? "bg-destructive/20 border-destructive animate-pulse" :
       isWarning ? "bg-orange-500/20 border-orange-500" :
       "bg-primary/20 border-primary"

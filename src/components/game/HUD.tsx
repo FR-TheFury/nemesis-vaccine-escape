@@ -79,7 +79,7 @@ export const HUD = ({
       />
 
       {/* Toggle buttons */}
-      <div className="fixed top-16 sm:top-20 left-2 sm:left-4 z-50 flex flex-col gap-1.5 sm:gap-2">
+      <div className="fixed top-16 sm:top-20 left-2 sm:left-4 z-[60] flex flex-col gap-1.5 sm:gap-2">
         <Button
           onClick={() => setShowPlayers(!showPlayers)}
           variant="outline"

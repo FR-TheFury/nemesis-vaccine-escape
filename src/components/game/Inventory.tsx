@@ -14,7 +14,7 @@ export const Inventory = ({ items }: InventoryProps) => {
   const [selectedFormula, setSelectedFormula] = useState<InventoryItem | null>(null);
   
   return (
-    <div className="fixed bottom-2 left-1/2 -translate-x-1/2 z-40 w-[calc(100%-1rem)] sm:w-full max-w-2xl px-2 sm:px-4">
+    <div className="fixed bottom-2 left-1/2 -translate-x-1/2 z-[60] w-[calc(100%-1rem)] sm:w-full max-w-2xl px-2 sm:px-4">
       <div className="bg-background/95 backdrop-blur-md border-2 border-primary rounded-lg p-2 sm:p-4 relative">
         {items.length > 0 && (
           <span className="absolute -top-1 -right-1 flex h-3 w-3">
@@ -74,7 +74,7 @@ export const Inventory = ({ items }: InventoryProps) => {
       {/* Modal pour afficher les demi-formules */}
       {selectedFormula && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm"
           onClick={() => setSelectedFormula(null)}
         >
           <div 
