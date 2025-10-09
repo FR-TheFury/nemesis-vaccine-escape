@@ -12,6 +12,7 @@ import { Zone1 } from './zones/Zone1';
 import { Zone2 } from './zones/Zone2';
 import { Zone3 } from './zones/Zone3';
 import { GameEnd } from './zones/GameEnd';
+import { FinalCinematic } from './zones/FinalCinematic';
 import { Button } from '@/components/ui/button';
 import { 
   AlertDialog, 
@@ -35,6 +36,7 @@ const Game = () => {
   const navigate = useNavigate();
   const { session, players, currentPlayer, loading, error, setSession, setPlayers } = useGameSession(sessionCode || null);
   const [showTimeUpDialog, setShowTimeUpDialog] = useState(false);
+  const [showFinalCinematic, setShowFinalCinematic] = useState(false);
   const [isPreloading, setIsPreloading] = useState(false);
   const [preloadProgress, setPreloadProgress] = useState(0);
   const { currentReward, showNext } = useRewardQueue();
@@ -346,13 +348,39 @@ const Game = () => {
   }
 
   const renderZone = () => {
+    // Si la cinématique finale est active
+    if (showFinalCinematic) {
+      return (
+        <FinalCinematic
+          onComplete={async () => {
+            // À la fin de la cinématique, marquer la session comme completed
+            if (sessionCode) {
+              await supabase
+                .from('sessions')
+                .update({ status: 'completed' })
+                .eq('code', sessionCode);
+              
+              // Le useRealtimeSync détectera le changement et affichera showTimeUpDialog
+            }
+          }}
+        />
+      );
+    }
+
     switch (currentZone) {
       case 1:
         return <Zone1 sessionCode={sessionCode || ''} session={session} playerPseudo={currentPlayer.pseudo} />;
       case 2:
         return <Zone2 sessionCode={sessionCode || ''} session={session} playerPseudo={currentPlayer.pseudo} />;
       case 3:
-        return <Zone3 sessionCode={sessionCode || ''} session={session} playerPseudo={currentPlayer.pseudo} />;
+        return (
+          <Zone3 
+            sessionCode={sessionCode || ''} 
+            session={session} 
+            playerPseudo={currentPlayer.pseudo}
+            onFinalDoorUnlock={() => setShowFinalCinematic(true)}
+          />
+        );
       default:
         return <GameEnd session={session} players={players} />;
     }

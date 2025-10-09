@@ -17,9 +17,10 @@ interface Zone3Props {
   sessionCode: string;
   session: any;
   playerPseudo?: string;
+  onFinalDoorUnlock?: () => void;
 }
 
-export const Zone3 = ({ sessionCode, session, playerPseudo = '' }: Zone3Props) => {
+export const Zone3 = ({ sessionCode, session, playerPseudo = '', onFinalDoorUnlock }: Zone3Props) => {
   const [activePuzzle, setActivePuzzle] = useState<string | null>(null);
   const [showDoorPadlock, setShowDoorPadlock] = useState(false);
   const { toast } = useToast();
@@ -199,6 +200,9 @@ export const Zone3 = ({ sessionCode, session, playerPseudo = '' }: Zone3Props) =
         doorCode={doorCodes.zone3 || ''}
         onUnlock={() => {
           setShowDoorPadlock(false);
+          if (onFinalDoorUnlock) {
+            onFinalDoorUnlock();
+          }
         }}
       />
 

@@ -47,6 +47,7 @@ export const DoorPadlock = ({
       
       try {
         const zoneKey = `zone${currentZone}`;
+        const isFinalDoor = currentZone === 3;
         
         const { data: session } = await supabase
           .from('sessions')
@@ -60,23 +61,43 @@ export const DoorPadlock = ({
             [zoneKey]: 'unlocked' 
           };
 
-          await supabase
-            .from('sessions')
-            .update({
-              door_status: updatedDoorStatus,
-              current_zone: currentZone === 3 ? 3 : currentZone + 1,
-              status: currentZone === 3 ? 'completed' : session.status
-            })
-            .eq('code', sessionCode);
+          if (isFinalDoor) {
+            // Pour la porte finale, on déverrouille mais on ne marque pas completed
+            // La cinématique s'occupera de ça
+            await supabase
+              .from('sessions')
+              .update({
+                door_status: updatedDoorStatus
+              })
+              .eq('code', sessionCode);
 
-          toast.success('🎉 Code correct ! Accès à la zone suivante déverrouillé !');
-          
-          setTimeout(() => {
-            onUnlock();
-            onClose();
-            setIsSuccess(false);
-            setCode('');
-          }, 2000);
+            toast.success('🎉 Code correct ! Lancement de la séquence finale...');
+            
+            setTimeout(() => {
+              onUnlock(); // Déclenche la cinématique
+              onClose();
+              setIsSuccess(false);
+              setCode('');
+            }, 1500);
+          } else {
+            // Pour les zones 1 et 2, comportement normal
+            await supabase
+              .from('sessions')
+              .update({
+                door_status: updatedDoorStatus,
+                current_zone: currentZone + 1
+              })
+              .eq('code', sessionCode);
+
+            toast.success('🎉 Code correct ! Accès à la zone suivante déverrouillé !');
+            
+            setTimeout(() => {
+              onUnlock();
+              onClose();
+              setIsSuccess(false);
+              setCode('');
+            }, 2000);
+          }
         }
       } catch (err) {
         console.error('Error unlocking door:', err);
