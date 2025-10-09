@@ -103,15 +103,24 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
       icon: '📝',
       solved: false,
       onClick: () => setActivePuzzle('notes')
+    },
+    {
+      id: 'Code',
+      x: 15,
+      y: 77,
+      label: 'Code de la porte',
+      icon: '🔐',
+      solved: false,
+      onClick: () => setActivePuzzle('Code')
     }
   ];
 
   // Hotspot de la porte
   const doorHotspot = [{
     id: 'door',
-    x: 95,
+    x: 90,
     y: 50,
-    label: 'Code final - Zone 2',
+    label: 'Porte final - Zone 2',
     icon: '🔐',
     solved: false,
     isDoor: true,
@@ -229,6 +238,21 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
             </p>
           </div>
         }
+      />
+      <DistractorModal
+          isOpen={activePuzzle === 'Code'}
+          onClose={() => setActivePuzzle(null)}
+          title="Code de la porte"
+          icon="🔐"
+          content={
+            <div className="space-y-2">
+              <p>
+                Si jamais vous trouvez cette note, <strong> ne suis surement déjà plus la</strong>, je vais vous aider à vous en sortir, <strong> le code</strong> :
+                <p><strong>1.1.4.7</strong></p>
+                Bon courage, et surtout, arrêtez mon erreur je vous en conjure
+              </p>
+            </div>
+          }
       />
     </div>
   );
