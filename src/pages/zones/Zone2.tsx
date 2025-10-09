@@ -26,6 +26,7 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
   const doorStatus = session.door_status || { zone1: 'locked', zone2: 'locked', zone3: 'locked' };
   const doorCodes = session.door_codes || {};
   const { solvePuzzle } = usePuzzleSolver(sessionCode, playerPseudo);
+  const samplesId = zone.puzzles.samples?.id || 'zone2_samples';
 
   const handleSolvePuzzle = async (puzzleId: string) => {
     await solvePuzzle(puzzleId);
@@ -67,7 +68,7 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
       y: 75,
       label: 'Tri des échantillons',
       icon: '🧪',
-      solved: !!solvedPuzzles[zone.puzzles.samples?.id],
+      solved: !!solvedPuzzles[samplesId],
       onClick: () => setActivePuzzle('samples')
     }
   ];
@@ -160,8 +161,8 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
       <ColorTubesPuzzle
         isOpen={activePuzzle === 'samples'}
         onClose={() => setActivePuzzle(null)}
-        onSolve={() => handleSolvePuzzle(zone.puzzles.samples?.id || 'zone2_samples')}
-        isSolved={!!solvedPuzzles[zone.puzzles.samples?.id]}
+        onSolve={() => handleSolvePuzzle(samplesId)}
+        isSolved={!!solvedPuzzles[samplesId]}
       />
 
       <DoorPadlock
