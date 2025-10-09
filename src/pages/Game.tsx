@@ -31,6 +31,8 @@ const Game = () => {
   const navigate = useNavigate();
   const { session, players, currentPlayer, loading, error, setSession, setPlayers } = useGameSession(sessionCode || null);
   const [showTimeUpDialog, setShowTimeUpDialog] = useState(false);
+  const [isPreloading, setIsPreloading] = useState(false);
+  const [preloadProgress, setPreloadProgress] = useState(0);
   const { currentReward, showNext } = useRewardQueue();
   
   // Gérer la présence du joueur
@@ -142,10 +144,53 @@ const Game = () => {
   const canStartGame = isHost && session.status === 'waiting';
   const currentZone = session.current_zone;
 
+  const preloadAssets = async () => {
+    const assets = [
+      '/src/assets/zone1-bg.png',
+      '/src/assets/zone2-bg.png',
+      '/src/assets/zone3-bg.png',
+      '/src/assets/Zone-1-audio.mp3'
+    ];
+
+    const loadPromises = assets.map((src, index) => {
+      return new Promise((resolve, reject) => {
+        if (src.endsWith('.mp3')) {
+          const audio = new Audio(src);
+          audio.addEventListener('canplaythrough', () => {
+            setPreloadProgress(((index + 1) / assets.length) * 100);
+            resolve(src);
+          });
+          audio.addEventListener('error', reject);
+        } else {
+          const img = new Image();
+          img.onload = () => {
+            setPreloadProgress(((index + 1) / assets.length) * 100);
+            resolve(src);
+          };
+          img.onerror = reject;
+          img.src = src;
+        }
+      });
+    });
+
+    try {
+      await Promise.all(loadPromises);
+    } catch (error) {
+      console.error('Error preloading assets:', error);
+    }
+  };
+
   const handleStartGame = async () => {
     if (!sessionCode) return;
     
+    setIsPreloading(true);
+    setPreloadProgress(0);
+    
     try {
+      // Précharger tous les assets
+      await preloadAssets();
+      
+      // Démarrer la partie
       const { supabase } = await import('@/integrations/supabase/client');
       await supabase
         .from('sessions')
@@ -153,9 +198,11 @@ const Game = () => {
         .eq('code', sessionCode);
       
       toast.success('Partie lancée !');
+      setIsPreloading(false);
     } catch (err) {
       console.error('Error starting game:', err);
       toast.error('Erreur au démarrage');
+      setIsPreloading(false);
     }
   };
 
@@ -215,25 +262,39 @@ const Game = () => {
           onZoneChange={handleZoneChange}
         />
         
-        <div className="text-center space-y-4 sm:space-y-6 max-w-md mx-auto">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-2">Protocol Z</h1>
-          <p className="text-lg sm:text-xl text-muted-foreground">Salle d'attente</p>
-          <p className="text-xs sm:text-sm text-muted-foreground">
-            {players.filter(p => p.is_connected).length} joueur(s) connecté(s)
-          </p>
-          
-          {canStartGame && (
-            <Button onClick={handleStartGame} size="lg" className="mt-4 sm:mt-6 w-full sm:w-auto">
-              Démarrer la partie
-            </Button>
-          )}
-          
-          {!isHost && (
+        {isPreloading ? (
+          <div className="text-center space-y-4 sm:space-y-6 max-w-md mx-auto">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-2">Protocol Z</h1>
+            <p className="text-lg sm:text-xl text-muted-foreground">Chargement du jeu...</p>
+            <div className="w-full bg-secondary rounded-full h-4 overflow-hidden">
+              <div 
+                className="bg-primary h-full transition-all duration-300 ease-out"
+                style={{ width: `${preloadProgress}%` }}
+              />
+            </div>
+            <p className="text-sm text-muted-foreground">{Math.round(preloadProgress)}%</p>
+          </div>
+        ) : (
+          <div className="text-center space-y-4 sm:space-y-6 max-w-md mx-auto">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-2">Protocol Z</h1>
+            <p className="text-lg sm:text-xl text-muted-foreground">Salle d'attente</p>
             <p className="text-xs sm:text-sm text-muted-foreground">
-              En attente que l'hôte lance la partie...
+              {players.filter(p => p.is_connected).length} joueur(s) connecté(s)
             </p>
-          )}
-        </div>
+            
+            {canStartGame && (
+              <Button onClick={handleStartGame} size="lg" className="mt-4 sm:mt-6 w-full sm:w-auto">
+                Démarrer la partie
+              </Button>
+            )}
+            
+            {!isHost && (
+              <p className="text-xs sm:text-sm text-muted-foreground">
+                En attente que l'hôte lance la partie...
+              </p>
+            )}
+          </div>
+        )}
       </div>
     );
   }
