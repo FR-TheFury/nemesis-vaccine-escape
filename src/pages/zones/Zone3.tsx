@@ -6,6 +6,7 @@ import { FinalCode } from '@/components/puzzles/FinalCode';
 import { InteractiveZoneMap } from '@/components/zones/InteractiveZoneMap';
 import { DoorPadlock } from '@/components/game/DoorPadlock';
 import { DistractorModal } from '@/components/game/DistractorModal';
+import { TerminalHacking } from '@/components/puzzles/TerminalHacking';
 import { usePuzzleSolver } from '@/hooks/usePuzzleSolver';
 import { useToast } from '@/hooks/use-toast';
 import { AlertTriangle } from 'lucide-react';
@@ -88,7 +89,8 @@ export const Zone3 = ({ sessionCode, session, playerPseudo = '' }: Zone3Props) =
 
   // Distracteurs
   const distractorHotspots = [
-    {
+    // Terminal : affiché uniquement si zone3_final est résolu
+    ...(solvedPuzzles[zone.puzzles.final.id] ? [{
       id: 'terminal',
       x: 65,
       y: 60,
@@ -96,7 +98,7 @@ export const Zone3 = ({ sessionCode, session, playerPseudo = '' }: Zone3Props) =
       icon: '🖥️',
       solved: false,
       onClick: () => setActivePuzzle('terminal')
-    },
+    }] : []),
     {
       id: 'documents',
       x: 82,
@@ -200,14 +202,14 @@ export const Zone3 = ({ sessionCode, session, playerPseudo = '' }: Zone3Props) =
         }}
       />
 
-      {/* Distracteurs */}
-      <DistractorModal
+      {/* Terminal de hacking */}
+      <TerminalHacking
         isOpen={activePuzzle === 'terminal'}
         onClose={() => setActivePuzzle(null)}
-        title="Terminal sécurisé"
-        icon="🖥️"
-        content="Le terminal demande une authentification de niveau 5. Message d'erreur : 'ACCÈS REFUSÉ - AUTORISATION INSUFFISANTE'."
+        finalCode="2982"
       />
+
+      {/* Distracteurs */}
       
       <DistractorModal
         isOpen={activePuzzle === 'documents'}
