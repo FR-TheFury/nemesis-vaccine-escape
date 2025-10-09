@@ -14,9 +14,9 @@ interface DNASequenceProps {
 
 const TUBE_COLORS = {
   A: 'bg-red-500',
-  T: 'bg-blue-500',
+  T: 'bg-yellow-500',
   C: 'bg-green-500',
-  G: 'bg-yellow-500',
+  G: 'bg-blue-500',
 };
 
 export const DNASequence = ({ isOpen, onClose, correctSequence, onSolve, isSolved = false }: DNASequenceProps) => {
