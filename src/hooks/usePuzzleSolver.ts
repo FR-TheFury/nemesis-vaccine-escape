@@ -25,33 +25,26 @@ export const usePuzzleSolver = (sessionCode: string | null, playerPseudo: string
     if (!sessionCode) return;
 
     try {
-      // 1. SELECT ciblé - récupérer uniquement les champs nécessaires
+      // Récupérer la session actuelle
       const { data: session, error: fetchError } = await supabase
         .from('sessions')
-        .select('solved_puzzles, revealed_hints, door_visible, current_zone')
+        .select('*')
         .eq('code', sessionCode)
-        .maybeSingle();
+        .single();
 
-      if (fetchError || !session) throw fetchError;
+      if (fetchError) throw fetchError;
 
-      // 2. Anti-doublon - vérifier si le puzzle est déjà résolu
-      if ((session.solved_puzzles as any)?.[puzzleId]) {
-        console.log('⚠️ Puzzle already solved, skipping');
-        return;
-      }
-
-      // 3. Préparer les nouvelles données
+      // Mettre à jour les puzzles résolus
       const solvedPuzzles = { ...(session.solved_puzzles as any || {}), [puzzleId]: true };
-      const revealedHints = { ...(session.revealed_hints as any || { zone1: [], zone2: [], zone3: [] }) };
-      const doorVisible = { ...(session.door_visible as any || { zone1: false, zone2: false, zone3: false }) };
       
+      // Révéler l'indice correspondant au puzzle
+      const revealedHints = { ...(session.revealed_hints as any || { zone1: [], zone2: [], zone3: [] }) };
       const hintMapping = PUZZLE_TO_HINT_MAP[puzzleId];
-      let newHintRevealed = false;
       
       if (hintMapping && !revealedHints[hintMapping.zone].includes(hintMapping.hint)) {
         revealedHints[hintMapping.zone] = [...revealedHints[hintMapping.zone], hintMapping.hint];
-        newHintRevealed = true;
         
+        // Récupérer le contenu de l'indice
         const zoneHints = (hintsData as any)[hintMapping.zone];
         const hintContent = zoneHints?.[hintMapping.hint];
         
@@ -60,13 +53,28 @@ export const usePuzzleSolver = (sessionCode: string | null, playerPseudo: string
           title: `Énigme ${hintMapping.hint.replace('p', '')}`,
           description: hintContent || 'Un nouvel indice a été révélé !'
         });
+
+        // Envoyer un message système dans le chat
+        if (playerPseudo) {
+          await supabase
+            .from('chat_messages')
+            .insert({
+              session_code: sessionCode,
+              player_pseudo: playerPseudo,
+              message: `*${playerPseudo}* a débloqué l'énigme ${hintMapping.hint.replace('p', '')}`,
+              type: 'system'
+            });
+        }
       }
 
-      // 4. Vérifier les puzzles de zone
+      // Vérifier si les 3 puzzles de la zone actuelle sont résolus
       const zone1Puzzles = ['zone1_caesar', 'zone1_locker', 'zone1_audio'];
       const zone2Puzzles = ['zone2_dna', 'zone2_microscope', 'zone2_periodic'];
       const zone3Puzzles = ['zone3_cryobox', 'zone3_mixer', 'zone3_final'];
+      
+      const doorVisible = { ...(session.door_visible as any || { zone1: false, zone2: false, zone3: false }) };
 
+      // Vérifier si tous les puzzles de la zone sont résolus → afficher le cadenas
       if (session.current_zone === 1 && zone1Puzzles.every(p => solvedPuzzles[p])) {
         doorVisible.zone1 = true;
         toast.info('🔐 Tous les indices révélés ! Le cadenas de la porte est maintenant accessible.');
@@ -78,8 +86,8 @@ export const usePuzzleSolver = (sessionCode: string | null, playerPseudo: string
         toast.info('🔐 Tous les indices révélés ! Le cadenas de la porte est maintenant accessible.');
       }
 
-      // 5. Update session + chat message en parallèle (non bloquant)
-      const updatePromise = supabase
+      // Mettre à jour la session (sans changer de zone automatiquement)
+      const { error: updateError } = await supabase
         .from('sessions')
         .update({
           solved_puzzles: solvedPuzzles,
@@ -87,32 +95,14 @@ export const usePuzzleSolver = (sessionCode: string | null, playerPseudo: string
           door_visible: doorVisible,
         })
         .eq('code', sessionCode);
-      
-      const chatPromise = (newHintRevealed && playerPseudo)
-        ? supabase
-            .from('chat_messages')
-            .insert({
-              session_code: sessionCode,
-              player_pseudo: playerPseudo,
-              message: `*${playerPseudo}* a débloqué l'énigme ${hintMapping.hint.replace('p', '')}`,
-              type: 'system'
-            })
-        : Promise.resolve();
-      
-      // 6. Attendre les deux opérations sans bloquer l'UI
-      const [updateResult, chatResult] = await Promise.allSettled([updatePromise, chatPromise]);
-      
-      if (updateResult.status === 'rejected') {
-        throw updateResult.reason;
-      }
-      
-      console.log('✅ Puzzle solved:', puzzleId);
+
+      if (updateError) throw updateError;
 
     } catch (err) {
       console.error('Error solving puzzle:', err);
       toast.error('Erreur lors de la validation du puzzle');
     }
-  }, [sessionCode, playerPseudo, addReward]);
+  }, [sessionCode]);
 
   return { solvePuzzle };
 };

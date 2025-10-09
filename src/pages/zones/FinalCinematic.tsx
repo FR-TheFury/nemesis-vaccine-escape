@@ -15,13 +15,6 @@ export const FinalCinematic = ({ onComplete }: FinalCinematicProps) => {
   
   const currentPhaseIndexRef = useRef(0);
   const startTimeRef = useRef(Date.now());
-  const onCompleteRef = useRef(onComplete);
-  const hasCompletedRef = useRef(false);
-
-  // Synchroniser la référence de onComplete
-  useEffect(() => {
-    onCompleteRef.current = onComplete;
-  }, [onComplete]);
 
   useEffect(() => {
     const timings = {
@@ -54,18 +47,14 @@ export const FinalCinematic = ({ onComplete }: FinalCinematicProps) => {
           setPhase(phases[currentPhaseIndexRef.current]);
           startTimeRef.current = Date.now();
         } else {
-          // Appeler onComplete une seule fois
-          if (!hasCompletedRef.current) {
-            hasCompletedRef.current = true;
-            onCompleteRef.current();
-          }
+          onComplete();
         }
       }
     };
 
     const interval = setInterval(updateProgress, 50);
     return () => clearInterval(interval);
-  }, []);
+  }, [onComplete]);
 
   return (
     <div className="fixed inset-0 z-[200] bg-black">

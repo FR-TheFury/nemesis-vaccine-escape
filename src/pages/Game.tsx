@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useGameSession } from '@/hooks/useGameSession';
 import { useRealtimeSync } from '@/hooks/useRealtimeSync';
@@ -73,36 +73,26 @@ const Game = () => {
     };
   }, [sessionCode, navigate]);
 
-  // Callbacks pour le temps réel (pas de useCallback pour éviter les problèmes de capture)
-  const handleSessionUpdate = (updatedSession: any) => {
-    // Fusionner l'update au lieu d'écraser pour garder tous les champs
-    setSession((prev: any) => (prev ? { ...prev, ...updatedSession } : updatedSession));
-    
-    // Détecter la fin de partie pour tous les joueurs
-    if (updatedSession.status === 'failed' || updatedSession.status === 'completed') {
-      setShowTimeUpDialog(true);
-    }
-  };
-  
-  const handlePlayerJoin = (player: any) => {
-    setPlayers((prev: any) => [...prev, player]);
-  };
-  
-  const handlePlayerUpdate = (player: any) => {
-    setPlayers((prev: any) => prev.map((p: any) => p.id === player.id ? player : p));
-  };
-  
-  const handlePlayerLeave = (player: any) => {
-    setPlayers((prev: any) => prev.map((p: any) => p.id === player.id ? player : p));
-  };
-
   useRealtimeSync(
     sessionCode || null,
     {
-      onSessionUpdate: handleSessionUpdate,
-      onPlayerJoin: handlePlayerJoin,
-      onPlayerUpdate: handlePlayerUpdate,
-      onPlayerLeave: handlePlayerLeave,
+      onSessionUpdate: (updatedSession) => {
+        setSession(updatedSession as any);
+        
+        // Détecter la fin de partie pour tous les joueurs
+        if (updatedSession.status === 'failed' || updatedSession.status === 'completed') {
+          setShowTimeUpDialog(true);
+        }
+      },
+      onPlayerJoin: (player) => {
+        setPlayers((prev: any) => [...prev, player as any]);
+      },
+      onPlayerUpdate: (player) => {
+        setPlayers((prev: any) => prev.map((p: any) => p.id === player.id ? player : p));
+      },
+      onPlayerLeave: (player) => {
+        setPlayers((prev: any) => prev.map((p: any) => p.id === player.id ? player : p));
+      },
     }
   );
 
@@ -153,15 +143,7 @@ const Game = () => {
   }
 
   if (!session || !currentPlayer) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <div className="text-center space-y-4">
-          <h1 className="text-2xl font-bold">Protocol Z</h1>
-          <p className="text-muted-foreground">Reconnexion des données de session...</p>
-          <Button onClick={() => navigate('/')}>Retour à l'accueil</Button>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   const isHost = currentPlayer.is_host;
@@ -205,12 +187,6 @@ const Game = () => {
     }
   };
 
-  const preloadWithTimeout = (promise: Promise<any>, ms = 8000) =>
-    Promise.race([
-      promise,
-      new Promise((_, reject) => setTimeout(() => reject(new Error('Preload timeout')), ms))
-    ]);
-
   const handleStartGame = async () => {
     if (!sessionCode) return;
     
@@ -221,14 +197,10 @@ const Game = () => {
         .update({ is_preloading: true })
         .eq('code', sessionCode);
       
-      // 2. Précharger tous les assets avec timeout
+      // 2. Précharger tous les assets
       setIsPreloading(true);
       setPreloadProgress(0);
-      try {
-        await preloadWithTimeout(preloadAssets());
-      } catch (timeoutError) {
-        console.warn('Preload timeout, continuing anyway:', timeoutError);
-      }
+      await preloadAssets();
       
       // 3. Démarrer la partie et arrêter le préchargement
       await supabase
@@ -240,16 +212,13 @@ const Game = () => {
         })
         .eq('code', sessionCode);
       
-      // 4. Refresh complet de la session pour éviter les données partielles
-      const { data: freshSession, error: fetchErr } = await supabase
-        .from('sessions')
-        .select('*')
-        .eq('code', sessionCode)
-        .single();
-      
-      if (!fetchErr && freshSession) {
-        setSession(freshSession);
-      }
+      // 4. Mise à jour optimiste locale
+      setSession(prev => prev ? { 
+        ...prev, 
+        status: 'active', 
+        timer_running: true,
+        is_preloading: false 
+      } : prev);
       
       setIsPreloading(false);
       toast.success('Partie lancée !');
@@ -378,25 +347,23 @@ const Game = () => {
     );
   }
 
-  const handleFinalCinematicComplete = useCallback(async () => {
-    try {
-      if (sessionCode) {
-        await supabase
-          .from('sessions')
-          .update({ status: 'completed' })
-          .eq('code', sessionCode);
-      }
-      setShowFinalCinematic(false);
-    } catch (error) {
-      console.error('Error completing final cinematic:', error);
-    }
-  }, [sessionCode]);
-
   const renderZone = () => {
     // Si la cinématique finale est active
     if (showFinalCinematic) {
       return (
-        <FinalCinematic onComplete={handleFinalCinematicComplete} />
+        <FinalCinematic
+          onComplete={async () => {
+            // À la fin de la cinématique, marquer la session comme completed
+            if (sessionCode) {
+              await supabase
+                .from('sessions')
+                .update({ status: 'completed' })
+                .eq('code', sessionCode);
+              
+              // Le useRealtimeSync détectera le changement et affichera showTimeUpDialog
+            }
+          }}
+        />
       );
     }
 

@@ -15,36 +15,28 @@ interface CryoBoxProps {
 
 export const CryoBox = ({ isOpen, onClose, correctCode, onSolve, isSolved = false }: CryoBoxProps) => {
   const [code, setCode] = useState<string>('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
-  const handleSubmit = async () => {
-    if (isSubmitting) return;
-    setIsSubmitting(true);
+  const handleSubmit = () => {
+    const normalized = code.trim().toUpperCase().replace(/[\s\-+]/g, '');
+    const normalizedCorrect = correctCode.toUpperCase().replace(/[\s\-+]/g, '');
     
-    try {
-      const normalized = code.trim().toUpperCase().replace(/[\s\-+]/g, '');
-      const normalizedCorrect = correctCode.toUpperCase().replace(/[\s\-+]/g, '');
-      
-      // Alternative: also accept with "+" separator
-      const alternativeCorrect = correctCode.replace(/[\s-]/g, '+').toUpperCase().replace(/\+/g, '');
+    // Alternative: also accept with "+" separator
+    const alternativeCorrect = correctCode.replace(/[\s-]/g, '+').toUpperCase().replace(/\+/g, '');
 
-      if (normalized === normalizedCorrect || normalized === alternativeCorrect) {
-        toast({
-          title: "✓ Coffre cryogénique ouvert !",
-          description: "Les flacons de synthèse sont accessibles.",
-        });
-        onSolve();
-        onClose();
-      } else {
-        toast({
-          title: "✗ Code incorrect",
-          description: "La séquence de sécurité ne correspond pas.",
-          variant: "destructive",
-        });
-      }
-    } finally {
-      setIsSubmitting(false);
+    if (normalized === normalizedCorrect || normalized === alternativeCorrect) {
+      toast({
+        title: "✓ Coffre cryogénique ouvert !",
+        description: "Les flacons de synthèse sont accessibles.",
+      });
+      onSolve();
+      onClose();
+    } else {
+      toast({
+        title: "✗ Code incorrect",
+        description: "La séquence de sécurité ne correspond pas.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -84,8 +76,8 @@ export const CryoBox = ({ isOpen, onClose, correctCode, onSolve, isSolved = fals
                 </p>
               </div>
 
-              <Button onClick={handleSubmit} className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? 'Vérification...' : 'Déverrouiller le coffre'}
+              <Button onClick={handleSubmit} className="w-full">
+                Déverrouiller le coffre
               </Button>
             </>
           )}

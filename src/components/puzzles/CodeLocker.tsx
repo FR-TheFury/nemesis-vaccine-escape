@@ -15,7 +15,6 @@ interface CodeLockerProps {
 
 export const CodeLocker = ({ isOpen, onClose, correctCode, onSolve, addItem, isSolved = false }: CodeLockerProps) => {
   const [code, setCode] = useState<string>('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
   const handleDigit = (digit: string) => {
@@ -28,40 +27,33 @@ export const CodeLocker = ({ isOpen, onClose, correctCode, onSolve, addItem, isS
     setCode('');
   };
 
-  const handleSubmit = async () => {
-    if (isSubmitting) return;
-    setIsSubmitting(true);
-    
-    try {
-      if (code === correctCode) {
-        if (addItem) {
-          addItem({
-            id: 'periodic_table',
-            name: 'Tableau Périodique',
-            description: 'Cliquez pour consulter les éléments chimiques'
-          });
-          toast({
-            title: "✓ Casier déverrouillé !",
-            description: "Vous avez obtenu le Tableau Périodique des Éléments. L'énigme 3 est maintenant révélée.",
-          });
-        } else {
-          toast({
-            title: "✓ Casier déverrouillé !",
-            description: "Le badge magnétique est maintenant accessible.",
-          });
-        }
-        onSolve();
-        onClose();
+  const handleSubmit = () => {
+    if (code === correctCode) {
+      if (addItem) {
+        addItem({
+          id: 'periodic_table',
+          name: 'Tableau Périodique',
+          description: 'Cliquez pour consulter les éléments chimiques'
+        });
+        toast({
+          title: "✓ Casier déverrouillé !",
+          description: "Vous avez obtenu le Tableau Périodique des Éléments. L'énigme 3 est maintenant révélée.",
+        });
       } else {
         toast({
-          title: "✗ Code incorrect",
-          description: "Le casier reste verrouillé.",
-          variant: "destructive",
+          title: "✓ Casier déverrouillé !",
+          description: "Le badge magnétique est maintenant accessible.",
         });
-        setCode('');
       }
-    } finally {
-      setIsSubmitting(false);
+      onSolve();
+      onClose();
+    } else {
+      toast({
+        title: "✗ Code incorrect",
+        description: "Le casier reste verrouillé.",
+        variant: "destructive",
+      });
+      setCode('');
     }
   };
 
@@ -119,10 +111,10 @@ export const CodeLocker = ({ isOpen, onClose, correctCode, onSolve, addItem, isS
                 </Button>
                 <Button
                   onClick={handleSubmit}
-                  disabled={code.length !== 4 || isSubmitting}
+                  disabled={code.length !== 4}
                   className="h-12"
                 >
-                  {isSubmitting ? '...' : '✓'}
+                  ✓
                 </Button>
               </div>
             </>
