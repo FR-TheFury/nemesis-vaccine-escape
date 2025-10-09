@@ -67,13 +67,8 @@ export const ColorTubesPuzzle = ({ isOpen, onClose, onSolve, isSolved = false }:
     // Ne peut pas placer dans un tube plein
     if (toTube.blocks.length >= 4) return false;
     
-    // Peut placer dans un tube vide
-    if (toTube.blocks.length === 0) return true;
-    
-    // Peut placer seulement sur la même couleur
-    const topBlockFrom = getTopBlock(fromTube);
-    const topBlockTo = getTopBlock(toTube);
-    return topBlockFrom === topBlockTo;
+    // Peut placer n'importe quel bloc dans n'importe quel tube non plein
+    return true;
   };
 
   const checkWinCondition = (currentTubes: Tube[]): boolean => {
@@ -145,7 +140,7 @@ export const ColorTubesPuzzle = ({ isOpen, onClose, onSolve, isSolved = false }:
       } else {
         toast({
           title: "❌ Mouvement invalide",
-          description: "Vous ne pouvez placer un bloc que sur la même couleur ou dans un tube vide.",
+          description: "Le tube de destination est plein.",
           variant: "destructive"
         });
         setSelectedTube(null);
@@ -177,8 +172,8 @@ export const ColorTubesPuzzle = ({ isOpen, onClose, onSolve, isSolved = false }:
                 <ul className="list-disc list-inside space-y-1 text-muted-foreground">
                   <li>Cliquez sur un tube pour sélectionner le bloc du dessus</li>
                   <li>Cliquez sur un autre tube pour y déplacer le bloc</li>
-                  <li>Vous ne pouvez placer un bloc que sur la même couleur ou dans un tube vide</li>
-                  <li>Objectif : 1 couleur par tube (4 blocs de la même couleur)</li>
+                  <li>Vous pouvez placer n'importe quel bloc dans n'importe quel tube non plein</li>
+                  <li>Objectif : 1 couleur par tube (4 blocs de la même couleur dans 3 tubes)</li>
                 </ul>
                 <p className="text-xs text-primary mt-2">Mouvements : {moveCount}</p>
               </div>
