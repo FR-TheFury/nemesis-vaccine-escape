@@ -15,13 +15,24 @@ export const useInventory = (
     if (!sessionCode) return;
 
     try {
+      // Récupérer l'inventaire actuel depuis Supabase
+      const { data: session, error } = await supabase
+        .from('sessions')
+        .select('inventory')
+        .eq('code', sessionCode)
+        .single();
+
+      if (error) throw error;
+
+      const currentInv = (session?.inventory as unknown as InventoryItem[]) || [];
+
       // Vérifier que l'item n'existe pas déjà
-      if (currentInventory.some(i => i.id === item.id)) {
+      if (currentInv.some(i => i.id === item.id)) {
         console.log('Item already in inventory');
         return;
       }
 
-      const newInventory = [...currentInventory, item];
+      const newInventory = [...currentInv, item];
 
       await supabase
         .from('sessions')
@@ -50,7 +61,7 @@ export const useInventory = (
     } catch (err) {
       console.error('Error adding item to inventory:', err);
     }
-  }, [sessionCode, currentInventory, playerPseudo]);
+  }, [sessionCode, playerPseudo, addReward]);
 
   // Retirer un item de l'inventaire
   const removeItem = useCallback(async (itemId: string) => {
