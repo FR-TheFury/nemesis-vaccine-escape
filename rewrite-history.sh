@@ -6,7 +6,7 @@ CORRECT_EMAIL="teodebaypro@gmail.com"
 
 echo "=========================================="
 echo "Réécriture de l'historique Git"
-echo "Remplacement de gpt-engineer-app[bot] par $CORRECT_NAME"
+echo "Remplacement des auteurs bots (gpt-engineer-app[bot], lovable-devbot) par $CORRECT_NAME"
 echo "=========================================="
 echo ""
 
@@ -15,25 +15,32 @@ export FILTER_BRANCH_SQUELCH_WARNING=1
 
 # Réécriture de l'historique
 git filter-branch -f --env-filter "
-CORRECT_NAME=\"$CORRECT_NAME\"
-CORRECT_EMAIL=\"$CORRECT_EMAIL\"
+CN=\"$CORRECT_NAME\"
+CE=\"$CORRECT_EMAIL\"
 
-# Remplacer gpt-engineer-app[bot]
-if [ \"\$GIT_COMMITTER_NAME\" = \"gpt-engineer-app[bot]\" ]
-then
-    export GIT_COMMITTER_NAME=\"\$CORRECT_NAME\"
-    export GIT_COMMITTER_EMAIL=\"\$CORRECT_EMAIL\"
+AN=\"\$GIT_AUTHOR_NAME\"
+AE=\"\$GIT_AUTHOR_EMAIL\"
+CNM=\"\$GIT_COMMITTER_NAME\"
+CEM=\"\$GIT_COMMITTER_EMAIL\"
+
+# Cible les bots par nom OU email (author et committer)
+if [ \"$AN\" = \"gpt-engineer-app[bot]\" ] || [ \"$AN\" = \"lovable-devbot\" ] || [ \"$AE\" = \"159125892+gpt-engineer-app[bot]@users.noreply.github.com\" ] || [ \"$AE\" = \"lovable-devbot@users.noreply.github.com\" ]; then
+  export GIT_AUTHOR_NAME=\"$CN\"
+  export GIT_AUTHOR_EMAIL=\"$CE\"
 fi
-if [ \"\$GIT_AUTHOR_NAME\" = \"gpt-engineer-app[bot]\" ]
-then
-    export GIT_AUTHOR_NAME=\"\$CORRECT_NAME\"
-    export GIT_AUTHOR_EMAIL=\"\$CORRECT_EMAIL\"
+
+if [ \"$CNM\" = \"gpt-engineer-app[bot]\" ] || [ \"$CNM\" = \"lovable-devbot\" ] || [ \"$CEM\" = \"159125892+gpt-engineer-app[bot]@users.noreply.github.com\" ] || [ \"$CEM\" = \"lovable-devbot@users.noreply.github.com\" ]; then
+  export GIT_COMMITTER_NAME=\"$CN\"
+  export GIT_COMMITTER_EMAIL=\"$CE\"
 fi
 " --tag-name-filter cat -- --branches --tags
 
 echo ""
-echo "Vérification des derniers commits :"
-git log --oneline -5 --format="%h - %an <%ae> - %s"
+echo "Vérification locale (sans --all) :"
+git shortlog -sne
+
+echo "Extrait des derniers commits (auteur/commiteur) :"
+git log --oneline -5 --format="%h | %an <%ae> | %cn <%ce>"
 
 echo ""
 echo "=========================================="
