@@ -188,25 +188,48 @@ const Game = () => {
   const handleStartGame = async () => {
     if (!sessionCode) return;
     
-    setIsPreloading(true);
-    setPreloadProgress(0);
-    
     try {
-      // Précharger tous les assets
-      await preloadAssets();
-      
-      // Démarrer la partie
-      const { supabase } = await import('@/integrations/supabase/client');
+      // 1. Indiquer que le préchargement commence pour tous les joueurs
       await supabase
         .from('sessions')
-        .update({ status: 'active', timer_running: true })
+        .update({ is_preloading: true })
         .eq('code', sessionCode);
       
-      toast.success('Partie lancée !');
+      // 2. Précharger tous les assets
+      setIsPreloading(true);
+      setPreloadProgress(0);
+      await preloadAssets();
+      
+      // 3. Démarrer la partie et arrêter le préchargement
+      await supabase
+        .from('sessions')
+        .update({ 
+          status: 'active', 
+          timer_running: true,
+          is_preloading: false 
+        })
+        .eq('code', sessionCode);
+      
+      // 4. Mise à jour optimiste locale
+      setSession(prev => prev ? { 
+        ...prev, 
+        status: 'active', 
+        timer_running: true,
+        is_preloading: false 
+      } : prev);
+      
       setIsPreloading(false);
+      toast.success('Partie lancée !');
     } catch (err) {
       console.error('Error starting game:', err);
       toast.error('Erreur au démarrage');
+      
+      // Remettre is_preloading à false en cas d'erreur
+      await supabase
+        .from('sessions')
+        .update({ is_preloading: false })
+        .eq('code', sessionCode);
+      
       setIsPreloading(false);
     }
   };
@@ -245,6 +268,9 @@ const Game = () => {
     }
   };
 
+  // Afficher l'overlay de chargement si preloading est actif
+  const showLoadingOverlay = isPreloading || session.is_preloading;
+
   if (session.status === 'waiting') {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background p-4">
@@ -267,19 +293,34 @@ const Game = () => {
           onZoneChange={handleZoneChange}
         />
         
-        {isPreloading ? (
-          <div className="text-center space-y-4 sm:space-y-6 max-w-md mx-auto">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-2">Protocol Z</h1>
-            <p className="text-lg sm:text-xl text-muted-foreground">Chargement du jeu...</p>
-            <div className="w-full bg-secondary rounded-full h-4 overflow-hidden">
-              <div 
-                className="bg-primary h-full transition-all duration-300 ease-out"
-                style={{ width: `${preloadProgress}%` }}
-              />
+        {showLoadingOverlay ? (
+          // Overlay plein écran de préchargement
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-sm">
+            <div className="text-center space-y-6 max-w-md mx-auto px-4">
+              <h1 className="text-5xl md:text-6xl font-bold text-primary animate-pulse">
+                Protocol Z
+              </h1>
+              <div className="flex flex-col items-center space-y-4">
+                <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+                <p className="text-xl text-muted-foreground">
+                  Préparation de la partie...
+                </p>
+              </div>
+              {isHost && (
+                <div className="w-full space-y-2">
+                  <div className="w-full bg-secondary rounded-full h-3 overflow-hidden">
+                    <div 
+                      className="bg-primary h-full transition-all duration-300 ease-out"
+                      style={{ width: `${preloadProgress}%` }}
+                    />
+                  </div>
+                  <p className="text-sm text-muted-foreground">{Math.round(preloadProgress)}%</p>
+                </div>
+              )}
             </div>
-            <p className="text-sm text-muted-foreground">{Math.round(preloadProgress)}%</p>
           </div>
         ) : (
+          // Écran d'attente normal
           <div className="text-center space-y-4 sm:space-y-6 max-w-md mx-auto">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-2">Protocol Z</h1>
             <p className="text-lg sm:text-xl text-muted-foreground">Salle d'attente</p>

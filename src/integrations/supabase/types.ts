@@ -101,6 +101,7 @@ export type Database = {
           hints_used: number
           host_id: string
           inventory: Json
+          is_preloading: boolean
           revealed_hints: Json | null
           solved_puzzles: Json
           status: Database["public"]["Enums"]["session_status"]
@@ -118,6 +119,7 @@ export type Database = {
           hints_used?: number
           host_id: string
           inventory?: Json
+          is_preloading?: boolean
           revealed_hints?: Json | null
           solved_puzzles?: Json
           status?: Database["public"]["Enums"]["session_status"]
@@ -135,6 +137,7 @@ export type Database = {
           hints_used?: number
           host_id?: string
           inventory?: Json
+          is_preloading?: boolean
           revealed_hints?: Json | null
           solved_puzzles?: Json
           status?: Database["public"]["Enums"]["session_status"]
