@@ -356,23 +356,25 @@ const Game = () => {
     );
   }
 
+  const handleFinalCinematicComplete = useCallback(async () => {
+    try {
+      if (sessionCode) {
+        await supabase
+          .from('sessions')
+          .update({ status: 'completed' })
+          .eq('code', sessionCode);
+      }
+      setShowFinalCinematic(false);
+    } catch (error) {
+      console.error('Error completing final cinematic:', error);
+    }
+  }, [sessionCode]);
+
   const renderZone = () => {
     // Si la cinématique finale est active
     if (showFinalCinematic) {
       return (
-        <FinalCinematic
-          onComplete={async () => {
-            // À la fin de la cinématique, marquer la session comme completed
-            if (sessionCode) {
-              await supabase
-                .from('sessions')
-                .update({ status: 'completed' })
-                .eq('code', sessionCode);
-              
-              // Le useRealtimeSync détectera le changement et affichera showTimeUpDialog
-            }
-          }}
-        />
+        <FinalCinematic onComplete={handleFinalCinematicComplete} />
       );
     }
 
