@@ -131,7 +131,12 @@ export const Zone3 = ({ sessionCode, session, playerPseudo = '' }: Zone3Props) =
     id: 'door',
     x: 76,
     y: 13,
-    
+    label: 'Mission Finale',
+    icon: '🏆',
+    solved: false,
+    isDoor: true,
+    onClick: () => setShowDoorPadlock(true)
+  }];
 
   const hotspots = [...puzzleHotspots, ...distractorHotspots, ...doorHotspot];
 
