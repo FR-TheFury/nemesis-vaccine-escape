@@ -25,6 +25,10 @@ import {
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import enigmesData from '@/data/enigmes.json';
+import zone1Bg from '@/assets/zone1-bg.png';
+import zone2Bg from '@/assets/zone2-bg.png';
+import zone3Bg from '@/assets/zone3-bg.png';
+import zone1Audio from '@/assets/Zone-1-audio.mp3';
 
 const Game = () => {
   const { sessionCode } = useParams<{ sessionCode: string }>();
@@ -146,29 +150,30 @@ const Game = () => {
 
   const preloadAssets = async () => {
     const assets = [
-      '/src/assets/zone1-bg.png',
-      '/src/assets/zone2-bg.png',
-      '/src/assets/zone3-bg.png',
-      '/src/assets/Zone-1-audio.mp3'
+      { src: zone1Bg, type: 'image' },
+      { src: zone2Bg, type: 'image' },
+      { src: zone3Bg, type: 'image' },
+      { src: zone1Audio, type: 'audio' }
     ];
 
-    const loadPromises = assets.map((src, index) => {
+    const loadPromises = assets.map((asset, index) => {
       return new Promise((resolve, reject) => {
-        if (src.endsWith('.mp3')) {
-          const audio = new Audio(src);
+        if (asset.type === 'audio') {
+          const audio = new Audio(asset.src);
           audio.addEventListener('canplaythrough', () => {
             setPreloadProgress(((index + 1) / assets.length) * 100);
-            resolve(src);
+            resolve(asset.src);
           });
           audio.addEventListener('error', reject);
+          audio.load();
         } else {
           const img = new Image();
           img.onload = () => {
             setPreloadProgress(((index + 1) / assets.length) * 100);
-            resolve(src);
+            resolve(asset.src);
           };
           img.onerror = reject;
-          img.src = src;
+          img.src = asset.src;
         }
       });
     });
