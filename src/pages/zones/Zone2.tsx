@@ -3,6 +3,7 @@ import { DNASequence } from '@/components/puzzles/DNASequence';
 import { Microscope } from '@/components/puzzles/Microscope';
 import { PeriodicTable } from '@/components/puzzles/PeriodicTable';
 import { ColorTubesPuzzle } from '@/components/puzzles/ColorTubesPuzzle';
+import { CentrifugeCalibration } from '@/components/puzzles/CentrifugeCalibration';
 import { InteractiveZoneMap } from '@/components/zones/InteractiveZoneMap';
 import { DoorPadlock } from '@/components/game/DoorPadlock';
 import { DistractorModal } from '@/components/game/DistractorModal';
@@ -70,6 +71,15 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
       icon: '🧪',
       solved: !!solvedPuzzles[samplesId],
       onClick: () => setActivePuzzle('samples')
+    },
+    {
+      id: 'centrifuge',
+      x: 18,
+      y: 25,
+      label: 'Centrifugeuse',
+      icon: '⚙️',
+      solved: !!solvedPuzzles[zone.puzzles.centrifuge?.id],
+      onClick: () => setActivePuzzle('centrifuge')
     }
   ];
 
@@ -92,25 +102,16 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
       icon: '📝',
       solved: false,
       onClick: () => setActivePuzzle('notes')
-    },
-    {
-      id: 'centrifuge',
-      x: 18,
-      y: 25,
-      label: 'Centrifugeuse',
-      icon: '⚙️',
-      solved: false,
-      onClick: () => setActivePuzzle('centrifuge')
     }
   ];
 
   // Hotspot de la porte
   const doorHotspot = doorVisible.zone2 && doorStatus.zone2 === 'locked' ? [{
     id: 'door',
-    x: 76,
-    y: 13,
-    label: 'Porte vers Zone 3',
-    icon: '🚪',
+    x: 95,
+    y: 50,
+    label: 'Code final - Zone 2',
+    icon: '🔐',
     solved: false,
     isDoor: true,
     onClick: () => setShowDoorPadlock(true)
@@ -165,6 +166,17 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
         isSolved={!!solvedPuzzles[samplesId]}
       />
 
+      <CentrifugeCalibration
+        isOpen={activePuzzle === 'centrifuge'}
+        onClose={() => setActivePuzzle(null)}
+        targetRPM={zone.puzzles.centrifuge?.targetRPM || 7200}
+        targetTime={zone.puzzles.centrifuge?.targetTime || 90}
+        toleranceRPM={zone.puzzles.centrifuge?.toleranceRPM || 50}
+        toleranceTime={zone.puzzles.centrifuge?.toleranceTime || 5}
+        onSolve={() => handleSolvePuzzle(zone.puzzles.centrifuge?.id || 'zone2_centrifuge')}
+        isSolved={!!solvedPuzzles[zone.puzzles.centrifuge?.id]}
+      />
+
       <DoorPadlock
         isOpen={showDoorPadlock}
         onClose={() => setShowDoorPadlock(false)}
@@ -200,14 +212,6 @@ export const Zone2 = ({ sessionCode, session, playerPseudo = '' }: Zone2Props) =
             </p>
           </div>
         }
-      />
-      
-      <DistractorModal
-        isOpen={activePuzzle === 'centrifuge'}
-        onClose={() => setActivePuzzle(null)}
-        title="Centrifugeuse"
-        icon="⚙️"
-        content="La centrifugeuse est vide et hors tension. Un autocollant indique 'EN MAINTENANCE - NE PAS UTILISER'."
       />
     </div>
   );

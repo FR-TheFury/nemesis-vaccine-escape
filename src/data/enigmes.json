@@ -121,6 +121,20 @@
             "Commencez par isoler une couleur complète.",
             "Pensez à l'ordre inverse - quelle couleur finir en premier ?"
           ]
+        },
+        "centrifuge": {
+          "id": "zone2_centrifuge",
+          "name": "Centrifuge - Calibration",
+          "targetRPM": 7200,
+          "targetTime": 90,
+          "toleranceRPM": 50,
+          "toleranceTime": 5,
+          "reward": "Centrifugeuse calibrée",
+          "hints": [
+            "Les valeurs correctes sont indiquées dans les notes du Dr Morel.",
+            "RPM doit être proche de 7200.",
+            "Le temps doit être autour de 90 secondes."
+          ]
         }
       }
     },
