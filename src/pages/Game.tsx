@@ -357,7 +357,12 @@ const Game = () => {
 
   const WaitingScreen = () => {
     const [copied, setCopied] = useState(false);
+    const [hasAnimated, setHasAnimated] = useState(false);
     const connectedCount = players.filter((p: any) => p.is_connected).length;
+
+    useEffect(() => {
+      setHasAnimated(true);
+    }, []);
 
     const copyCode = () => {
       if (sessionCode) {
@@ -369,9 +374,9 @@ const Game = () => {
     };
 
     return (
-      <div className="flex min-h-screen bg-background animate-fade-in">
+      <div className={`flex min-h-screen bg-background ${!hasAnimated ? 'animate-fade-in' : ''}`}>
         {/* Liste des joueurs - Sidebar gauche */}
-        <div className="w-80 border-r border-border bg-card p-6 flex flex-col animate-slide-in-right">
+        <div className={`w-80 border-r border-border bg-card p-6 flex flex-col ${!hasAnimated ? 'animate-slide-in-right' : ''}`}>
           <div className="mb-4">
             <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
               <Users className="w-5 h-5 text-primary" />
@@ -402,7 +407,7 @@ const Game = () => {
 
         {/* Contenu principal */}
         <div className="flex-1 flex items-center justify-center p-8">
-          <Card className="w-full max-w-2xl border-primary/30 bg-primary/5 shadow-lg animate-scale-in">
+          <Card className={`w-full max-w-2xl border-primary/30 bg-primary/5 shadow-lg ${!hasAnimated ? 'animate-scale-in' : ''}`}>
             <CardHeader>
               <CardTitle className="text-center text-3xl">Salle d'attente</CardTitle>
               <CardDescription className="text-center text-base">
