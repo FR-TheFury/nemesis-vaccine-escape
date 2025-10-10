@@ -366,6 +366,12 @@ const Game = () => {
     }
   };
 
+  // Si la partie n'a pas encore démarré, afficher l'écran d'attente
+  if (session.status === 'waiting' || showLoadingOverlay) {
+    return <WaitingScreen />;
+  }
+
+  // Sinon, afficher l'interface de jeu normale
   return (
     <div className="min-h-screen bg-background">
       <HUD
