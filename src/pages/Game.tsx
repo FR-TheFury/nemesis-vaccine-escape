@@ -351,7 +351,6 @@ const Game = () => {
   const showLoadingOverlay = isPreloading || session.is_preloading;
 
   const WaitingScreen = () => {
-    const [showInfo, setShowInfo] = useState(true);
     const [copied, setCopied] = useState(false);
     const connectedCount = players.filter((p: any) => p.is_connected).length;
 
@@ -365,99 +364,83 @@ const Game = () => {
     };
 
     return (
-      <div className="flex flex-col min-h-screen items-center justify-center bg-background animate-fade-in">
-        <Card className="w-[92vw] max-w-xl border-primary/30 bg-primary/5 shadow-lg animate-scale-in">
-          <CardHeader>
-            <CardTitle className="text-center">Salle d'attente</CardTitle>
-            <CardDescription className="text-center">
-              {canStart ? "Démarrez quand tout le monde est prêt." : "En attente du Game Master pour démarrer la partie..."}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="flex items-center justify-center gap-2">
-              <span className="text-sm text-muted-foreground">Code session</span>
-              <span className="font-mono font-bold text-primary">{sessionCode}</span>
-              <Button size="sm" variant="outline" onClick={copyCode} className="ml-2">
-                {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-              </Button>
-            </div>
-
-            {!isPreloading && (
-              <div className="text-center">
-                {isHost && canStart && (
-                  <Button size="lg" onClick={handleStartGame} className="hover-scale">
-                    Démarrer la partie
-                  </Button>
-                )}
+      <div className="flex min-h-screen bg-background animate-fade-in">
+        {/* Liste des joueurs - Sidebar gauche */}
+        <div className="w-80 border-r border-border bg-card p-6 flex flex-col animate-slide-in-right">
+          <div className="mb-4">
+            <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
+              <Users className="w-5 h-5 text-primary" />
+              Joueurs connectés
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              {connectedCount}/{players.length} en ligne
+            </p>
+          </div>
+          
+          <div className="flex-1 space-y-2 overflow-auto">
+            {players.map((p: any) => (
+              <div 
+                key={p.id} 
+                className="flex items-center gap-3 p-3 rounded-lg bg-accent/30 border border-border hover:bg-accent/50 transition-colors"
+              >
+                {p.is_host && <Crown className="w-5 h-5 text-yellow-500 flex-shrink-0" />}
+                <span className="text-sm font-medium flex-1">{p.pseudo}</span>
+                <span 
+                  className={`h-3 w-3 rounded-full flex-shrink-0 ${
+                    p.is_connected ? 'bg-green-500 animate-pulse' : 'bg-gray-500'
+                  }`} 
+                />
               </div>
-            )}
+            ))}
+          </div>
+        </div>
 
-            {(isPreloading || session.is_preloading) && (
-              <div className="w-full">
-                <div className="w-72 sm:w-96 mx-auto">
-                  <div className="h-2 w-full rounded-full bg-primary/20 overflow-hidden border border-primary/30">
+        {/* Contenu principal */}
+        <div className="flex-1 flex items-center justify-center p-8">
+          <Card className="w-full max-w-2xl border-primary/30 bg-primary/5 shadow-lg animate-scale-in">
+            <CardHeader>
+              <CardTitle className="text-center text-3xl">Salle d'attente</CardTitle>
+              <CardDescription className="text-center text-base">
+                {canStart ? "Démarrez quand tout le monde est prêt." : "En attente du Game Master pour démarrer la partie..."}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-8">
+              <div className="flex flex-col items-center gap-4 p-6 rounded-lg bg-accent/30 border border-border">
+                <span className="text-sm text-muted-foreground">Code de session</span>
+                <div className="flex items-center gap-3">
+                  <span className="font-mono font-bold text-3xl text-primary tracking-wider">{sessionCode}</span>
+                  <Button size="lg" variant="outline" onClick={copyCode} className="hover-scale">
+                    {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
+                  </Button>
+                </div>
+              </div>
+
+              {!isPreloading && (
+                <div className="text-center">
+                  {isHost && canStart && (
+                    <Button size="lg" onClick={handleStartGame} className="hover-scale text-lg px-8 py-6">
+                      Démarrer la partie
+                    </Button>
+                  )}
+                </div>
+              )}
+
+              {(isPreloading || session.is_preloading) && (
+                <div className="space-y-4">
+                  <div className="h-3 w-full rounded-full bg-primary/20 overflow-hidden border border-primary/30">
                     <div
                       className="h-full bg-gradient-to-r from-primary via-primary/80 to-primary transition-all duration-300 ease-out animate-pulse"
                       style={{ width: `${preloadProgress}%` }}
                     />
                   </div>
-                  <p className="mt-2 text-sm text-muted-foreground text-center">
+                  <p className="text-center text-base text-muted-foreground font-medium">
                     Préparation de la mission... {preloadProgress.toFixed(0)}%
                   </p>
                 </div>
-              </div>
-            )}
-
-            <div className="space-y-3">
-              <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-                <Users className="w-4 h-4" />
-                {connectedCount}/{players.length} connectés
-              </div>
-              
-              <div className="space-y-2">
-                <div className="text-sm font-medium text-center text-muted-foreground">Joueurs connectés</div>
-                <div className="space-y-2 max-h-48 overflow-auto">
-                  {players.map((p: any) => (
-                    <div key={p.id} className="flex items-center gap-2 p-2 rounded-md bg-accent/50">
-                      {p.is_host && <Crown className="w-4 h-4 text-yellow-500" />}
-                      <span className="text-sm font-medium">{p.pseudo}</span>
-                      <span className={`ml-auto h-2 w-2 rounded-full ${p.is_connected ? 'bg-green-500' : 'bg-gray-500'}`} />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Dialog open={showInfo} onOpenChange={setShowInfo}>
-          <DialogContent className="sm:max-w-md animate-enter">
-            <DialogHeader>
-              <DialogTitle>Infos de session</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">Code:</span>
-                <span className="font-mono font-semibold">{sessionCode}</span>
-                <Button size="sm" variant="outline" onClick={copyCode}>
-                  {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                </Button>
-              </div>
-              <div className="space-y-2">
-                <div className="text-sm font-medium">Joueurs</div>
-                <div className="space-y-2 max-h-64 overflow-auto pr-2">
-                  {players.map((p: any) => (
-                    <div key={p.id} className="flex items-center gap-2 p-2 rounded-md bg-accent/50">
-                      {p.is_host && <Crown className="w-4 h-4 text-yellow-500" />}
-                      <span className="text-sm font-medium">{p.pseudo}</span>
-                      <span className={`ml-auto h-2 w-2 rounded-full ${p.is_connected ? 'bg-green-500' : 'bg-gray-500'}`} />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
+              )}
+            </CardContent>
+          </Card>
+        </div>
       </div>
     );
   };
