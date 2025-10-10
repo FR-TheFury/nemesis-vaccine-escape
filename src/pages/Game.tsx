@@ -41,7 +41,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Slider } from "@/components/ui/slider"
-import { Volume2 } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Crown, Users, Copy, Check } from 'lucide-react';
 interface Enigma {
   id: number;
   title: string;
@@ -232,7 +233,7 @@ const Game = () => {
         .update({ 
           status: 'active',
           timer_running: true,
-          is_preload: false 
+          is_preloading: false 
         })
         .eq('code', sessionCode);
       
@@ -240,7 +241,7 @@ const Game = () => {
         ...prev,
         status: 'active',
         timer_running: true,
-        is_preload: false
+        is_preloading: false
       } : prev);
       
       setIsPreloading(false);
@@ -293,31 +294,103 @@ const Game = () => {
 
   const showLoadingOverlay = isPreloading || session.is_preloading;
 
-  const WaitingScreen = () => (
-    <div className="flex flex-col min-h-screen items-center justify-center bg-background">
-      <div className="text-center space-y-6">
-        <h1 className="text-4xl font-bold text-primary">
-          Bienvenue, {currentPlayer?.pseudo}!
-        </h1>
-        <p className="text-xl text-muted-foreground">
-          En attente du Game Master pour démarrer la partie...
-        </p>
-        {isHost && canStart && (
-          <Button size="lg" onClick={handleStartGame} disabled={isPreloading}>
-            {isPreloading ? 'Chargement...' : 'Démarrer la partie'}
-          </Button>
-        )}
-        {isPreloading && (
-          <div className="w-64">
-            <p className="text-sm text-muted-foreground mb-2">
-              Chargement des assets: {preloadProgress.toFixed(0)}%
-            </p>
-            <progress className="progress w-full" value={preloadProgress} max="100"></progress>
-          </div>
-        )}
+  const WaitingScreen = () => {
+    const [showInfo, setShowInfo] = useState(true);
+    const [copied, setCopied] = useState(false);
+    const connectedCount = players.filter((p: any) => p.is_connected).length;
+
+    const copyCode = () => {
+      if (sessionCode) {
+        navigator.clipboard.writeText(sessionCode);
+        setCopied(true);
+        toast.success('Code de session copié');
+        setTimeout(() => setCopied(false), 1200);
+      }
+    };
+
+    return (
+      <div className="flex flex-col min-h-screen items-center justify-center bg-background animate-fade-in">
+        <Card className="w-[92vw] max-w-xl border-primary/30 bg-primary/5 shadow-lg animate-scale-in">
+          <CardHeader>
+            <CardTitle className="text-center">Salle d'attente</CardTitle>
+            <CardDescription className="text-center">
+              {canStart ? "Démarrez quand tout le monde est prêt." : "En attente du Game Master pour démarrer la partie..."}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="flex items-center justify-center gap-2">
+              <span className="text-sm text-muted-foreground">Code session</span>
+              <span className="font-mono font-bold text-primary">{sessionCode}</span>
+              <Button size="sm" variant="outline" onClick={copyCode} className="ml-2">
+                {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+              </Button>
+            </div>
+
+            {!isPreloading && (
+              <div className="text-center">
+                {isHost && canStart && (
+                  <Button size="lg" onClick={handleStartGame} className="hover-scale">
+                    Démarrer la partie
+                  </Button>
+                )}
+              </div>
+            )}
+
+            {(isPreloading || session.is_preloading) && (
+              <div className="w-full">
+                <div className="w-72 sm:w-96 mx-auto">
+                  <div className="h-2 w-full rounded-full bg-primary/20 overflow-hidden border border-primary/30">
+                    <div
+                      className="h-full bg-gradient-to-r from-primary to-primary/70"
+                      style={{ width: `${preloadProgress}%` }}
+                    />
+                  </div>
+                  <p className="mt-2 text-sm text-muted-foreground text-center">
+                    Préparation de la mission... {preloadProgress.toFixed(0)}%
+                  </p>
+                </div>
+              </div>
+            )}
+
+            <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+              <Users className="w-4 h-4" />
+              {connectedCount}/{players.length} connectés
+            </div>
+          </CardContent>
+        </Card>
+
+        <Dialog open={showInfo} onOpenChange={setShowInfo}>
+          <DialogContent className="sm:max-w-md animate-enter">
+            <DialogHeader>
+              <DialogTitle>Infos de session</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">Code:</span>
+                <span className="font-mono font-semibold">{sessionCode}</span>
+                <Button size="sm" variant="outline" onClick={copyCode}>
+                  {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                </Button>
+              </div>
+              <div className="space-y-2">
+                <div className="text-sm font-medium">Joueurs</div>
+                <div className="space-y-2 max-h-64 overflow-auto pr-2">
+                  {players.map((p: any) => (
+                    <div key={p.id} className="flex items-center gap-2 p-2 rounded-md bg-accent/50">
+                      {p.is_host && <Crown className="w-4 h-4 text-yellow-500" />}
+                      <span className="text-sm font-medium">{p.pseudo}</span>
+                      <span className={`ml-auto h-2 w-2 rounded-full ${p.is_connected ? 'bg-green-500' : 'bg-gray-500'}`} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
-    </div>
-  );
+    );
+  };
+
 
   const renderZone = () => {
     // Si le jeu est terminé (success ou échec), afficher GameEnd
