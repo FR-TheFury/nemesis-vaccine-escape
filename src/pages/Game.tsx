@@ -20,7 +20,7 @@ import enigmesData from '@/data/enigmes.json';
 import zone1Bg from '@/assets/zone1-bg.png';
 import zone2Bg from '@/assets/zone2-bg.png';
 import zone3Bg from '@/assets/zone3-bg.png';
-import zone1Audio from '@/assets/Zone-1-Audio.mp3';
+import zone1Audio from '@/assets/Zone-1-audio.mp3';
 
 // Importez les assets et les composants nécessaires
 import {
