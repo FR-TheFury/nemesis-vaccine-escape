@@ -20,7 +20,49 @@ import enigmesData from '@/data/enigmes.json';
 import zone1Bg from '@/assets/zone1-bg.png';
 import zone2Bg from '@/assets/zone2-bg.png';
 import zone3Bg from '@/assets/zone3-bg.png';
-import zone1Audio from '@/assets/Zone-1-audio.mp3';
+import zone1Audio from '@/assets/Zone-1-Audio.mp3';
+
+// Importez les assets et les composants nécessaires
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Slider } from "@/components/ui/slider"
+import { Volume2 } from 'lucide-react';
+interface Enigma {
+  id: number;
+  title: string;
+  description: string;
+  hint1: string;
+  hint2: string;
+  solution: string;
+  reward: {
+    type: string;
+    title: string;
+    description: string;
+    icon: string;
+  };
+}
+
+interface Player {
+  id: string;
+  pseudo: string;
+  is_host: boolean;
+  volume: number;
+}
 
 const Game = () => {
   const { sessionCode } = useParams<{ sessionCode: string }>();
@@ -31,27 +73,22 @@ const Game = () => {
   const [preloadProgress, setPreloadProgress] = useState(0);
   const { currentReward, showNext } = useRewardQueue();
   
-  // Gérer la présence du joueur
   usePlayerPresence({
     sessionCode: sessionCode || '',
     playerId: currentPlayer?.id || ''
   });
   
-  // Écouter la suppression de la session
   useEffect(() => {
     if (!sessionCode) return;
 
     const channel = supabase
       .channel('session-deletion')
-      .on(
-        'postgres_changes',
-        {
+      .on('postgres_changes', {
           event: 'DELETE',
           schema: 'public',
           table: 'sessions',
           filter: `code=eq.${sessionCode}`
-        },
-        () => {
+        }, () => {
           toast.error('La session a été fermée par le Game Master');
           navigate('/');
         }
@@ -67,10 +104,10 @@ const Game = () => {
     sessionCode || null,
     {
       onSessionUpdate: (updatedSession) => {
-        setSession(updatedSession as any);
+        setSession(updatedSession);
       },
       onPlayerJoin: (player) => {
-        setPlayers((prev: any) => [...prev, player as any]);
+        setPlayers((prev: any) => [...prev, player]);
       },
       onPlayerUpdate: (player) => {
         setPlayers((prev: any) => prev.map((p: any) => p.id === player.id ? player : p));
@@ -86,7 +123,6 @@ const Game = () => {
     session?.timer_remaining || 3600,
     currentPlayer?.is_host || false,
     async () => {
-      // Timer expiré - marquer comme failed
       if (sessionCode) {
         await supabase
           .from('sessions')
@@ -138,7 +174,7 @@ const Game = () => {
   }
 
   const isHost = currentPlayer.is_host;
-  const canStartGame = isHost && session.status === 'waiting';
+  const canStart = isHost && session.status === 'waiting';
   const currentZone = session.current_zone;
 
   const preloadAssets = async () => {
@@ -146,7 +182,7 @@ const Game = () => {
       { src: zone1Bg, type: 'image' },
       { src: zone2Bg, type: 'image' },
       { src: zone3Bg, type: 'image' },
-      { src: zone1Audio, type: 'audio' }
+      { src: zone1Audio, type: 'audio' },
     ];
 
     const loadPromises = assets.map((asset, index) => {
@@ -182,33 +218,29 @@ const Game = () => {
     if (!sessionCode) return;
     
     try {
-      // 1. Indiquer que le préchargement commence pour tous les joueurs
       await supabase
         .from('sessions')
         .update({ is_preloading: true })
         .eq('code', sessionCode);
       
-      // 2. Précharger tous les assets
       setIsPreloading(true);
       setPreloadProgress(0);
       await preloadAssets();
       
-      // 3. Démarrer la partie et arrêter le préchargement
       await supabase
         .from('sessions')
         .update({ 
-          status: 'active', 
+          status: 'active',
           timer_running: true,
-          is_preloading: false 
+          is_preload: false 
         })
         .eq('code', sessionCode);
       
-      // 4. Mise à jour optimiste locale
-      setSession(prev => prev ? { 
-        ...prev, 
-        status: 'active', 
+      setSession((prev) => prev ? {
+        ...prev,
+        status: 'active',
         timer_running: true,
-        is_preloading: false 
+        is_preload: false
       } : prev);
       
       setIsPreloading(false);
@@ -217,7 +249,6 @@ const Game = () => {
       console.error('Error starting game:', err);
       toast.error('Erreur au démarrage');
       
-      // Remettre is_preloading à false en cas d'erreur
       await supabase
         .from('sessions')
         .update({ is_preloading: false })
@@ -232,10 +263,9 @@ const Game = () => {
     
     const doorStatus = (session.door_status || { zone1: 'locked', zone2: 'locked', zone3: 'locked' }) as Record<string, string>;
     
-    // Vérifier que la zone est accessible
     let canAccess = false;
     if (newZone === 1) {
-      canAccess = true; // Zone 1 toujours accessible
+      canAccess = true;
     } else if (newZone === 2) {
       canAccess = doorStatus.zone1 === 'unlocked';
     } else if (newZone === 3) {
@@ -261,85 +291,36 @@ const Game = () => {
     }
   };
 
-  // Afficher l'overlay de chargement si preloading est actif
   const showLoadingOverlay = isPreloading || session.is_preloading;
 
-  if (session.status === 'waiting') {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background p-4">
-        <HUD
-          sessionCode={sessionCode || ''}
-          currentPlayerPseudo={currentPlayer.pseudo}
-          isHost={isHost}
-          players={players}
-          inventory={inventory}
-          timeRemaining={timeRemaining}
-          isTimerRunning={isRunning}
-          formatTime={formatTime}
-          onToggleTimer={toggleTimer}
-          hintsUsed={session.hints_used}
-          maxHints={enigmesData.hints.maxHints}
-          currentPuzzleId={null}
-          puzzleHints={[]}
-          currentZone={currentZone}
-          solvedPuzzles={session.solved_puzzles as any}
-          onZoneChange={handleZoneChange}
-        />
-        
-        {showLoadingOverlay ? (
-          // Overlay plein écran de préchargement
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-sm">
-            <div className="text-center space-y-6 max-w-md mx-auto px-4">
-              <h1 className="text-5xl md:text-6xl font-bold text-primary animate-pulse">
-                Protocol Z
-              </h1>
-              <div className="flex flex-col items-center space-y-4">
-                <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-                <p className="text-xl text-muted-foreground">
-                  Préparation de la partie...
-                </p>
-              </div>
-              {isHost && (
-                <div className="w-full space-y-2">
-                  <div className="w-full bg-secondary rounded-full h-3 overflow-hidden">
-                    <div 
-                      className="bg-primary h-full transition-all duration-300 ease-out"
-                      style={{ width: `${preloadProgress}%` }}
-                    />
-                  </div>
-                  <p className="text-sm text-muted-foreground">{Math.round(preloadProgress)}%</p>
-                </div>
-              )}
-            </div>
-          </div>
-        ) : (
-          // Écran d'attente normal
-          <div className="text-center space-y-4 sm:space-y-6 max-w-md mx-auto">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-2">Protocol Z</h1>
-            <p className="text-lg sm:text-xl text-muted-foreground">Salle d'attente</p>
-            <p className="text-xs sm:text-sm text-muted-foreground">
-              {players.filter(p => p.is_connected).length} joueur(s) connecté(s)
+  const WaitingScreen = () => (
+    <div className="flex flex-col min-h-screen items-center justify-center bg-background">
+      <div className="text-center space-y-6">
+        <h1 className="text-4xl font-bold text-primary">
+          Bienvenue, {currentPlayer?.pseudo}!
+        </h1>
+        <p className="text-xl text-muted-foreground">
+          En attente du Game Master pour démarrer la partie...
+        </p>
+        {isHost && canStart && (
+          <Button size="lg" onClick={handleStartGame} disabled={isPreloading}>
+            {isPreloading ? 'Chargement...' : 'Démarrer la partie'}
+          </Button>
+        )}
+        {isPreloading && (
+          <div className="w-64">
+            <p className="text-sm text-muted-foreground mb-2">
+              Chargement des assets: {preloadProgress.toFixed(0)}%
             </p>
-            
-            {canStartGame && (
-              <Button onClick={handleStartGame} size="lg" className="mt-4 sm:mt-6 w-full sm:w-auto">
-                Démarrer la partie
-              </Button>
-            )}
-            
-            {!isHost && (
-              <p className="text-xs sm:text-sm text-muted-foreground">
-                En attente que l'hôte lance la partie...
-              </p>
-            )}
+            <progress className="progress w-full" value={preloadProgress} max="100"></progress>
           </div>
         )}
       </div>
-    );
-  }
+    </div>
+  );
 
   const renderZone = () => {
-    // Si le jeu est terminé (victoire ou défaite), afficher GameEnd
+    // Si le jeu est terminé (success ou échec), afficher GameEnd
     if (session.status === 'completed' || session.status === 'failed') {
       return <GameEnd session={session} players={players} />;
     }
@@ -349,7 +330,7 @@ const Game = () => {
       return (
         <FinalCinematic
           onComplete={async () => {
-            // À la fin de la cinématique, marquer la session comme completed
+            // Le processus est terminé - mise à jour complète
             if (sessionCode) {
               await supabase
                 .from('sessions')
@@ -357,6 +338,9 @@ const Game = () => {
                 .eq('code', sessionCode);
               
               setShowFinalCinematic(false);
+              
+              // Forcer la mise à jour locale immédiate pour éviter le retour à Zone 3
+              setSession((prev: any) => ({ ...prev, status: 'completed' }));
             }
           }}
         />
