@@ -159,6 +159,22 @@ const Game = () => {
     }
   }, [session?.timer_remaining, session?.timer_running]);
 
+  // Écouter la progression du préchargement
+  useEffect(() => {
+    if (!sessionCode || !session.is_preloading) return;
+    
+    const progressChannel = supabase
+      .channel(`progress-${sessionCode}`)
+      .on('broadcast', { event: 'progress' }, ({ payload }) => {
+        setPreloadProgress(payload.progress);
+      })
+      .subscribe();
+    
+    return () => {
+      supabase.removeChannel(progressChannel);
+    };
+  }, [sessionCode, session.is_preloading]);
+
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
@@ -219,6 +235,10 @@ const Game = () => {
     if (!sessionCode) return;
     
     try {
+      // Créer un canal pour broadcaster la progression
+      const progressChannel = supabase.channel(`progress-${sessionCode}`);
+      await progressChannel.subscribe();
+      
       await supabase
         .from('sessions')
         .update({ is_preloading: true })
@@ -226,7 +246,42 @@ const Game = () => {
       
       setIsPreloading(true);
       setPreloadProgress(0);
-      await preloadAssets();
+      
+      // Charger les assets et broadcaster la progression
+      const assets = [
+        { src: zone1Bg, type: 'image' },
+        { src: zone2Bg, type: 'image' },
+        { src: zone3Bg, type: 'image' },
+        { src: zone1Audio, type: 'audio' },
+      ];
+      
+      for (let i = 0; i < assets.length; i++) {
+        const asset = assets[i];
+        
+        // Charger l'asset
+        await new Promise((resolve, reject) => {
+          if (asset.type === 'audio') {
+            const audio = new Audio(asset.src);
+            audio.addEventListener('canplaythrough', resolve);
+            audio.addEventListener('error', reject);
+            audio.load();
+          } else {
+            const img = new Image();
+            img.onload = resolve;
+            img.onerror = reject;
+            img.src = asset.src;
+          }
+        });
+        
+        // Calculer et broadcaster la progression
+        const progress = ((i + 1) / assets.length) * 100;
+        setPreloadProgress(progress);
+        await progressChannel.send({
+          type: 'broadcast',
+          event: 'progress',
+          payload: { progress }
+        });
+      }
       
       await supabase
         .from('sessions')
@@ -245,6 +300,7 @@ const Game = () => {
       } : prev);
       
       setIsPreloading(false);
+      await supabase.removeChannel(progressChannel);
       toast.success('Partie lancée !');
     } catch (err) {
       console.error('Error starting game:', err);
@@ -341,7 +397,7 @@ const Game = () => {
                 <div className="w-72 sm:w-96 mx-auto">
                   <div className="h-2 w-full rounded-full bg-primary/20 overflow-hidden border border-primary/30">
                     <div
-                      className="h-full bg-gradient-to-r from-primary to-primary/70"
+                      className="h-full bg-gradient-to-r from-primary via-primary/80 to-primary transition-all duration-300 ease-out animate-pulse"
                       style={{ width: `${preloadProgress}%` }}
                     />
                   </div>
@@ -352,9 +408,24 @@ const Game = () => {
               </div>
             )}
 
-            <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-              <Users className="w-4 h-4" />
-              {connectedCount}/{players.length} connectés
+            <div className="space-y-3">
+              <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                <Users className="w-4 h-4" />
+                {connectedCount}/{players.length} connectés
+              </div>
+              
+              <div className="space-y-2">
+                <div className="text-sm font-medium text-center text-muted-foreground">Joueurs connectés</div>
+                <div className="space-y-2 max-h-48 overflow-auto">
+                  {players.map((p: any) => (
+                    <div key={p.id} className="flex items-center gap-2 p-2 rounded-md bg-accent/50">
+                      {p.is_host && <Crown className="w-4 h-4 text-yellow-500" />}
+                      <span className="text-sm font-medium">{p.pseudo}</span>
+                      <span className={`ml-auto h-2 w-2 rounded-full ${p.is_connected ? 'bg-green-500' : 'bg-gray-500'}`} />
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
