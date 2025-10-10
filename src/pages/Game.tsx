@@ -186,11 +186,16 @@ const Game = () => {
     );
   }
 
-  if (!session || !currentPlayer) {
+  if (!session) {
     return null;
   }
 
-  const isHost = currentPlayer.is_host;
+  // Debug logs
+  console.log('[Game] Session status:', session.status);
+  console.log('[Game] Players count:', players.length);
+  console.log('[Game] Current player:', currentPlayer ? 'found' : 'null');
+
+  const isHost = !!currentPlayer?.is_host;
   const canStart = isHost && session.status === 'waiting';
   const currentZone = session.current_zone;
 
@@ -476,20 +481,20 @@ const Game = () => {
 
     switch (currentZone) {
       case 1:
-        return <Zone1 sessionCode={sessionCode || ''} session={session} playerPseudo={currentPlayer.pseudo} />;
+        return <Zone1 sessionCode={sessionCode || ''} session={session} playerPseudo={currentPlayer?.pseudo || ''} />;
       case 2:
-        return <Zone2 sessionCode={sessionCode || ''} session={session} playerPseudo={currentPlayer.pseudo} />;
+        return <Zone2 sessionCode={sessionCode || ''} session={session} playerPseudo={currentPlayer?.pseudo || ''} />;
       case 3:
         return (
           <Zone3 
             sessionCode={sessionCode || ''} 
             session={session} 
-            playerPseudo={currentPlayer.pseudo}
+            playerPseudo={currentPlayer?.pseudo || ''}
             onFinalDoorUnlock={() => setShowFinalCinematic(true)}
           />
         );
       default:
-        return <Zone1 sessionCode={sessionCode || ''} session={session} playerPseudo={currentPlayer.pseudo} />;
+        return <Zone1 sessionCode={sessionCode || ''} session={session} playerPseudo={currentPlayer?.pseudo || ''} />;
     }
   };
 
@@ -503,7 +508,7 @@ const Game = () => {
     <div className="min-h-screen bg-background">
       <HUD
         sessionCode={sessionCode || ''}
-        currentPlayerPseudo={currentPlayer.pseudo}
+        currentPlayerPseudo={currentPlayer?.pseudo || ''}
         isHost={isHost}
         players={players}
         inventory={inventory}
