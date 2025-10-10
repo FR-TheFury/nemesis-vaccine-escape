@@ -72,17 +72,29 @@ export const usePlayerPresence = ({ sessionCode, playerId }: UsePlayerPresencePr
 
         console.log('[Presence] Connected players remaining:', connectedPlayers?.length || 0);
 
-        // Si plus personne n'est connecté, nettoyer la session
+        // Si plus personne n'est connecté, ne nettoyer la session que si elle n'est PAS en attente
         if (!connectedPlayers || connectedPlayers.length === 0) {
-          console.log('[Presence] No players connected, cleaning up session:', sessionCode);
-          
           try {
-            await supabase.rpc('cleanup_session', { 
-              session_code_param: sessionCode 
-            });
-            console.log('[Presence] Session cleaned up successfully');
+            const { data: sessionRow, error: sessionErr } = await supabase
+              .from('sessions')
+              .select('status')
+              .eq('code', sessionCode)
+              .single();
+
+            if (sessionErr) {
+              console.error('[Presence] Error fetching session status before cleanup:', sessionErr);
+              return;
+            }
+
+            if (sessionRow && sessionRow.status !== 'waiting') {
+              console.log('[Presence] No players connected and session not waiting, cleaning up:', sessionCode);
+              await supabase.rpc('cleanup_session', { session_code_param: sessionCode });
+              console.log('[Presence] Session cleaned up successfully');
+            } else {
+              console.log('[Presence] Session is waiting with 0 players; skipping cleanup');
+            }
           } catch (cleanupError) {
-            console.error('[Presence] Error cleaning up session:', cleanupError);
+            console.error('[Presence] Error during conditional cleanup:', cleanupError);
           }
         }
       } catch (err) {

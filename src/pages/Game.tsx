@@ -161,7 +161,7 @@ const Game = () => {
 
   // Écouter la progression du préchargement
   useEffect(() => {
-    if (!sessionCode || !session.is_preloading) return;
+    if (!sessionCode || !session?.is_preloading) return;
     
     const progressChannel = supabase
       .channel(`progress-${sessionCode}`)
@@ -173,7 +173,7 @@ const Game = () => {
     return () => {
       supabase.removeChannel(progressChannel);
     };
-  }, [sessionCode, session.is_preloading]);
+  }, [sessionCode, session?.is_preloading]);
 
   if (loading) {
     return (
