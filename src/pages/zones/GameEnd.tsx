@@ -4,10 +4,19 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Trophy, Clock, Lightbulb, Users } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 interface GameEndProps {
   session: any;
   players: any[];
+}
+
+interface Player {
+  id: string;
+  pseudo: string;
+  is_host: boolean;
+  is_connected: boolean;
 }
 
 export const GameEnd = ({ session, players }: GameEndProps) => {
@@ -139,7 +148,7 @@ export const GameEnd = ({ session, players }: GameEndProps) => {
         <div className="space-y-2 sm:space-y-3 animate-fade-in" style={{ animationDelay: '800ms' }}>
           <h3 className="font-bold text-base sm:text-lg">Équipe</h3>
           <div className="flex flex-wrap gap-1.5 sm:gap-2">
-            {players.map((player, index) => (
+            {players.map((player: Player, index) => (
               <Badge 
                 key={player.id} 
                 variant="secondary" 
@@ -153,13 +162,41 @@ export const GameEnd = ({ session, players }: GameEndProps) => {
           </div>
         </div>
 
+        {/* Section Merci d'avoir joué */}
+        <Card className="p-4 sm:p-6 bg-primary/5 border-primary/20 animate-fade-in" style={{ animationDelay: '900ms' }}>
+          <div className="text-center space-y-3">
+            <h3 className="text-xl sm:text-2xl font-bold text-primary">
+              Merci d'avoir joué ! 🎮
+            </h3>
+            <p className="text-sm sm:text-base text-muted-foreground">
+              {success 
+                ? 'Votre équipe a fait preuve de courage, d\'intelligence et de collaboration. Le Dr Morel aurait été fier de vous voir sauver l\'humanité du virus Protocol Z.'
+                : 'Même si le temps vous a manqué, votre courage et votre détermination resteront dans les mémoires. Peut-être aurez-vous une autre chance de sauver l\'humanité...'}
+            </p>
+            <p className="text-xs sm:text-sm text-muted-foreground italic">
+              Cette aventure a été créée avec passion. Nous espérons que vous avez passé un excellent moment ! 💚
+            </p>
+          </div>
+        </Card>
+
         <Button 
-          onClick={() => navigate('/')} 
+          onClick={async () => {
+            const sessionCode = session.code;
+            try {
+              await supabase.rpc('cleanup_session', { session_code_param: sessionCode });
+              toast.success('Session terminée avec succès');
+              navigate('/');
+            } catch (error) {
+              console.error('Error cleaning up session:', error);
+              toast.error('Erreur lors de la fermeture de la session');
+              navigate('/');
+            }
+          }} 
           size="lg" 
           className="w-full text-sm sm:text-base animate-fade-in"
           style={{ animationDelay: '1000ms' }}
         >
-          Retour à l'accueil
+          Quitter et supprimer la session
         </Button>
       </Card>
     </div>

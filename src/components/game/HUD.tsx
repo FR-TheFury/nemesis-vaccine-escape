@@ -3,7 +3,6 @@ import { Timer } from './Timer';
 import { Inventory } from './Inventory';
 import { Chat } from './Chat';
 import { PlayersList } from './PlayersList';
-import { HintButton } from './HintButton';
 import { HintsPanel } from './HintsPanel';
 import { HostControls } from './HostControls';
 import { FacilityMap } from './FacilityMap';
@@ -203,15 +202,7 @@ export const HUD = ({
         currentPlayerPseudo={currentPlayerPseudo}
       />
 
-      <HintButton
-        sessionCode={sessionCode}
-        currentHints={hintsUsed}
-        maxHints={maxHints}
-        currentPuzzleId={currentPuzzleId}
-        puzzleHints={puzzleHints}
-      />
-
-      <HelpSheetsModal 
+      <HelpSheetsModal
         isOpen={showHelpSheets} 
         onClose={() => setShowHelpSheets(false)} 
       />

@@ -14,15 +14,6 @@ import { Zone3 } from './zones/Zone3';
 import { GameEnd } from './zones/GameEnd';
 import { FinalCinematic } from './zones/FinalCinematic';
 import { Button } from '@/components/ui/button';
-import { 
-  AlertDialog, 
-  AlertDialogContent, 
-  AlertDialogHeader, 
-  AlertDialogTitle, 
-  AlertDialogDescription, 
-  AlertDialogFooter,
-  AlertDialogAction 
-} from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import enigmesData from '@/data/enigmes.json';
@@ -35,7 +26,6 @@ const Game = () => {
   const { sessionCode } = useParams<{ sessionCode: string }>();
   const navigate = useNavigate();
   const { session, players, currentPlayer, loading, error, setSession, setPlayers } = useGameSession(sessionCode || null);
-  const [showTimeUpDialog, setShowTimeUpDialog] = useState(false);
   const [showFinalCinematic, setShowFinalCinematic] = useState(false);
   const [isPreloading, setIsPreloading] = useState(false);
   const [preloadProgress, setPreloadProgress] = useState(0);
@@ -78,11 +68,6 @@ const Game = () => {
     {
       onSessionUpdate: (updatedSession) => {
         setSession(updatedSession as any);
-        
-        // Détecter la fin de partie pour tous les joueurs
-        if (updatedSession.status === 'failed' || updatedSession.status === 'completed') {
-          setShowTimeUpDialog(true);
-        }
       },
       onPlayerJoin: (player) => {
         setPlayers((prev: any) => [...prev, player as any]);
@@ -100,8 +85,14 @@ const Game = () => {
     sessionCode || null,
     session?.timer_remaining || 3600,
     currentPlayer?.is_host || false,
-    () => {
-      setShowTimeUpDialog(true);
+    async () => {
+      // Timer expiré - marquer comme failed
+      if (sessionCode) {
+        await supabase
+          .from('sessions')
+          .update({ status: 'failed' })
+          .eq('code', sessionCode);
+      }
     }
   );
 
@@ -348,6 +339,11 @@ const Game = () => {
   }
 
   const renderZone = () => {
+    // Si le jeu est terminé (victoire ou défaite), afficher GameEnd
+    if (session.status === 'completed' || session.status === 'failed') {
+      return <GameEnd session={session} players={players} />;
+    }
+
     // Si la cinématique finale est active
     if (showFinalCinematic) {
       return (
@@ -360,7 +356,7 @@ const Game = () => {
                 .update({ status: 'completed' })
                 .eq('code', sessionCode);
               
-              // Le useRealtimeSync détectera le changement et affichera showTimeUpDialog
+              setShowFinalCinematic(false);
             }
           }}
         />
@@ -382,7 +378,7 @@ const Game = () => {
           />
         );
       default:
-        return <GameEnd session={session} players={players} />;
+        return <Zone1 sessionCode={sessionCode || ''} session={session} playerPseudo={currentPlayer.pseudo} />;
     }
   };
 
@@ -420,37 +416,6 @@ const Game = () => {
         description={currentReward?.description || ''}
         icon={currentReward?.icon}
       />
-
-      <AlertDialog open={showTimeUpDialog} onOpenChange={setShowTimeUpDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle className={session.status === 'failed' ? 'text-destructive text-2xl' : 'text-primary text-2xl'}>
-              {session.status === 'failed' ? '💀 GAME OVER' : '🎉 Mission accomplie !'}
-            </AlertDialogTitle>
-            <AlertDialogDescription className="text-lg">
-              {session.status === 'failed' 
-                ? 'Le temps est écoulé. Le virus Z s\'est propagé dans le monde entier... L\'humanité est perdue.' 
-                : 'Félicitations ! Vous avez sauvé l\'humanité !'}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogAction onClick={async () => {
-              // Nettoyer la session avant de retourner à l'accueil
-              if (sessionCode) {
-                try {
-                  await supabase.rpc('cleanup_session', { session_code_param: sessionCode });
-                  console.log('Session cleaned up successfully');
-                } catch (error) {
-                  console.error('Error cleaning up session:', error);
-                }
-              }
-              navigate('/');
-            }}>
-              Retour à l'accueil
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   );
 };
